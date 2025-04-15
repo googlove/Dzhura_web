@@ -11,7 +11,7 @@ html {
 	font-display: swap;
    }
    
-header, nav, section, article, aside, footer {
+header, nav, section, article, aside {
 	display: block;
 }
 body {
