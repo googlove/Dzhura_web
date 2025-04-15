@@ -1,194 +1,25 @@
-<html lang="uk"><head></head><body>
-   
-      <meta charset="utf-8">
-      <title>Демобілізації не буде ∞.</title>
-
-      <script src="js/xdate.js" type="text/javascript"></script>
-      <script src="js/jquery-1.10.2.min.js" type="text/javascript"></script>
-      <script src="js/jquery-ui-1.10.3.custom.min.js"></script>
-      <script src="js/localization.js"></script>
-      <script src="js/script.min.js" type="text/javascript"></script>
-      <link href="css/jquery-ui.css" rel="stylesheet" type="text/css">
-      <link rel="stylesheet" href="css/styles.css" media="screen">
-	  <link rel="icon" href="images/favicon.ico" type="image/x-icon">
-     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-	  <link rel="apple-touch-icon" href="images/logo_76.png" sizes="76x76">
-	  <link rel="apple-touch-icon" href="images/logo_120.png" sizes="120x120">
-	  <link rel="apple-touch-icon" href="images/logo_152.png" sizes="152x152">
-	  <link rel="apple-touch-icon" href="images/logo_180.png" sizes="180x180">
-
-
-      <meta name="viewport" content="width=device-width">
-      <meta name="copyright" content="flame4ost, googlove">
-      <meta name="description" content="Сервіс розрахунку часу, що залишився військовослужбовцю до демобілізації в роках, місяцях, тижнях, днях, годинах, хвилинах, секундах. Лічильник днів до дому. Дізнайся скільки чекати дембеля."><script src="js/cnt.share.js"></script>
-	  
-	  <style>
-	  .ui-widget-content{
-		 background-color:white; 
-		 background-color:white; 
-	  }
-	  .ui-datepicker th{
-		 color:black; 
-	  }
-	  
-	  #ui-datepicker-div{
-		-moz-box-shadow: 0px 2px 6px #000000;
-		-webkit-box-shadow: 0px 2px 6px #000000;
-		box-shadow: 0px 2px 6px #000000;
-	  }
-	  </style>
-   
-   
-      <div style="width:200px; margin:0px auto 0px;">
-         <div id="logo" title="Demobilization UA - лічильник днів до демобілізації">
-		 <div class="star"></div>
-		 <div class="logo_title">Лічильник ДМБ</div>
-		 <div style="clear:both"></div>
-		 <div class="logo_description">Військовий стан до пенсії.</div>
-
-		 </div>
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/styles.css" media="screen">
+  <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+  <title>Джура</title>
+</head>
+<body>
+  <div class="selection-screen">
+    <center> <h1>Обери свій статус</h1></center>
+    <div class="selection">
+      <div style="display: flex; justify-content: center; gap: 40px; align-items: center;">
+        <a href="choice.html">
+          <img src="images/mobilized.png" alt="Мобілізований" style="width: 200px;">
+        </a>
+        <a href="choice.html">
+          <img src="images/infinity.png" alt="Контрактник" style="width: 200px;">
+        </a>
       </div>
-	  
-
-		
-		
-	  <div id="main">
-	  <div id="content">
-            <h1>До наступного контракту:</h1>
-            <div id="all_timers">
-               <div id="display_change_number" class="counter_block">
-                  <div id="by" class="framenumber">
-                     <div id="id_years" class="number"></div>
-                     <div class="number_caption">Років</div>
-                  </div>
-                  <div id="bm" class="framenumber">
-                     <div id="id_month" class="number"></div>
-                     <div class="number_caption">Місяців</div>
-                  </div>
-                  <div id="bd" class="framenumber">
-                     <div id="id_days" class="number"></div>
-                     <div class="number_caption">Днів</div>
-                  </div>
-                  <div id="bh" class="framenumber">
-                     <div id="id_hours" class="number"></div>
-                     <div class="number_caption">Годин</div>
-                  </div>
-                  <div id="bmm" class="framenumber">
-                     <div id="id_minutes" class="number"></div>
-                     <div class="number_caption">Хвилин</div>
-                  </div>
-                  <div id="bs" class="framenumber">
-                     <div id="id_seconds" class="number"></div>
-                     <div class="number_caption">Секунд</div>
-                  </div>
-               </div>
-               <div id="display_change_days" class="counter_block block_hide">
-                  <div>
-                     <div id="id_all_days" class="number"></div>
-                     <div class="number_caption">Днів</div>
-                  </div>
-               </div>
-               <div id="display_change_weeks" class="counter_block block_hide">
-                  <div>
-                     <div id="id_all_weeks" class="number"></div>
-                     <div class="number_caption">Тижнів</div>
-                  </div>
-               </div>
-               <div id="display_change_hours" class="counter_block block_hide">
-                  <div>
-                     <div id="id_all_hours" class="number"></div>
-                     <div class="number_caption">Годин</div>
-                  </div>
-               </div>
-               <div id="display_change_minutes" class="counter_block block_hide">
-                  <div>
-                     <div id="id_all_minutes" class="number"></div>
-                     <div class="number_caption">Хвилин</div>
-                  </div>
-               </div>
-               <div id="display_change_seconds" class="counter_block block_hide">
-                  <div>
-                     <div id="id_all_seconds" class="number"></div>
-                     <div class="number_caption">Секунд</div>
-                  </div>
-               </div>
-            </div>
-            <div style="clear:both"></div>
-            <div id="display_final" class="number"></div>
-            <div>
-               <div id="p_back">
-                  <div id="progress"></div>
-               </div>
-               <div id="p_value">0%</div>
-            </div>
-
-            <div style="padding-top:40px;">
-                  <img src="images/calendar.png" style="width: 24px; height: 24px;">
-               <span class="date_title">Дата підписання контракту:</span>
-               <input inputmode="none" title="Дата підписання" type="text" value="" id="datepicker1" style="width:190px;">
-               <p></p>
-               <img src="images/page_with_curl.png" style="width: 24px; height: 24px;">
-               <span class="date_title">Дата до наступного контракту:</span>
-               <input inputmode="none" title="Дата дембеля" type="text" value="" id="datepicker" style="width:190px">
-            </div>
-			
-
-
-
-			<div style="padding-top:10px">
-			
-
-            <div id="modes" class="modes" style="margin-top:10px;">
-                  <img src="images/pick.png" style="width: 32px; height: 32px;">
-               <span class="modelink active" id="mode1">Класичний</span>	
-               <span class="modelink" id="mode2">Тижні</span>	
-               <span class="modelink" id="mode3">Дні</span>	
-               <span class="modelink" id="mode4">Години</span>		
-               <span class="modelink" id="mode5">Хвилини</span>	
-               <span class="modelink" id="mode6">Секунди</span>		
-            </div>
-         </div>
-		 
-		 
-
-		
-
-		 <div style="padding-top:10px; font-size:18px; padding-bottom:10px;">
-         </div>
-          <div class="foot_menu">
-            <a title="Магазин ачівок" class="reglink" href="https://www.instagram.com/stodnevka_ua/">
-               <i class="fa-brands fa-instagram"></i>
-               Магазин ачівок
-             </a>
-             
-             <a title="Telegram" class="reglink" href="https://t.me/flame4ost">
-               <i class="fab fa-telegram-plane"></i>
-               Телеграм
-             </a>
-             
-             <a title="Feedback" class="reglink" href="https://www.instagram.com/googlove_official/">
-               <i class="fa-brands fa-instagram"></i>
-               Зворотній зв'язок
-             </a>
-             
-
-         </div>
-
-
-		  <div class="app_links">
-							  <a title="Лічильник ДМБ" href="">
-					  <img width="140" style="margin-top:10px;" alt="Лічильник ДМБ" src="images/google-play-badge.svg">
-					</a>
-		
-         </div> 
-		  <div class="copyright">
-         <p style="color: white; text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;">
-            © 2025 Лічильник ДМБ
-          </p>
-		  </div>
-		 
-      </div>
-                 
-       
-   
-</body></html>
+    </div>
+  </div>
+</body>
+</html>
