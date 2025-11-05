@@ -311,29 +311,31 @@
 <script>
     // Імітація завантаження db.json (Вставлено як об'єкт для спрощення)
     const db = {
-        "ranks": [
-            {"id": 1, "title": "Матрос", "category": "Рядовий", "next_rank_id": 2, "img": "images/matros.png"},
-            {"id": 2, "title": "Старший матрос", "category": "Рядовий", "next_rank_id": 3, "img": "st_matros.png"},
-            {"id": 3, "title": "Старшина 2 статті", "category": "Сержант", "next_rank_id": 4, "img": "st_2.png"},
-            {"id": 4, "title": "Старшина 1 статті", "category": "Сержант", "next_rank_id": 5, "img": "st_1.png"},
-            {"id": 5, "title": "Головний старшина", "category": "Сержант", "next_rank_id": 6, "img": "gl_st.png"},
-            {"id": 6, "title": "Головний корабельний старшина", "category": "Старшина", "next_rank_id": 7, "img": "gl_kor_st.png"},
-            {"id": 7, "title": "Штаб-старшина", "category": "Старшина", "next_rank_id": 8, "img": "shtab_st.png"},
-            {"id": 8, "title": "Майстер-старшина", "category": "Старшина", "next_rank_id": 9, "img": "mayster_st.png"},
-            {"id": 9, "title": "Старший майстер-старшина", "category": "Старшина", "next_rank_id": 10, "img": "st_mayster_st.png"},
-            {"id": 10, "title": "Головний майстер-старшина", "category": "Старшина", "next_rank_id": null, "img": "gl_mayster_st.png"},
-            {"id": 11, "title": "Молодший лейтенант", "category": "Молодший офіцер", "next_rank_id": 12, "img": "ml_leyt.png"},
-            {"id": 12, "title": "Лейтенант", "category": "Молодший офіцер", "next_rank_id": 13, "img": "leyt.png"},
-            {"id": 13, "title": "Старший лейтенант", "category": "Молодший офіцер", "next_rank_id": 14, "img": "st_leyt.png"},
-            {"id": 14, "title": "Капітан-лейтенант", "category": "Молодший офіцер", "next_rank_id": 15, "img": "kap_leyt.png"},
-            {"id": 15, "title": "Капітан 3 рангу", "category": "Старший офіцер", "next_rank_id": 16, "img": "kap_3.png"},
-            {"id": 16, "title": "Капітан 2 рангу", "category": "Старший офіцер", "next_rank_id": 17, "img": "kap_2.png"},
-            {"id": 17, "title": "Капітан 1 рангу", "category": "Старший офіцер", "next_rank_id": 18, "img": "kap_1.png"},
-            {"id": 18, "title": "Коммодор", "category": "Вищий офіцер", "next_rank_id": 19, "img": "commodor.png"},
-            {"id": 19, "title": "Контр-адмірал", "category": "Вищий офіцер", "next_rank_id": 20, "img": "kontr_adm.png"},
-            {"id": 20, "title": "Віце-адмірал", "category": "Вищий офіцер", "next_rank_id": 21, "img": "vitse_adm.png"},
-            {"id": 21, "title": "Адмірал", "category": "Вищий офіцер", "next_rank_id": null, "img": "admiral.png"}
-        ],
+        {
+    "ranks": [
+        {"id": 1, "title": "Матрос", "category": "Рядовий", "next_rank_id": 2, "img": "images/matros.png"},
+        {"id": 2, "title": "Старший матрос", "category": "Рядовий", "next_rank_id": 3, "img": "images/st_matros.png"},
+        {"id": 3, "title": "Старшина 2 статті", "category": "Сержант", "next_rank_id": 4, "img": "images/st_2.png"},
+        {"id": 4, "title": "Старшина 1 статті", "category": "Сержант", "next_rank_id": 5, "img": "images/st_1.png"},
+        {"id": 5, "title": "Головний старшина", "category": "Сержант", "next_rank_id": 6, "img": "images/gl_st.png"},
+        {"id": 6, "title": "Головний корабельний старшина", "category": "Старшина", "next_rank_id": 7, "img": "images/gl_kor_st.png"},
+        {"id": 7, "title": "Штаб-старшина", "category": "Старшина", "next_rank_id": 8, "img": "images/shtab_st.png"},
+        {"id": 8, "title": "Майстер-старшина", "category": "Старшина", "next_rank_id": 9, "img": "images/mayster_st.png"},
+        {"id": 9, "title": "Старший майстер-старшина", "category": "Старшина", "next_rank_id": 10, "img": "images/st_mayster_st.png"},
+        {"id": 10, "title": "Головний майстер-старшина", "category": "Старшина", "next_rank_id": null, "img": "images/gl_mayster_st.png"},
+        {"id": 11, "title": "Молодший лейтенант", "category": "Молодший офіцер", "next_rank_id": 12, "img": "images/ml_leyt.png"},
+        {"id": 12, "title": "Лейтенант", "category": "Молодший офіцер", "next_rank_id": 13, "img": "images/leyt.png"},
+        {"id": 13, "title": "Старший лейтенант", "category": "Молодший офіцер", "next_rank_id": 14, "img": "images/st_leyt.png"},
+        {"id": 14, "title": "Капітан-лейтенант", "category": "Молодший офіцер", "next_rank_id": 15, "img": "images/kap_leyt.png"},
+        {"id": 15, "title": "Капітан 3 рангу", "category": "Старший офіцер", "next_rank_id": 16, "img": "images/kap_3.png"},
+        {"id": 16, "title": "Капітан 2 рангу", "category": "Старший офіцер", "next_rank_id": 17, "img": "images/kap_2.png"},
+        {"id": 17, "title": "Капітан 1 рангу", "category": "Старший офіцер", "next_rank_id": 18, "img": "images/kap_1.png"},
+        {"id": 18, "title": "Коммодор", "category": "Вищий офіцер", "next_rank_id": 19, "img": "images/commodor.png"},
+        {"id": 19, "title": "Контр-адмірал", "category": "Вищий офіцер", "next_rank_id": 20, "img": "images/kontr_adm.png"},
+        {"id": 20, "title": "Віце-адмірал", "category": "Вищий офіцер", "next_rank_id": 21, "img": "images/vitse_adm.png"},
+        {"id": 21, "title": "Адмірал", "category": "Вищий офіцер", "next_rank_id": null, "img": "images/admiral.png"}
+    ],
+
         "service_time": [
             {"value": "1-11 місяців", "display": "1-11 місяців"},
             {"value": "1 рік", "display": "1 рік"},
