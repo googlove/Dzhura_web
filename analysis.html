@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Аналіз-Сайт ВМС ЗСУ: Твій Подвиг</title>
+    <style>
+        :root {
+            --pixel-blue: #0A3C59; /* Темно-синій піксель */
+            --pixel-light: #527A8A; /* Світло-синій піксель */
+            --pixel-accent: #FFD700; /* Золотий акцент */
+            --background-color: #f0f0f0;
+            --text-color: #111;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            background-image: repeating-linear-gradient(45deg, 
+                var(--pixel-blue) 0, var(--pixel-blue) 5px, 
+                var(--pixel-light) 5px, var(--pixel-light) 10px);
+            background-size: 40px 40px;
+        }
+
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 900px;
+            min-height: 700px;
+        }
+
+        h1, h2, h3 {
+            color: var(--pixel-blue);
+            border-bottom: 3px solid var(--pixel-light);
+            padding-bottom: 5px;
+            margin-top: 25px;
+        }
+        
+        /* Стилізація форми */
+        .form-group {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        select, button, input[type="date"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 4px;
+            border: 1px solid #aaa;
+            box-sizing: border-box;
+            background-color: #fff;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: var(--pixel-blue);
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            padding: 10px 0;
+        }
+
+        .checkbox-grid label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-weight: normal;
+        }
+        
+        .checkbox-grid input[type="checkbox"] {
+            margin-right: 8px;
+            width: auto;
+        }
+
+        /* Стилізація секції результатів (Battlefield 2 style) */
+        #results {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #eee;
+            border: 5px solid var(--pixel-blue);
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .stat-block {
+            background-color: var(--pixel-blue);
+            color: white;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        /* Стиль для великого відліку часу */
+        .stat-block.countdown {
+            background-color: #A52A2A; /* Червоний/Бордовий для уваги */
+            flex-direction: column;
+            text-align: center;
+        }
+        .stat-block.countdown strong {
+            font-size: 2.5em;
+            color: #fff;
+            margin-top: 5px;
+        }
+
+
+        .stat-block strong {
+            color: var(--pixel-accent);
+            font-size: 1.2em;
+        }
+
+        .rank-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .rank-info img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            border: 2px solid var(--pixel-accent);
+            border-radius: 50%;
+            padding: 5px;
+            background-color: #fff;
+        }
+
+        .kkd-bar-container {
+            width: 100%;
+            background-color: #ccc;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .kkd-bar {
+            height: 25px;
+            background-color: var(--pixel-accent);
+            border-radius: 5px;
+            text-align: center;
+            line-height: 25px;
+            color: var(--pixel-blue);
+            font-weight: bold;
+            transition: width 1s ease-in-out;
+        }
+        
+        .recommendation {
+            background-color: #fff;
+            border: 2px solid var(--pixel-accent);
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 4px;
+        }
+
+        .next-rank-display {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #008000;
+        }
+        
+        .placeholder-image {
+            width: 80px;
+            height: 80px;
+            background-color: #ccc;
+            border: 2px solid var(--pixel-accent);
+            border-radius: 50%;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            text-align: center;
+            line-height: 1.2;
+            color: #555;
+        }
+        /* Стиль для приміток щодо контракту */
+        .contract-note {
+            color: var(--pixel-accent);
+            font-style: italic;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>⚔️ Аналіз-Сайт ВМС ЗСУ: Особиста Статистика</h1>
+
+    <div id="form-section">
+        <form id="analysisForm">
+
+            <div class="form-group">
+                <label for="serviceTime">1. Скільки служиш? (Для підбору ачівки)</label>
+                <select id="serviceTime" required></select>
+            </div>
+
+            <div class="form-group">
+                <label for="rank">2. Твоє звання</label>
+                <select id="rank" required></select>
+            </div>
+            
+            <div class="form-group">
+                <label for="position">3. Твоя посада на катері?</label>
+                <select id="position" required></select>
+            </div>
+
+            <div class="form-group">
+                <label>4. Які твої навички?</label>
+                <div id="skillsContainer" class="checkbox-grid">
+                    </div>
+                <small>Кожна обрана навичка підвищує ККД на 16% (Базовий 10%)</small>
+            </div>
+
+            <div class="form-group">
+                <label for="education">5. Яка освіта?</label>
+                <select id="education" required></select>
+                <small>Освіта впливає на потенціал звання та ККД.</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="contractDate">6. Дата підписання контракту (для розрахунку демобілізації)</label>
+                <input type="date" id="contractDate" required>
+                <small>Оберіть дату, коли було підписано Ваш останній контракт (чи мобілізовано).</small>
+            </div>
+
+            <button type="submit">АНАЛІЗУВАТИ ПОДВИГИ</button>
+        </form>
+    </div>
+
+    <div id="results">
+        <h2>📊 ПРОФІЛЬ ТА АНАЛІЗ БОЙОВИХ ДОСЯГНЕНЬ</h2>
+        
+        <h3>⚓ Залишилось до кінця контракту</h3>
+        <div class="stat-block countdown">
+            <span id="contractStatusLabel">Статус контракту:</span>
+            <strong id="contractCountdown">--</strong>
+            <span class="contract-note" id="contractNote"></span>
+        </div>
+
+        <h3>📈 Коефіцієнт Корисної Дії (ККД)</h3>
+        <div class="stat-block">
+            <span>Поточний ККД:</span> 
+            <strong id="kkdValue">0%</strong>
+        </div>
+        <div class="kkd-bar-container">
+            <div id="kkdBar" class="kkd-bar"></div>
+        </div>
+
+        <h3>🎖️ Звання та Кар'єрний Шлях</h3>
+        <div class="stat-block rank-info">
+            <div>
+                <p>Твоє Звання:</p>
+                <strong id="currentRankDisplay"></strong>
+            </div>
+            <div id="currentRankImage" class="placeholder-image">Фото звання</div>
+            <div style="text-align: right;">
+                <p>Наступний Потенціал:</p>
+                <div class="next-rank-display" id="nextRankDisplay"></div>
+            </div>
+        </div>
+        
+        <h3>🏆 Твій Подвиг ("Ачівка")</h3>
+        <div class="stat-block">
+            <div style="flex-direction: column; align-items: flex-start;">
+                <strong id="achievementTitle"></strong>
+                <small id="achievementDescription" style="color: #ccc; margin-top: 5px;"></small>
+            </div>
+        </div>
+        
+        <h3>🚀 Рекомендації та Мотивація</h3>
+        <div class="recommendation" id="recommendations">
+            <p><strong>Подальші дії:</strong></p>
+            <ul>
+                </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Імітація завантаження db.json (Вставлено як об'єкт для спрощення)
+    const db = {
+        "ranks": [
+            {"id": 1, "title": "Матрос", "category": "Рядовий", "next_rank_id": 2, "img": "matros.png"},
+            {"id": 2, "title": "Старший матрос", "category": "Рядовий", "next_rank_id": 3, "img": "st_matros.png"},
+            {"id": 3, "title": "Старшина 2 статті", "category": "Сержант", "next_rank_id": 4, "img": "st_2.png"},
+            {"id": 4, "title": "Старшина 1 статті", "category": "Сержант", "next_rank_id": 5, "img": "st_1.png"},
+            {"id": 5, "title": "Головний старшина", "category": "Сержант", "next_rank_id": 6, "img": "gl_st.png"},
+            {"id": 6, "title": "Головний корабельний старшина", "category": "Старшина", "next_rank_id": 7, "img": "gl_kor_st.png"},
+            {"id": 7, "title": "Штаб-старшина", "category": "Старшина", "next_rank_id": 8, "img": "shtab_st.png"},
+            {"id": 8, "title": "Майстер-старшина", "category": "Старшина", "next_rank_id": 9, "img": "mayster_st.png"},
+            {"id": 9, "title": "Старший майстер-старшина", "category": "Старшина", "next_rank_id": 10, "img": "st_mayster_st.png"},
+            {"id": 10, "title": "Головний майстер-старшина", "category": "Старшина", "next_rank_id": null, "img": "gl_mayster_st.png"},
+            {"id": 11, "title": "Молодший лейтенант", "category": "Молодший офіцер", "next_rank_id": 12, "img": "ml_leyt.png"},
+            {"id": 12, "title": "Лейтенант", "category": "Молодший офіцер", "next_rank_id": 13, "img": "leyt.png"},
+            {"id": 13, "title": "Старший лейтенант", "category": "Молодший офіцер", "next_rank_id": 14, "img": "st_leyt.png"},
+            {"id": 14, "title": "Капітан-лейтенант", "category": "Молодший офіцер", "next_rank_id": 15, "img": "kap_leyt.png"},
+            {"id": 15, "title": "Капітан 3 рангу", "category": "Старший офіцер", "next_rank_id": 16, "img": "kap_3.png"},
+            {"id": 16, "title": "Капітан 2 рангу", "category": "Старший офіцер", "next_rank_id": 17, "img": "kap_2.png"},
+            {"id": 17, "title": "Капітан 1 рангу", "category": "Старший офіцер", "next_rank_id": 18, "img": "kap_1.png"},
+            {"id": 18, "title": "Коммодор", "category": "Вищий офіцер", "next_rank_id": 19, "img": "commodor.png"},
+            {"id": 19, "title": "Контр-адмірал", "category": "Вищий офіцер", "next_rank_id": 20, "img": "kontr_adm.png"},
+            {"id": 20, "title": "Віце-адмірал", "category": "Вищий офіцер", "next_rank_id": 21, "img": "vitse_adm.png"},
+            {"id": 21, "title": "Адмірал", "category": "Вищий офіцер", "next_rank_id": null, "img": "admiral.png"}
+        ],
+        "service_time": [
+            {"value": "1-11 місяців", "display": "1-11 місяців"},
+            {"value": "1 рік", "display": "1 рік"},
+            {"value": "2 роки", "display": "2 роки"},
+            {"value": "3 роки", "display": "3 роки"},
+            {"value": "4 роки", "display": "4 роки"},
+            {"value": "5 років", "display": "5 років"},
+            {"value": "6 років", "display": "6 років"},
+            {"value": "7 років", "display": "7 років"},
+            {"value": "8 років", "display": "8 років"},
+            {"value": "9 років", "display": "9 років"},
+            {"value": "10 років", "display": "10 років"},
+            {"value": "11 років", "display": "11 років"},
+            {"value": "12 років", "display": "12 років"},
+            {"value": "В армії народився", "display": "В армії народився"}
+        ],
+        "positions": [
+            "Старшина КБУ", "Командир відділення рульових сигнальників", "Старший рульовий сигнальник", "Рульовий сигнальник", "Командир відділення операторів", "Старший оператор", "Оператор КБУ", "Командир відділення комендорів", "Комендор", "КБУ", "Боцман", "Баталер", "Марсовий", "Електрик", "Старший електрик", "Старший моторист", "Моторист", "Командир катера", "Помічник командира", "Старшина ЕМК"
+        ],
+        "achievements": [
+            {"time": "1-11 місяців", "title": "Новобранець Моря", "description": "Витримав(ла) перші шторми та засвоїв(ла) основи морської справи. Попереду цілий океан!"},
+            {"time": "1 рік", "title": "Офіцерське Братство", "description": "Заклав(ла) фундамент професійної кар'єри. Впевнено тримаєш стрій!"},
+            {"time": "2 роки", "title": "Стабілізація Катера", "description": "Перший рік – випробування, другий – досвід. Ти став(ла) надійною опорою."},
+            {"time": "3 роки", "title": "Торпеда Досвіду", "description": "Твоя вислуга дозволяє вирішувати нестандартні завдання. Готовий(а) до командування!"},
+            {"time": "4 роки", "title": "Майстер Акваторії", "description": "Ти знаєш катер, як свою кишеню, а море – як рідний дім. Час передавати знання."},
+            {"time": "5 років", "title": "Золотий Якір", "description": "5 років бездоганної служби. Приклад для наслідування та справжній професіонал."},
+            {"time": "6 років", "title": "Ветеран Водної Гладі (Фаза 1)", "description": "Пройшов(ла) через вогонь та воду. Твій досвід безцінний для флоту."},
+            {"time": "7 років", "title": "Ветеран Водної Гладі (Фаза 2)", "description": "Пройшов(ла) через вогонь та воду. Твій досвід безцінний для флоту."},
+            {"time": "8 років", "title": "Морський Вовк (Початок)", "description": "Роки служби перетворили тебе на справжнього морського вовка. Успіхи говорять самі за себе."},
+            {"time": "9 років", "title": "Морський Вовк (Профі)", "description": "Роки служби перетворили тебе на справжнього морського вовка. Успіхи говорять самі за себе."},
+            {"time": "10 років", "title": "Лідер Флотилії (Золото)", "description": "Десятиліття вірності присязі. Ти є рушійною силою та гордістю ВМС ЗСУ."},
+            {"time": "11 років", "title": "Лідер Флотилії (Платина)", "description": "Десятиліття вірності присязі. Ти є рушійною силою та гордістю ВМС ЗСУ."},
+            {"time": "12 років", "title": "Лідер Флотилії (Діамант)", "description": "Десятиліття вірності присязі. Ти є рушійною силою та гордістю ВМС ЗСУ."},
+            {"time": "В армії народився", "title": "Абсолютний Адмірал", "description": "Твоя кар'єра почалася з колиски на палубі. Справжня легенда!"}
+        ],
+        "skills_list": [
+            {"name": "Радіоелектронна боротьба", "kkd_boost": 16},
+            {"name": "Володіння БПЛА (пілотування)", "kkd_boost": 16},
+            {"name": "Ремонт дизельних двигунів", "kkd_boost": 16},
+            {"name": "Надання домедичної допомоги (бойовий медик)", "kkd_boost": 16},
+            {"name": "Криптографія", "kkd_boost": 16},
+            {"name": "Водолазна справа", "kkd_boost": 16}
+        ],
+        "education_bonus": [
+            {"level": "Вища", "kkd_bonus": 20, "officer_path": true},
+            {"level": "Молодший спеціаліст", "kkd_bonus": 10, "officer_path": false},
+            {"level": "Середньо-спеціальна", "kkd_bonus": 5, "officer_path": false},
+            {"level": "Закінчив 9-11 класів", "kkd_bonus": 0, "officer_path": false}
+        ]
+    };
+
+    // ----------------------------------------------------------------------
+    // ФУНКЦІЇ ІНІЦІАЛІЗАЦІЇ ФОРМИ
+    // ----------------------------------------------------------------------
+    function populateSelects() {
+        const serviceTimeSelect = document.getElementById('serviceTime');
+        const rankSelect = document.getElementById('rank');
+        const positionSelect = document.getElementById('position');
+        const educationSelect = document.getElementById('education');
+        const skillsContainer = document.getElementById('skillsContainer');
+
+        // 1. Час служби
+        db.service_time.forEach(item => {
+            serviceTimeSelect.add(new Option(item.display, item.value));
+        });
+
+        // 2. Звання
+        db.ranks.forEach(rank => {
+            rankSelect.add(new Option(rank.title, rank.id));
+        });
+
+        // 3. Посада
+        db.positions.forEach(pos => {
+            positionSelect.add(new Option(pos, pos));
+        });
+
+        // 4. Навички (Чекбокси)
+        db.skills_list.forEach((skill) => {
+            skillsContainer.innerHTML += `
+                <label>
+                    <input type="checkbox" name="skill" value="${skill.name}" data-kkd="${skill.kkd_boost}">
+                    ${skill.name}
+                </label>
+            `;
+        });
+
+        // 5. Освіта
+        db.education_bonus.forEach(edu => {
+            educationSelect.add(new Option(edu.level, edu.level));
+        });
+    }
+
+    // ----------------------------------------------------------------------
+    // ФУНКЦІЯ РОЗРАХУНКУ ЧАСУ ДО ДЕМОБІЛІЗАЦІЇ
+    // ----------------------------------------------------------------------
+    function calculateContractEnd(startDateString) {
+        // Визначаємо приблизний термін контракту.
+        // Оскільки термін контракту може бути різним (наприклад, 3 роки, 5 років, до кінця ОС), 
+        // для військовослужбовців рядового, сержантського та старшинського складу 
+        // стандартний термін контракту зазвичай становить 3 роки.
+        // В умовах воєнного стану, контракт діє до оголошення демобілізації або кінця контракту (що настане пізніше).
+        
+        const now = new Date();
+        const contractStartDate = new Date(startDateString);
+        
+        if (isNaN(contractStartDate)) {
+            return {
+                status: "Невідома дата", 
+                countdown: "--", 
+                note: "Будь ласка, введіть коректну дату."
+            };
+        }
+
+        // Обчислюємо 3-річний термін (як приклад)
+        const threeYearsLater = new Date(contractStartDate);
+        threeYearsLater.setFullYear(threeYearsLater.getFullYear() + 3);
+        
+        let diffTime = threeYearsLater.getTime() - now.getTime();
+        
+        // Перевірка на "До кінця життя" (в умовах воєнного стану)
+        let noteText = "";
+        let countdownText = "";
+        let contractStatusLabel = "Залишилось до кінця контракту (3 роки):";
+
+        if (diffTime <= 0) {
+            // Контракт формально закінчився, але діє до кінця ОС
+            contractStatusLabel = "Статус у Воєнний Час:";
+            countdownText = "ДО КІНЦЯ ВОЄННОГО СТАНУ";
+            noteText = "Ваш контракт продовжується до оголошення демобілізації.";
+            document.querySelector('.stat-block.countdown').style.backgroundColor = '#A52A2A'; // Бордовий
+        } else {
+            // Розділяємо залишок часу
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
+            const years = Math.floor(diffDays / 365);
+            const months = Math.floor((diffDays % 365) / 30);
+            const days = diffDays - (years * 365) - (months * 30);
+
+            countdownText = `${years} Р. ${months} МІС. ${days} ДН.`;
+            noteText = `Цей розрахунок базується на стандартному 3-річному терміні контракту.`;
+            document.querySelector('.stat-block.countdown').style.backgroundColor = '#008000'; // Зелений
+        }
+
+        return {
+            status: contractStatusLabel,
+            countdown: countdownText,
+            note: noteText
+        };
+    }
+
+    // ----------------------------------------------------------------------
+    // ФУНКЦІЯ ОБРОБКИ ФОРМИ ТА РОЗРАХУНКУ
+    // ----------------------------------------------------------------------
+    function handleFormSubmit(event) {
+        event.preventDefault();
+        
+        const serviceTime = document.getElementById('serviceTime').value;
+        const currentRankId = parseInt(document.getElementById('rank').value);
+        const educationLevel = document.getElementById('education').value;
+        const contractDate = document.getElementById('contractDate').value;
+        const selectedSkills = Array.from(document.querySelectorAll('#skillsContainer input[name="skill"]:checked'));
+
+        const currentRank = db.ranks.find(r => r.id === currentRankId);
+        const educationData = db.education_bonus.find(e => e.level === educationLevel);
+        
+        // 1. РОЗРАХУНОК ККД
+        let kkd = 10; // Базовий ККД
+        if (educationData) {
+            kkd += educationData.kkd_bonus;
+        }
+        selectedSkills.forEach(skillCheckbox => {
+            kkd += parseInt(skillCheckbox.dataset.kkd);
+        });
+        kkd = Math.min(kkd, 90); 
+
+        // 2. РОЗРАХУНОК НАСТУПНОГО ЗВАННЯ ТА РЕКОМЕНДАЦІЙ
+        let nextRankTitle = "Досягнуто Максимуму";
+        let recommendationHTML = '';
+
+        if (educationData.officer_path && currentRank.id <= 10) { 
+            nextRankTitle = "Лейтенант (Офіцерські Курси)";
+            recommendationHTML += `<li>Пройти <strong>Офіцерські Курси</strong> (для отримання звання <strong>Лейтенант</strong>) завдяки Вашій <strong>Вищій освіті</strong>.</li>`;
+        } else if (currentRank && currentRank.next_rank_id) {
+            const nextRank = db.ranks.find(r => r.id === currentRank.next_rank_id);
+            nextRankTitle = nextRank ? nextRank.title : "Подальше підвищення за вислугою";
+            recommendationHTML += `<li>Продовжувати бездоганну службу для отримання звання <strong>${nextRankTitle}</strong>.</li>`;
+        } 
+        
+        const missingSkills = db.skills_list.filter(skill => 
+            !selectedSkills.some(s => s.value === skill.name)
+        );
+        if (missingSkills.length > 0) {
+            recommendationHTML += `<li>Опанувати додаткові навички для досягнення ККД <strong>90%</strong>.</li>`;
+        }
+
+        // 3. АЧІВКА (ПОДВИГ)
+        const achievement = db.achievements.find(a => a.time === serviceTime);
+        
+        // 4. ВІДЛІК ДО ДЕМОБІЛІЗАЦІЇ
+        const contractResult = calculateContractEnd(contractDate);
+
+        // --- ВІДОБРАЖЕННЯ РЕЗУЛЬТАТІВ ---
+        
+        // Контракт
+        document.getElementById('contractStatusLabel').textContent = contractResult.status;
+        document.getElementById('contractCountdown').textContent = contractResult.countdown;
+        document.getElementById('contractNote').textContent = contractResult.note;
+        
+        // Звання
+        document.getElementById('currentRankDisplay').textContent = currentRank.title;
+        document.getElementById('nextRankDisplay').textContent = nextRankTitle;
+        const currentRankImage = document.getElementById('currentRankImage');
+        currentRankImage.innerHTML = `<p>${currentRank.title}</p><small>(Фото тут)</small>`; // Заглушка
+        
+        // Ачівка
+        document.getElementById('achievementTitle').textContent = achievement.title;
+        document.getElementById('achievementDescription').textContent = achievement.description;
+        
+        // Рекомендації
+        document.getElementById('recommendations').querySelector('ul').innerHTML = recommendationHTML || '<li>Ваш профіль ідеальний!</li>';
+        
+        // ККД
+        document.getElementById('kkdValue').textContent = `${kkd}%`;
+        const kkdBar = document.getElementById('kkdBar');
+        kkdBar.style.width = `${kkd}%`;
+        kkdBar.textContent = `${kkd}%`;
+
+        // Показати секцію результатів та прокрутити
+        document.getElementById('results').style.display = 'block';
+        window.scrollTo({ top: document.getElementById('results').offsetTop, behavior: 'smooth' });
+    }
+
+    // ----------------------------------------------------------------------
+    // ОСНОВНА ЛОГІКА: ЗАПУСК
+    // ----------------------------------------------------------------------
+    document.addEventListener('DOMContentLoaded', () => {
+        populateSelects();
+        document.getElementById('analysisForm').addEventListener('submit', handleFormSubmit);
+    });
+</script>
+
+</body>
+</html>
