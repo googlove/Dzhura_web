@@ -1,15 +1,25 @@
+
 // --- DATA BASE (JSON) ---
 const DB = {
     ranks_army: [
         { id: 1, title: "Рекрут", days: 0 }, 
-        { id: 2, title: "Солдат", days: 120 }, { id: 3, title: "Старший солдат", days: 180 },
-        { id: 4, title: "Молодший сержант", days: 360 }, { id: 5, title: "Сержант", days: 730 }, 
-        { id: 6, title: "Старший сержант", days: 1095 }, { id: 7, title: "Головний сержант", days: 1460 }, 
-        { id: 8, title: "Штаб-сержант", days: 1825 }, { id: 9, title: "Майстер-сержант", days: 2190 },
-        { id: 10, title: "Старший майстер-сержант", days: 2555 }, { id: 11, title: "Головний майстер-сержант", days: 2920 },
-        { id: 12, title: "Молодший лейтенант", days: 1460 }, { id: 13, title: "Лейтенант", days: 1825 }, 
-        { id: 14, title: "Старший лейтенант", days: 2190 }, { id: 15, title: "Капітан", days: 2555 }, 
-        { id: 16, title: "Майор", days: 2920 }, { id: 17, title: "Підполковник", days: 3285 }, { id: 18, title: "Полковник", days: 3650 }
+        { id: 2, title: "Солдат", days: 120 }, 
+        { id: 3, title: "Старший солдат", days: 180 },
+        { id: 4, title: "Молодший сержант", days: 360 }, 
+        { id: 5, title: "Сержант", days: 730 }, 
+        { id: 6, title: "Старший сержант", days: 1095 }, 
+        { id: 7, title: "Головний сержант", days: 1460 }, 
+        { id: 8, title: "Штаб-сержант", days: 1825 }, 
+        { id: 9, title: "Майстер-сержант", days: 2190 },
+        { id: 10, title: "Старший майстер-сержант", days: 2555 }, 
+        { id: 11, title: "Головний майстер-сержант", days: 2920 },
+        { id: 12, title: "Молодший лейтенант", days: 1460 }, 
+        { id: 13, title: "Лейтенант", days: 1825 }, 
+        { id: 14, title: "Старший лейтенант", days: 2190 }, 
+        { id: 15, title: "Капітан", days: 2555 }, 
+        { id: 16, title: "Майор", days: 2920 }, 
+        { id: 17, title: "Підполковник", days: 3285 }, 
+        { id: 18, title: "Полковник", days: 3650 }
     ],
     ranks_navy: [
         // Рядовий склад
@@ -22,12 +32,11 @@ const DB = {
         { id: 5, title: "Старшина 1 статті", days: 730 }, 
         { id: 6, title: "Головний старшина", days: 1095 }, 
         
-        // Старший старшинський склад (оновлення: замість "Головний корабельний старшина" - "Штаб-старшина")
-        // Згідно з новими правилами, "Головний корабельний старшина" тепер перед "Штаб-старшина"
+        // Старший старшинський склад
         { id: 7, title: "Головний корабельний старшина", days: 1460 }, 
         { id: 8, title: "Штаб-старшина", days: 1825 }, 
         
-        // Вищий старшинський склад (Майстер-старшини)
+        // Вищий старшинський склад (майстер-старшини)
         { id: 9, title: "Майстер-старшина", days: 2190 },
         { id: 10, title: "Старший майстер-старшина", days: 2555 }, 
         { id: 11, title: "Головний майстер-старшина", days: 2920 },
@@ -36,214 +45,210 @@ const DB = {
         { id: 12, title: "Молодший лейтенант", days: 1460 }, 
         { id: 13, title: "Лейтенант", days: 1825 }, 
         { id: 14, title: "Старший лейтенант", days: 2190 }, 
-        { id: 15, title: "Капітан-лейтенант", days: 2555 }, // Капітан-лейтенант замість Капітана
+        { id: 15, title: "Капітан-лейтенант", days: 2555 },
         
         // Старший офіцерський склад
-        { id: 16, title: "Капітан 3 рангу", days: 2920 }, // Капітан 3 рангу замість Майора
-        { id: 17, title: "Капітан 2 рангу", days: 3285 }, // Капітан 2 рангу замість Підполковника
-        { id: 18, title: "Капітан 1 рангу", days: 3650 }, // Капітан 1 рангу замість Полковника
+        { id: 16, title: "Капітан 3 рангу", days: 2920 },
+        { id: 17, title: "Капітан 2 рангу", days: 3285 },
+        { id: 18, title: "Капітан 1 рангу", days: 3650 },
 
         // Вищий офіцерський склад
-        { id: 19, title: "Коммодор", days: 4015 }, // Додано
-        { id: 20, title: "Контр-адмірал", days: 4380 }, // Контр-адмірал
-        { id: 21, title: "Віце-адмірал", days: 4745 }, // Віце-адмірал
-        { id: 22, title: "Адмірал", days: 5110 } // Адмірал
+        { id: 19, title: "Коммодор", days: 4015 },
+        { id: 20, title: "Контр-адмірал", days: 4380 },
+        { id: 21, title: "Віце-адмірал", days: 4745 },
+        { id: 22, title: "Адмірал", days: 5110 }
     ],
     skills: [
-    // ============================================
-    // ⚓ Бойові / палубні спеціальності
-    // ============================================
-    {
-        id: 'komendor',
-        category: 'Бойові / палуба',
-        icon: 'shield',
-        title: 'Комендор',
-        description: 'Оборона корабля, робота з озброєнням, порядок та безпека екіпажу.'
-    },
-    {
-        id: 'boatswain',
-        category: 'Бойові / палуба',
-        icon: 'anchor',
-        title: 'Боцман',
-        description: 'Такелаж, швартування, якірні операції, контроль палубного спорядження.'
-    },
-    {
-        id: 'marsovy',
-        category: 'Бойові / палуба',
-        icon: 'binoculars',
-        title: 'Марсовий',
-        description: 'Спостереження за горизонтом, виявлення загроз, сигнальні прилади.'
-    },
+        // ⚓ Бойові / палубні спеціальності
+        {
+            id: 'komendor',
+            category: 'Бойові / палуба',
+            icon: 'shield',
+            title: 'Комендор',
+            description: 'Оборона корабля, робота з озброєнням, порядок та безпека екіпажу.'
+        },
+        {
+            id: 'boatswain',
+            category: 'Бойові / палуба',
+            icon: 'anchor',
+            title: 'Боцман',
+            description: 'Такелаж, швартування, якірні операції, контроль палубного спорядження.'
+        },
+        {
+            id: 'marsovy',
+            category: 'Бойові / палуба',
+            icon: 'binoculars',
+            title: 'Марсовий',
+            description: 'Спостереження за горизонтом, виявлення загроз, сигнальні прилади.'
+        },
 
-    // ============================================
-    // 🧭 Місток і керування кораблем
-    // ============================================
-    {
-        id: 'helm_signalman',
-        category: 'Місток і керування',
-        icon: 'navigation',
-        title: 'Рульовий-сигнальник',
-        description: 'Керування кораблем, ведення курсу, сигнали і вахтове управління.'
-    },
-    {
-        id: 'senior_helm',
-        category: 'Місток і керування',
-        icon: 'compass',
-        title: 'Старший рульовий-сигнальник',
-        description: 'Керування у складних умовах, навчання молодшого складу, штурманська допомога.'
-    },
+        // 🧭 Місток і керування кораблем
+        {
+            id: 'helm_signalman',
+            category: 'Місток і керування',
+            icon: 'navigation',
+            title: 'Рульовий-сигнальник',
+            description: 'Керування кораблем, ведення курсу, сигнали і вахтове управління.'
+        },
+        {
+            id: 'senior_helm',
+            category: 'Місток і керування',
+            icon: 'compass',
+            title: 'Старший рульовий-сигнальник',
+            description: 'Керування у складних умовах, навчання молодшого складу, штурманська допомога.'
+        },
 
-    // ============================================
-    // 🛰 Корабельні системи, звʼязок, КБУ
-    // ============================================
-    {
-        id: 'operator_kbu',
-        category: 'Корабельні системи / зв’язок',
-        icon: 'satellite',
-        title: 'Оператор КБУ',
-        description: 'Дрони, зв’язок, Starlink, робота з ПК, налаштування систем керування та спостереження.'
-    },
-    {
-        id: 'senior_operator',
-        category: 'Корабельні системи / зв’язок',
-        icon: 'activity',
-        title: 'Старший оператор',
-        description: 'РЛС, комплекси зв’язку, спостереження, контроль інформаційних систем.'
-    },
+        // 🛰 Корабельні системи, звʼязок, КБУ
+        {
+            id: 'operator_kbu',
+            category: 'Корабельні системи / зв’язок',
+            icon: 'satellite',
+            title: 'Оператор КБУ',
+            description: 'Дрони, зв’язок, Starlink, робота з ПК, налаштування систем керування та спостереження.'
+        },
+        {
+            id: 'senior_operator',
+            category: 'Корабельні системи / зв’язок',
+            icon: 'activity',
+            title: 'Старший оператор',
+            description: 'РЛС, комплекси зв’язку, спостереження, контроль інформаційних систем.'
+        },
 
-    // ============================================
-    // ⚙️ Машинна команда
-    // ============================================
-    {
-        id: 'motorist',
-        category: 'Машинна команда',
-        icon: 'cog',
-        title: 'Моторист',
-        description: 'Пуск, контроль і обслуговування двигунів, насосів, компресорів та систем енергоживлення.'
-    },
-    {
-        id: 'senior_motorist',
-        category: 'Машинна команда',
-        icon: 'gauge',
-        title: 'Старший моторист',
-        description: 'Обслуговування ГЕУ, ведення журналів, контроль роботи силових агрегатів.'
-    },
-    {
-        id: 'electrician',
-        category: 'Машинна команда',
-        icon: 'zap',
-        title: 'Електрик',
-        description: 'Обслуговування освітлення, навігаційного обладнання та систем електроживлення.'
-    },
-    {
-        id: 'senior_electrician',
-        category: 'Машинна команда',
-        icon: 'plug',
-        title: 'Старший електрик',
-        description: 'Електромережі корабля, генератори, аварійні системи, діагностика та ремонт.'
-    },
+        // ⚙️ Машинна команда
+        {
+            id: 'motorist',
+            category: 'Машинна команда',
+            icon: 'cog',
+            title: 'Моторист',
+            description: 'Пуск, контроль і обслуговування двигунів, насосів, компресорів та систем енергоживлення.'
+        },
+        {
+            id: 'senior_motorist',
+            category: 'Машинна команда',
+            icon: 'gauge',
+            title: 'Старший моторист',
+            description: 'Обслуговування ГЕУ, ведення журналів, контроль роботи силових агрегатів.'
+        },
+        {
+            id: 'electrician',
+            category: 'Машинна команда',
+            icon: 'zap',
+            title: 'Електрик',
+            description: 'Обслуговування освітлення, навігаційного обладнання та систем електроживлення.'
+        },
+        {
+            id: 'senior_electrician',
+            category: 'Машинна команда',
+            icon: 'plug',
+            title: 'Старший електрик',
+            description: 'Електромережі корабля, генератори, аварійні системи, діагностика та ремонт.'
+        },
 
-    // ============================================
-    // 📦 Забезпечення
-    // ============================================
-    {
-        id: 'bataler',
-        category: 'Забезпечення',
-        icon: 'package',
-        title: 'Баталер',
-        description: 'Постачання продуктів, інвентарю, видача спорядження та контроль запасів на борту.'
-    },
+        // 📦 Забезпечення
+        {
+            id: 'bataler',
+            category: 'Забезпечення',
+            icon: 'package',
+            title: 'Баталер',
+            description: 'Постачання продуктів, інвентарю, видача спорядження та контроль запасів на борту.'
+        },
 
-    // ============================================
-    // 🧭 Командири відділень
-    // ============================================
-    {
-        id: 'commander_operators',
-        category: 'Командири відділень',
-        icon: 'broadcast',
-        title: 'Командир відділення операторів',
-        description: 'Керівництво операторами КБУ, розподіл завдань, контроль виконання та техніки.'
-    },
-    {
-        id: 'commander_helm',
-        category: 'Командири відділень',
-        icon: 'radar',
-        title: 'Командир рульових-сигнальників',
-        description: 'Організація вахт, підготовка штурманських постів, контроль точності курсу.'
-    },
-    {
-        id: 'commander_komendors',
-        category: 'Командири відділень',
-        icon: 'shield-alert',
-        title: 'Командир комендорів',
-        description: 'Координація корабельної охорони, безпека, організація чергувань та дій у разі тривоги.'
-    },
+        // 🧭 Командири відділень
+        {
+            id: 'commander_operators',
+            category: 'Командири відділень',
+            icon: 'broadcast',
+            title: 'Командир відділення операторів',
+            description: 'Керівництво операторами КБУ, розподіл завдань, контроль виконання та техніки.'
+        },
+        {
+            id: 'commander_helm',
+            category: 'Командири відділень',
+            icon: 'radar',
+            title: 'Командир рульових-сигнальників',
+            description: 'Організація вахт, підготовка штурманських постів, контроль точності курсу.'
+        },
+        {
+            id: 'commander_komendors',
+            category: 'Командири відділень',
+            icon: 'shield-alert',
+            title: 'Командир комендорів',
+            description: 'Координація корабельної охорони, безпека, організація чергувань та дій у разі тривоги.'
+        },
 
-    // ============================================
-    // 📊 Досвід / статистика (як прапор “я це вже робив”)
-    // ============================================
-    {
-        id: 'miles_helming',
-        category: 'Досвід / статистика',
-        icon: 'map',
-        title: 'Пройдені морські милі',
-        description: 'Мав реальний досвід керування кораблем на маршрутах.'
-    },
-    {
-        id: 'watch_hours',
-        category: 'Досвід / статистика',
-        icon: 'clock',
-        title: 'Години вахти',
-        description: 'Відпрацьовано багато годин на вахті (місток / палуба / машинне).'
-    },
-    {
-        id: 'machinery_hours',
-        category: 'Досвід / статистика',
-        icon: 'cpu',
-        title: 'Машинні години',
-        description: 'Працював у машинному відділенні, мав досвід з ГЕУ та механізмами.'
-    },
-    {
-        id: 'docking_operations',
-        category: 'Досвід / статистика',
-        icon: 'anchor',
-        title: 'Швартові операції',
-        description: 'Брав участь у швартуванні, якірних операціях, маневруванні біля причалу.'
-    },
-    {
-        id: 'combat_alerts',
-        category: 'Досвід / статистика',
-        icon: 'alarm-clock',
-        title: 'Бойові тривоги',
-        description: 'Має досвід відпрацювання бойових тривог на кораблі.'
-    },
-    {
-        id: 'repairs_done',
-        category: 'Досвід / статистика',
-        icon: 'wrench',
-        title: 'Ремонтні роботи',
-        description: 'Участь у ремонтах, відновленні систем та механізмів.'
-    }
-]
+        // 📊 Досвід / статистика
+        {
+            id: 'miles_helming',
+            category: 'Досвід / статистика',
+            icon: 'map',
+            title: 'Пройдені морські милі',
+            description: 'Мав реальний досвід керування кораблем на маршрутах.'
+        },
+        {
+            id: 'watch_hours',
+            category: 'Досвід / статистика',
+            icon: 'clock',
+            title: 'Години вахти',
+            description: 'Відпрацьовано багато годин на вахті (місток / палуба / машинне).'
+        },
+        {
+            id: 'machinery_hours',
+            category: 'Досвід / статистика',
+            icon: 'cpu',
+            title: 'Машинні години',
+            description: 'Працював у машинному відділенні, мав досвід з ГЕУ та механізмами.'
+        },
+        {
+            id: 'docking_operations',
+            category: 'Досвід / статистика',
+            icon: 'anchor',
+            title: 'Швартові операції',
+            description: 'Брав участь у швартуванні, якірних операціях, маневруванні біля причалу.'
+        },
+        {
+            id: 'combat_alerts',
+            category: 'Досвід / статистика',
+            icon: 'alarm-clock',
+            title: 'Бойові тривоги',
+            description: 'Має досвід відпрацювання бойових тривог на кораблі.'
+        },
+        {
+            id: 'repairs_done',
+            category: 'Досвід / статистика',
+            icon: 'wrench',
+            title: 'Ремонтні роботи',
+            description: 'Участь у ремонтах, відновленні систем та механізмів.'
+        }
+    ]
+}; // кінець DB
 
 let AppData = {
     name: 'Джура',
     startDate: new Date(),
-    serviceType: 'mobilized',
+    serviceType: 'mobilized', // 'mobilized' | 'contract'
     contractYears: 3,
     currentRankId: 1,
     isNavy: false,
-    theme: 'dark' 
+    theme: 'dark'
 };
 
-const STATUS_DAYS = 365; // умовна тривалість для відображення прогресу при мобілізації
+const STATUS_DAYS = 365;
+
+// --- MEDALS DEFINITION ---
+const MEDALS = [
+    { id: 'first_day',   title: 'Перший день',          desc: 'Початок шляху. В строю хоча б 1 день.',       check: ({ days }) => days >= 1 },
+    { id: 'week',        title: 'Тиждень у строю',      desc: '7 днів служби позаду.',                      check: ({ days }) => days >= 7 },
+    { id: 'month',       title: 'Бойовий місяць',       desc: '30+ днів без відкату.',                      check: ({ days }) => days >= 30 },
+    { id: 'hundred',     title: 'Сотня днів',           desc: '100 днів служби — серйозна заявка.',         check: ({ days }) => days >= 100 },
+    { id: 'half_year',   title: 'Пів року',             desc: '180+ днів на позиціях.',                     check: ({ days }) => days >= 180 },
+    { id: 'year',        title: 'Рік у строю',          desc: '365+ днів служби. Повний бойовий цикл.',     check: ({ days }) => days >= 365 },
+    { id: 'skills_3',    title: 'Універсальний боєць',  desc: 'Маєш 3+ активні бойові навички.',            check: ({ skills }) => skills >= 3 },
+    { id: 'full_kkd',    title: 'Сотка ККД',            desc: 'Досягнуто 100% бойового ККД.',               check: ({ kkd }) => kkd >= 100 }
+];
 
 // --- VIEW / NAVIGATION ---
-
 function toggleView(viewId) {
-    const views = document.querySelectorAll('.tab-content');
-    views.forEach(view => view.classList.remove('active'));
-
+    document.querySelectorAll('.tab-content').forEach(view => view.classList.remove('active'));
     const activeView = document.getElementById(`view-${viewId}`);
     if (activeView) activeView.classList.add('active');
 
@@ -255,90 +260,35 @@ function toggleView(viewId) {
         renderSkills();
         calculateKKD();
         updateAchievement();
+        if (typeof renderMedals === 'function') renderMedals();
     }
 
     if (viewId === 'stats') {
         renderMonthlyStats();
+        if (typeof renderMedals === 'function') renderMedals();
     }
 
     localStorage.setItem('DzhuraLastView', viewId);
 }
 
 function toggleTheme() {
-    let themes = ['dark', 'light', 'oled'];
-    let currentThemeIndex = themes.indexOf(AppData.theme);
-    let nextThemeIndex = (currentThemeIndex + 1) % themes.length;
-    AppData.theme = themes[nextThemeIndex];
-    
+    const themes = ['dark', 'light', 'oled'];
+    const currentIndex = themes.indexOf(AppData.theme);
+    const nextIndex = (currentIndex + 1) % themes.length;
+    AppData.theme = themes[nextIndex];
+
     document.body.className = `theme-${AppData.theme} min-h-screen w-full relative`;
-    document.getElementById('theme-icon').setAttribute(
-        'data-lucide',
-        AppData.theme === 'light' ? 'sun' : AppData.theme === 'oled' ? 'circle' : 'moon'
-    );
-    
-    if (window.lucide) {
-        lucide.createIcons();
-    }
+    document
+        .getElementById('theme-icon')
+        .setAttribute('data-lucide', AppData.theme === 'light' ? 'sun' : AppData.theme === 'oled' ? 'circle' : 'moon');
+
+    if (window.lucide) lucide.createIcons();
+
     saveData(false);
-    updateDisplay(); 
+    updateDisplay();
 }
 
-// --- MEDALS DEFINITION ---
-
-const MEDALS = [
-    {
-        id: 'first_day',
-        title: 'Перший день',
-        desc: 'Початок шляху. В строю хоча б 1 день.',
-        check: ({ days }) => days >= 1,
-    },
-    {
-        id: 'week',
-        title: 'Тиждень у строю',
-        desc: '7 днів служби позаду.',
-        check: ({ days }) => days >= 7,
-    },
-    {
-        id: 'month',
-        title: 'Бойовий місяць',
-        desc: '30+ днів без відкату.',
-        check: ({ days }) => days >= 30,
-    },
-    {
-        id: 'hundred',
-        title: 'Сотня днів',
-        desc: '100 днів служби — серйозна заявка.',
-        check: ({ days }) => days >= 100,
-    },
-    {
-        id: 'half_year',
-        title: 'Пів року',
-        desc: '180+ днів на позиціях.',
-        check: ({ days }) => days >= 180,
-    },
-    {
-        id: 'year',
-        title: 'Рік у строю',
-        desc: '365+ днів служби. Повний бойовий цикл.',
-        check: ({ days }) => days >= 365,
-    },
-    {
-        id: 'skills_3',
-        title: 'Універсальний боєць',
-        desc: 'Маєш 3+ активні бойові навички.',
-        check: ({ skills }) => skills >= 3,
-    },
-    {
-        id: 'full_kkd',
-        title: 'Сотка ККД',
-        desc: 'Досягнуто 100% бойового ККД.',
-        check: ({ kkd }) => kkd >= 100,
-    },
-];
-
-
 // --- SAVE / LOAD ---
-
 function saveData(update = true) {
     AppData.name = document.getElementById('input-name').value || 'Джура';
 
@@ -348,7 +298,6 @@ function saveData(update = true) {
     if (dateInputValue) {
         const parsed = new Date(dateInputValue);
         if (!isNaN(parsed)) {
-            // не дозволяємо дату в майбутньому
             AppData.startDate = parsed > now ? now : parsed;
         } else if (!AppData.startDate || isNaN(new Date(AppData.startDate))) {
             AppData.startDate = now;
@@ -357,7 +306,7 @@ function saveData(update = true) {
         AppData.startDate = now;
     }
 
-    AppData.currentRankId = parseInt(document.getElementById('input-rank').value) || 1;
+    AppData.currentRankId = parseInt(document.getElementById('input-rank').value, 10) || 1;
     AppData.isNavy = document.getElementById('is-navy').checked;
     
     if (AppData.serviceType === 'mobilized') {
@@ -368,6 +317,7 @@ function saveData(update = true) {
     
     document.getElementById('user-name-display').textContent = AppData.name;
     updateRankDisplay();
+
     if (update) {
         updateDisplay();
         alert('Дані збережено!');
@@ -386,14 +336,11 @@ function loadData() {
     document.getElementById('is-navy').checked = AppData.isNavy;
     
     document.body.className = `theme-${AppData.theme} min-h-screen w-full relative`;
-    document.getElementById('theme-icon').setAttribute(
-        'data-lucide',
-        AppData.theme === 'light' ? 'sun' : AppData.theme === 'oled' ? 'circle' : 'moon'
-    );
-    
-    if (window.lucide) {
-        lucide.createIcons();
-    }
+    document
+        .getElementById('theme-icon')
+        .setAttribute('data-lucide', AppData.theme === 'light' ? 'sun' : AppData.theme === 'oled' ? 'circle' : 'moon');
+
+    if (window.lucide) lucide.createIcons();
 
     generateRankOptions(AppData.isNavy);
     document.getElementById('input-rank').value = AppData.currentRankId;
@@ -411,7 +358,6 @@ function loadData() {
 }
 
 // --- SERVICE TYPE LOGIC ---
-
 function setServiceType(type, save = true) {
     AppData.serviceType = type;
     const mobilizedBtn = document.getElementById('btn-mobilized');
@@ -455,7 +401,6 @@ function setContractYears(years, save = true) {
 }
 
 // --- RANK LOGIC ---
-
 function generateRankOptions(isNavy) {
     const rankSelect = document.getElementById('input-rank');
     rankSelect.innerHTML = '';
@@ -484,6 +429,7 @@ function updateRankDisplay() {
     document.getElementById('rank-display').textContent = currentRank ? currentRank.title.toUpperCase() : 'РЕКРУТ';
 }
 
+// --- HELPERS (medals / stats) ---
 function getTotalServiceDays() {
     const now = new Date();
     const start = AppData.startDate;
@@ -493,7 +439,6 @@ function getTotalServiceDays() {
 }
 
 function computeKKDAndSkills() {
-    // читаємо навички не з DOM, а з localStorage
     const savedSkills = JSON.parse(localStorage.getItem('DzhuraSkills') || '[]');
     const skillsCount = savedSkills.length;
 
@@ -510,16 +455,14 @@ function computeKKDAndSkills() {
     return { kkd, skillsCount };
 }
 
-
+// --- SKILLS RENDER ---
 function renderSkills() {
     const skillsList = document.getElementById('skills-list');
     if (!skillsList) return;
     skillsList.innerHTML = '';
 
-    // Завантажуємо стан навичок з LS
-    let savedSkills = JSON.parse(localStorage.getItem('DzhuraSkills') || '[]');
+    const savedSkills = JSON.parse(localStorage.getItem('DzhuraSkills') || '[]');
 
-    // Групуємо навички по категоріях
     const grouped = {};
     DB.skills.forEach(skill => {
         const cat = skill.category || 'Інше';
@@ -530,13 +473,11 @@ function renderSkills() {
     Object.keys(grouped).forEach(categoryName => {
         const skillsInCategory = grouped[categoryName];
 
-        // Заголовок категорії
         const header = document.createElement('p');
         header.className = 'text-[10px] uppercase tracking-wider opacity-50 mt-3 mb-1';
         header.textContent = categoryName;
         skillsList.appendChild(header);
 
-        // Самі скіли
         skillsInCategory.forEach(skill => {
             const isChecked = savedSkills.includes(skill.id);
             const skillItem = document.createElement('div');
@@ -564,43 +505,70 @@ function renderSkills() {
         });
     });
 
-    if (window.lucide) {
-        lucide.createIcons();
-    }
+    if (window.lucide) lucide.createIcons();
 
-    // Навішуємо обробники після вставки
     document.querySelectorAll('#skills-list input[type="checkbox"]').forEach(cb => {
         cb.addEventListener('change', () => toggleSkill(cb));
     });
 }
 
-function toggleView(viewId) {
-    const views = document.querySelectorAll('.tab-content');
-    views.forEach(view => view.classList.remove('active'));
-
-    const activeView = document.getElementById(`view-${viewId}`);
-    if (activeView) activeView.classList.add('active');
-
-    document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('nav-active'));
-    const activeNavBtn = document.getElementById(`nav-${viewId}`);
-    if (activeNavBtn) activeNavBtn.classList.add('nav-active');
-
-    if (viewId === 'status') {
-        renderSkills();
-        calculateKKD();
-        updateAchievement();
-        renderMedals();
+function toggleSkill(checkbox) {
+    const skillId = checkbox.dataset.skillId;
+    let savedSkills = JSON.parse(localStorage.getItem('DzhuraSkills') || '[]');
+    
+    if (checkbox.checked) {
+        if (!savedSkills.includes(skillId)) {
+            savedSkills.push(skillId);
+        }
+    } else {
+        savedSkills = savedSkills.filter(id => id !== skillId);
     }
+    
+    localStorage.setItem('DzhuraSkills', JSON.stringify(savedSkills));
+    calculateKKD();
+}
 
-    if (viewId === 'stats') {
-        renderMonthlyStats();
-    }
+// --- MEDALS RENDER ---
+function renderMedals() {
+    const medalsList = document.getElementById('medals-list');
+    const medalsSummary = document.getElementById('medals-summary');
+    if (!medalsList || !medalsSummary) return;
 
-    localStorage.setItem('DzhuraLastView', viewId);
+    medalsList.innerHTML = '';
+
+    const days = getTotalServiceDays();
+    const { kkd, skillsCount } = computeKKDAndSkills();
+    const context = { days, kkd, skills: skillsCount };
+
+    const unlocked = MEDALS.filter(m => m.check(context));
+    const locked = MEDALS.filter(m => !m.check(context));
+
+    medalsSummary.textContent =
+        `Відкрито медалей: ${unlocked.length} / ${MEDALS.length}. ` +
+        `Днів служби: ${days}, ККД: ${kkd}%, навичок: ${skillsCount}.`;
+
+    const all = [
+        ...unlocked.map(m => ({ ...m, unlocked: true })),
+        ...locked.map(m => ({ ...m, unlocked: false }))
+    ];
+
+    all.forEach(medal => {
+        const div = document.createElement('div');
+        div.className = `medal-item ${medal.unlocked ? 'medal-unlocked' : 'medal-locked'}`;
+        div.innerHTML = `
+            <div class="medal-header">
+                <i data-lucide="${medal.unlocked ? 'medal' : 'circle'}" class="w-4 h-4 medal-icon"></i>
+                <span class="medal-title">${medal.title}</span>
+            </div>
+            <p class="medal-desc">${medal.desc}</p>
+        `;
+        medalsList.appendChild(div);
+    });
+
+    if (window.lucide) lucide.createIcons();
 }
 
 // --- DISPLAY & TIMER LOGIC ---
-
 function updateDisplay() {
     updateRankDisplay();
     const now = new Date();
@@ -620,7 +588,6 @@ function updateDisplay() {
     const passedDurationMs = now - start;
     const remainingDurationMs = end - now;
 
-    // Якщо служба ще не почалась
     if (now < start) {
         document.getElementById('percent-display').innerHTML =
             `0<span class="text-2xl text-blue-500">%</span>`;
@@ -638,16 +605,16 @@ function updateDisplay() {
     let remainingDays = Math.ceil(remainingDurationMs / (1000 * 60 * 60 * 24));
 
     if (remainingDurationMs <= 0) {
-        // Дембель
         passedDays = totalDays;
         remainingDays = 0;
-        document.getElementById('percent-display').innerHTML = `100<span class="text-2xl text-green-500">%</span>`;
+        document.getElementById('percent-display').innerHTML =
+            `100<span class="text-2xl text-green-500">%</span>`;
         document.getElementById('days-left').textContent = '0';
         document.getElementById('progress-label').textContent = 'ДЕМБЕЛЬ!';
         document.getElementById('days-ratio').textContent = `${passedDays} / ${totalDays} днів`;
         document.getElementById('counter-years').textContent = Math.floor(totalDays / 365);
-        document.getElementById('counter-months').textContent = (Math.floor(totalDays / 30) % 12);
-        document.getElementById('counter-days').textContent = (totalDays % 30);
+        document.getElementById('counter-months').textContent = Math.floor(totalDays / 30) % 12;
+        document.getElementById('counter-days').textContent = totalDays % 30;
         generateRiceMarks(100);
         return;
     }
@@ -658,7 +625,6 @@ function updateDisplay() {
     document.getElementById('days-left').textContent = remainingDays;
     document.getElementById('days-ratio').textContent = `${passedDays} / ${totalDays} днів`;
 
-    // Розбиваємо на роки/місяці/дні
     let tempDate = new Date(start.getTime());
     
     let years = 0;
@@ -703,16 +669,13 @@ function generateRiceMarks(percentage) {
         line.setAttribute('stroke-linecap', 'round');
         line.classList.add(isPassed ? 'rice-mark-active' : 'rice-mark-inactive');
         
-        if (!isPassed) {
-            line.style.opacity = '0.7';
-        }
+        if (!isPassed) line.style.opacity = '0.7';
 
         riceCircle.appendChild(line);
     }
 }
 
-// --- STATUS: KKD, Skills, Achievements ---
-
+// --- STATUS: KKD, Achievements ---
 function calculateKKD() {
     let kkd = 10;
     
@@ -722,7 +685,7 @@ function calculateKKD() {
         kkd += (currentRank.id - 1) * 4;
     }
 
-    const selectedSkills = document.querySelectorAll('#skills-list input:checked').length;
+    const selectedSkills = document.querySelectorAll('#skills-list input[type="checkbox"]:checked').length;
     kkd += selectedSkills * 16; 
     kkd = Math.min(100, kkd);
 
@@ -730,9 +693,9 @@ function calculateKKD() {
     const kkdBar = document.getElementById('kkd-bar');
     const kkdMiniDisplay = document.getElementById('kkd-mini-display');
 
-    kkdValue.textContent = `${kkd}%`;
-    kkdBar.style.width = `${kkd}%`;
-    kkdMiniDisplay.textContent = `${kkd}%`;
+    if (kkdValue) kkdValue.textContent = `${kkd}%`;
+    if (kkdBar) kkdBar.style.width = `${kkd}%`;
+    if (kkdMiniDisplay) kkdMiniDisplay.textContent = `${kkd}%`;
 }
 
 function updateAchievement() {
@@ -742,97 +705,45 @@ function updateAchievement() {
     let title, desc;
     
     if (currentRank.id === 1) {
-        title = "Новобранець"; desc = "Шлях тільки починається. Вчися і слухай.";
+        title = "Новобранець"; 
+        desc = "Шлях тільки починається. Вчися і слухай.";
     } else if (currentRank.id >= 2 && currentRank.id <= 3) {
-        title = "Боєць-початківець"; desc = "Завершено первинну підготовку. Базові навички засвоєно.";
+        title = "Боєць-початківець"; 
+        desc = "Завершено первинну підготовку. Базові навички засвоєно.";
     } else if (currentRank.id >= 4 && currentRank.id <= 7) {
-        title = "Молодший Командир"; desc = "Керуєш малими підрозділами. Відповідальність зростає.";
+        title = "Молодший Командир"; 
+        desc = "Керуєш малими підрозділами. Відповідальність зростає.";
     } else if (currentRank.id >= 8 && currentRank.id <= 11) {
-        title = "Майстер-сержант"; desc = "Основа війська. Досвід, знання та стійкість.";
+        title = "Майстер-сержант"; 
+        desc = "Основа війська. Досвід, знання та стійкість.";
     } else if (currentRank.id >= 12 && currentRank.id <= 15) {
-        title = "Тактик"; desc = "Успішне планування та виконання завдань на низовому рівні.";
+        title = "Тактик"; 
+        desc = "Успішне планування та виконання завдань на низовому рівні.";
     } else if (currentRank.id >= 16) {
-        title = "Стратег"; desc = "Високий рівень управління та прийняття рішень.";
+        title = "Стратег"; 
+        desc = "Високий рівень управління та прийняття рішень.";
     } else {
-        title = "Невідомий статус"; desc = "Оновіть ваше звання в налаштуваннях.";
+        title = "Невідомий статус"; 
+        desc = "Оновіть ваше звання в налаштуваннях.";
     }
     
-    document.getElementById('achieve-title').textContent = title;
-    document.getElementById('achieve-desc').textContent = desc;
-}
-
-function renderSkills() {
-    const skillsList = document.getElementById('skills-list');
-    if (!skillsList) return;
-    skillsList.innerHTML = '';
-
-    let savedSkills = JSON.parse(localStorage.getItem('DzhuraSkills') || '[]');
-    
-    DB.skills.forEach(skill => {
-        const isChecked = savedSkills.includes(skill.id);
-        const skillItem = document.createElement('div');
-        skillItem.className = 'flex items-center justify-between p-3 bg-white/5 rounded-xl';
-        skillItem.innerHTML = `
-            <div class="flex items-start gap-3">
-                <i data-lucide="shield-check" class="w-5 h-5 text-green-400 mt-0.5"></i>
-                <div>
-                    <p class="font-medium">${skill.title}</p>
-                    <p class="text-xs opacity-50">${skill.description}</p>
-                </div>
-            </div>
-            <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" data-skill-id="${skill.id}" ${isChecked ? 'checked' : ''} class="sr-only custom-checkbox">
-                <div class="w-10 h-6 bg-gray-600 rounded-full transition-all duration-300 flex items-center justify-center">
-                    <i data-lucide="check" class="w-4 h-4 text-white ${isChecked ? 'opacity-100' : 'opacity-0'} transition-opacity"></i>
-                </div>
-            </label>
-        `;
-        skillsList.appendChild(skillItem);
-    });
-
-    if (window.lucide) {
-        lucide.createIcons();
-    }
-
-    // навішуємо обробники після вставки
-    document.querySelectorAll('#skills-list input[type="checkbox"]').forEach(cb => {
-        cb.addEventListener('change', () => toggleSkill(cb));
-    });
-}
-
-function toggleSkill(checkbox) {
-    const skillId = checkbox.dataset.skillId;
-    let savedSkills = JSON.parse(localStorage.getItem('DzhuraSkills') || '[]');
-    
-    if (checkbox.checked) {
-        if (!savedSkills.includes(skillId)) {
-            savedSkills.push(skillId);
-        }
-    } else {
-        savedSkills = savedSkills.filter(id => id !== skillId);
-    }
-    
-    localStorage.setItem('DzhuraSkills', JSON.stringify(savedSkills));
-    calculateKKD();
+    const achTitle = document.getElementById('achieve-title');
+    const achDesc = document.getElementById('achieve-desc');
+    if (achTitle) achTitle.textContent = title;
+    if (achDesc) achDesc.textContent = desc;
 }
 
 // --- MONTHLY STATS ---
-
-/**
- * Рахує скільки днів служби у кожному місяці від початку до сьогодні.
- * Повертає масив: [{ label: 'січ. 2025', days: 10 }, ...]
- */
 function computeMonthlyStats(startDate, endDate) {
     const stats = [];
     const msPerDay = 1000 * 60 * 60 * 24;
 
     if (endDate <= startDate) return stats;
 
-    // Починаємо з 1-го числа місяця початку служби
     let current = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
     const last = new Date(endDate.getFullYear(), endDate.getMonth(), 1);
 
-    while (current <= last && stats.length < 24) { // до 24 місяців
+    while (current <= last && stats.length < 24) {
         const monthStart = new Date(current);
         const monthEnd = new Date(current.getFullYear(), current.getMonth() + 1, 1);
 
@@ -894,13 +805,11 @@ function renderMonthlyStats() {
 }
 
 // --- INITIALIZATION ---
-
 window.onload = function () {
     loadData();
     const navTimer = document.getElementById('nav-timer');
     if (navTimer) navTimer.click();
 
-    // PWA: реєстрація service worker
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('sw.js')
             .catch(err => console.log('Service Worker registration failed:', err));
