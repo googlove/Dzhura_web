@@ -157,7 +157,7 @@ const DB = {
         {
             id: 'commander_operators',
             category: 'Командири відділень',
-            icon: 'broadcast',
+            icon: 'search',
             title: 'Командир відділення операторів',
             description: 'Керівництво операторами КБУ, розподіл завдань, контроль виконання та техніки.'
         },
@@ -240,7 +240,7 @@ const MEDALS = [
     { id: 'week',        title: 'Тиждень у строю',      desc: '7 днів служби позаду.',                      check: ({ days }) => days >= 7 },
     { id: 'month',       title: 'Бойовий місяць',       desc: '30+ днів без відкату.',                      check: ({ days }) => days >= 30 },
     { id: 'hundred',     title: 'Сотня днів',           desc: '100 днів служби — серйозна заявка.',         check: ({ days }) => days >= 100 },
-    { id: 'half_year',   title: 'Пів року',             desc: '180+ днів на позиціях.',                     check: ({ days }) => days >= 180 },
+    { id: 'half_year',   title: 'Пів року',             desc: '180+ днів на катері (не весь час).',                     check: ({ days }) => days >= 180 },
     { id: 'year',        title: 'Рік у строю',          desc: '365+ днів служби. Повний бойовий цикл.',     check: ({ days }) => days >= 365 },
     { id: 'skills_3',    title: 'Універсальний боєць',  desc: 'Маєш 3+ активні бойові навички.',            check: ({ skills }) => skills >= 3 },
     { id: 'full_kkd',    title: 'Сотка ККД',            desc: 'Досягнуто 100% бойового ККД.',               check: ({ kkd }) => kkd >= 100 }
