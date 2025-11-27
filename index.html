@@ -13,6 +13,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 
     <!-- Наші кастомні стилі -->
+
+<!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0f172a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body class="theme-dark min-h-screen w-full relative">
@@ -256,6 +262,28 @@
                 </div>
             </div>
         </div>
+
+
+<!-- Medals / Achievements -->
+            <div class="glass-card glass-blur rounded-3xl p-6">
+                <h3 class="font-bold mb-4 flex items-center gap-2">
+                    <i data-lucide="medal" class="w-5 h-5 text-yellow-400"></i>
+                    Медалі
+                </h3>
+
+                <div id="medals-summary" class="text-xs opacity-60 mb-3">
+                    <!-- Заповнюється JS -->
+                </div>
+
+                <div id="medals-list" class="grid grid-cols-2 gap-3">
+                    <!-- Медалі рендеряться JS -->
+                </div>
+
+                <p class="text-[10px] text-center mt-4 opacity-40">
+                    Заробляй медалі за дні служби, навички та ККД
+                </p>
+            </div>
+
 
         <!-- BOTTOM NAV (iOS Dock) -->
         <div id="bottom-nav" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 w-[90%] max-w-[380px] z-50 transition-smooth">
