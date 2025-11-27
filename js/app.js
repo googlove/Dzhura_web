@@ -88,6 +88,60 @@ function toggleTheme() {
     updateDisplay(); 
 }
 
+// --- MEDALS DEFINITION ---
+
+const MEDALS = [
+    {
+        id: 'first_day',
+        title: 'Перший день',
+        desc: 'Початок шляху. В строю хоча б 1 день.',
+        check: ({ days }) => days >= 1,
+    },
+    {
+        id: 'week',
+        title: 'Тиждень у строю',
+        desc: '7 днів служби позаду.',
+        check: ({ days }) => days >= 7,
+    },
+    {
+        id: 'month',
+        title: 'Бойовий місяць',
+        desc: '30+ днів без відкату.',
+        check: ({ days }) => days >= 30,
+    },
+    {
+        id: 'hundred',
+        title: 'Сотня днів',
+        desc: '100 днів служби — серйозна заявка.',
+        check: ({ days }) => days >= 100,
+    },
+    {
+        id: 'half_year',
+        title: 'Пів року',
+        desc: '180+ днів на позиціях.',
+        check: ({ days }) => days >= 180,
+    },
+    {
+        id: 'year',
+        title: 'Рік у строю',
+        desc: '365+ днів служби. Повний бойовий цикл.',
+        check: ({ days }) => days >= 365,
+    },
+    {
+        id: 'skills_3',
+        title: 'Універсальний боєць',
+        desc: 'Маєш 3+ активні бойові навички.',
+        check: ({ skills }) => skills >= 3,
+    },
+    {
+        id: 'full_kkd',
+        title: 'Сотка ККД',
+        desc: 'Досягнуто 100% бойового ККД.',
+        check: ({ kkd }) => kkd >= 100,
+    },
+];
+
+
 // --- SAVE / LOAD ---
 
 function saveData(update = true) {
@@ -233,6 +287,95 @@ function updateRankDisplay() {
     const ranks = AppData.isNavy ? DB.ranks_navy : DB.ranks_army;
     const currentRank = ranks.find(r => r.id === AppData.currentRankId);
     document.getElementById('rank-display').textContent = currentRank ? currentRank.title.toUpperCase() : 'РЕКРУТ';
+}
+
+function getTotalServiceDays() {
+    const now = new Date();
+    const start = AppData.startDate;
+    const msPerDay = 1000 * 60 * 60 * 24;
+    const diff = now - start;
+    return diff > 0 ? Math.floor(diff / msPerDay) : 0;
+}
+
+function computeKKDAndSkills() {
+    // читаємо навички не з DOM, а з localStorage
+    const savedSkills = JSON.parse(localStorage.getItem('DzhuraSkills') || '[]');
+    const skillsCount = savedSkills.length;
+
+    const ranks = AppData.isNavy ? DB.ranks_navy : DB.ranks_army;
+    const currentRank = ranks.find(r => r.id === AppData.currentRankId);
+
+    let kkd = 10;
+    if (currentRank) {
+        kkd += (currentRank.id - 1) * 4;
+    }
+    kkd += skillsCount * 16;
+    kkd = Math.min(100, kkd);
+
+    return { kkd, skillsCount };
+}
+
+
+function renderMedals() {
+    const medalsList = document.getElementById('medals-list');
+    const medalsSummary = document.getElementById('medals-summary');
+    if (!medalsList || !medalsSummary) return;
+
+    medalsList.innerHTML = '';
+
+    const days = getTotalServiceDays();
+    const { kkd, skillsCount } = computeKKDAndSkills();
+
+    const context = { days, kkd, skills: skillsCount };
+
+    const unlocked = MEDALS.filter(m => m.check(context));
+    const locked = MEDALS.filter(m => !m.check(context));
+
+    medalsSummary.textContent = `Відкрито медалей: ${unlocked.length} / ${MEDALS.length}. Днів служби: ${days}, ККД: ${kkd}%, навичок: ${skillsCount}.`;
+
+    const all = [...unlocked.map(m => ({ ...m, unlocked: true })), ...locked.map(m => ({ ...m, unlocked: false }))];
+
+    all.forEach(medal => {
+        const div = document.createElement('div');
+        div.className = `medal-item ${medal.unlocked ? 'medal-unlocked' : 'medal-locked'}`;
+        div.innerHTML = `
+            <div class="medal-header">
+                <i data-lucide="${medal.unlocked ? 'medal' : 'circle'}" class="w-4 h-4 medal-icon"></i>
+                <span class="medal-title">${medal.title}</span>
+            </div>
+            <p class="medal-desc">${medal.desc}</p>
+        `;
+        medalsList.appendChild(div);
+    });
+
+    if (window.lucide) {
+        lucide.createIcons();
+    }
+}
+
+function toggleView(viewId) {
+    const views = document.querySelectorAll('.tab-content');
+    views.forEach(view => view.classList.remove('active'));
+
+    const activeView = document.getElementById(`view-${viewId}`);
+    if (activeView) activeView.classList.add('active');
+
+    document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('nav-active'));
+    const activeNavBtn = document.getElementById(`nav-${viewId}`);
+    if (activeNavBtn) activeNavBtn.classList.add('nav-active');
+
+    if (viewId === 'status') {
+        renderSkills();
+        calculateKKD();
+        updateAchievement();
+        renderMedals();
+    }
+
+    if (viewId === 'stats') {
+        renderMonthlyStats();
+    }
+
+    localStorage.setItem('DzhuraLastView', viewId);
 }
 
 // --- DISPLAY & TIMER LOGIC ---
@@ -533,7 +676,12 @@ function renderMonthlyStats() {
 
 window.onload = function () {
     loadData();
-    // для надійності активуємо таймер-вкладку
     const navTimer = document.getElementById('nav-timer');
     if (navTimer) navTimer.click();
+
+    // PWA: реєстрація service worker
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js')
+            .catch(err => console.log('Service Worker registration failed:', err));
+    }
 };
