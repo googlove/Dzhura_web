@@ -178,7 +178,7 @@ body.theme-light .medal-item {
 
 .medal-unlocked {
     border: 1px solid rgba(250, 204, 21, 0.7); /* yellow-300 */
-    box-shadow: 0 0 10px rgba(250, 204, 21, 0.3);
+    box-shadow: 0 0 4px rgba(250, 204, 21, 0.35); /* менш “розмазане” світіння */
 }
 
 .medal-unlocked .medal-icon {
@@ -192,4 +192,9 @@ body.theme-light .medal-item {
 
 .medal-locked .medal-icon {
     color: rgba(148, 163, 184, 0.9);
+}
+
+/* додатковий відступ для картки з медалями, щоб точно не прилипала ні до чого */
+.medals-card {
+    margin-top: 1.5rem; /* ~24px */
 }
