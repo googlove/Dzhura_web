@@ -1,27 +1,283 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="css/styles.css" media="screen">
-  <link rel="icon" href="images/favicon.ico" type="image/x-icon">
-  <title>Джура</title>
-</head>
-<body>
-  <div class="selection-screen">
-    <center> <h1>Обери свій статус</h1></center>
-    <div class="selection">
-      <div style="display: flex; justify-content: center; gap: 40px; align-items: center;">
-        <a href="choice.html">
-          <img src="images/mobilized.png" alt="Мобілізований" style="width: 200px;">
-        </a>
-        <a href="choice.html">
-          <img src="images/infinity.png" alt="Контрактник" style="width: 200px;">
-        </a>
-      </div>
-    </div>
-  </div>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Джура ∞</title>
 
-  
+    <!-- Tailwind CSS (для стилізації) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Шрифти -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Наші кастомні стилі -->
+    <link rel="stylesheet" href="app.css">
+</head>
+<body class="theme-dark min-h-screen w-full relative">
+
+    <!-- Background Blobs (Liquid Design) -->
+    <div class="bg-blobs fixed inset-0 z-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-[-10%] left-[-10%] w-[80vw] h-[80vw] rounded-full mix-blend-multiply filter blur-[80px] opacity-50 animate-blob bg-blue-600"></div>
+        <div class="absolute top-[20%] right-[-10%] w-[80vw] h-[80vw] rounded-full mix-blend-multiply filter blur-[80px] opacity-50 animate-blob animation-delay-2000 bg-indigo-600"></div>
+        <div class="absolute bottom-[-10%] left-[20%] w-[80vw] h-[80vw] rounded-full mix-blend-multiply filter blur-[80px] opacity-50 animate-blob animation-delay-4000 bg-cyan-600"></div>
+    </div>
+
+    <!-- Main App Container -->
+    <div id="app" class="relative z-10 max-w-md mx-auto min-h-screen flex flex-col pb-24">
+        
+        <!-- HEADER -->
+        <header class="flex justify-between items-center p-6">
+            <div class="flex items-center gap-3">
+                <div class="p-2 rounded-xl glass-card glass-blur flex items-center justify-center">
+                    <i data-lucide="shield" class="w-6 h-6 text-blue-500 fill-current opacity-80"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight" id="user-name-display">Джура</h1>
+                    <p class="text-[10px] uppercase tracking-wider opacity-60" id="rank-display">Рекрут</p>
+                </div>
+            </div>
+            <div class="flex gap-3">
+                <button type="button" onclick="toggleTheme()" class="p-3 rounded-full glass-card glass-blur active:scale-90 transition-smooth">
+                    <i data-lucide="moon" id="theme-icon" class="w-5 h-5"></i>
+                </button>
+                <button type="button" onclick="toggleView('settings')" class="p-3 rounded-full glass-card glass-blur active:scale-90 transition-smooth">
+                    <i data-lucide="settings" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- VIEWS -->
+
+        <!-- 1. TIMER VIEW -->
+        <div id="view-timer" class="tab-content active px-4 space-y-4">
+            
+            <!-- Main Circular Card -->
+            <div class="glass-card glass-blur rounded-[2.5rem] p-8 flex flex-col items-center justify-center relative overflow-hidden">
+                <!-- Status Badge -->
+                <div class="absolute top-6 right-6 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border border-green-500/30 bg-green-500/10 text-green-400">
+                    В строю
+                </div>
+
+                <!-- Rice Marks SVG -->
+                <div class="relative w-[280px] h-[280px] flex items-center justify-center">
+                    <svg id="rice-circle" width="300" height="300" viewBox="0 0 300 300" class="absolute inset-0 transform -rotate-90 w-full h-full" aria-label="Прогрес служби у відсотках">
+                        <!-- Генерується JS -->
+                    </svg>
+                    
+                    <div class="flex flex-col items-center z-10 text-center">
+                        <span id="percent-display" class="text-6xl font-bold tracking-tighter tabular-nums">0<span class="text-2xl text-blue-500">%</span></span>
+                        <span class="text-xs font-bold uppercase tracking-widest opacity-50 mt-2" id="progress-label">Пройдено</span>
+                        <span class="text-[10px] opacity-40 mt-1" id="days-ratio">0 / 0 днів</span>
+                    </div>
+                </div>
+
+                <!-- Counters Grid -->
+                <div class="grid grid-cols-3 gap-3 w-full mt-4">
+                    <div class="flex flex-col items-center bg-white/5 rounded-2xl p-3">
+                        <span id="counter-years" class="text-2xl font-bold font-mono text-blue-400">0</span>
+                        <span class="text-[10px] uppercase opacity-50">Років</span>
+                    </div>
+                    <div class="flex flex-col items-center bg-white/5 rounded-2xl p-3">
+                        <span id="counter-months" class="text-2xl font-bold font-mono text-blue-400">0</span>
+                        <span class="text-[10px] uppercase opacity-50">Місяців</span>
+                    </div>
+                    <div class="flex flex-col items-center bg-white/5 rounded-2xl p-3">
+                        <span id="counter-days" class="text-2xl font-bold font-mono text-blue-400">0</span>
+                        <span class="text-[10px] uppercase opacity-50">Днів</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Secondary Stats -->
+            <div class="grid grid-cols-2 gap-4">
+                <div class="glass-card glass-blur rounded-3xl p-5 flex flex-col justify-between h-36">
+                    <div class="p-2 bg-orange-500/10 w-fit rounded-xl text-orange-400">
+                        <i data-lucide="clock" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <div id="days-left" class="text-3xl font-bold tabular-nums">∞</div>
+                        <div id="days-left-label" class="text-xs opacity-50">Днів до дембеля</div>
+                    </div>
+                </div>
+
+                <div class="glass-card glass-blur rounded-3xl p-5 flex flex-col justify-between h-36 cursor-pointer active:scale-95 transition-smooth" onclick="toggleView('status')">
+                    <div class="p-2 bg-green-500/10 w-fit rounded-xl text-green-400">
+                        <i data-lucide="trending-up" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <div id="kkd-mini-display" class="text-3xl font-bold">10%</div>
+                        <div class="text-xs opacity-50 flex items-center gap-1">Мій ККД <i data-lucide="arrow-right" class="w-3 h-3"></i></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-8">
+                <p class="text-[10px] opacity-30 font-mono">СЛАВА УКРАЇНІ</p>
+            </div>
+        </div>
+
+        <!-- 2. STATUS VIEW (Analysis) -->
+        <div id="view-status" class="tab-content px-4 space-y-4">
+            
+            <!-- KKD Card -->
+            <div class="glass-card glass-blur rounded-3xl p-6">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="p-3 rounded-full bg-blue-600 text-white shadow-lg shadow-blue-600/30">
+                        <i data-lucide="activity" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-bold">Бойовий ККД</h2>
+                        <p class="text-xs opacity-50">Ефективність бійця</p>
+                    </div>
+                </div>
+                
+                <div class="relative h-6 bg-gray-500/20 rounded-full overflow-hidden mb-2">
+                    <div id="kkd-bar" class="absolute top-0 left-0 h-full bg-gradient-to-r from-blue-500 to-green-400 transition-all duration-1000" style="width: 10%;"></div>
+                </div>
+                <div class="flex justify-between text-xs font-mono opacity-60">
+                    <span>0%</span>
+                    <span id="kkd-value">10%</span>
+                    <span>100%</span>
+                </div>
+            </div>
+
+            <!-- Achievement Card -->
+            <div class="glass-card glass-blur rounded-3xl p-6 relative overflow-hidden">
+                <div class="absolute -right-4 -top-4 opacity-10 rotate-12">
+                    <i data-lucide="award" class="w-32 h-32"></i>
+                </div>
+                <div class="relative z-10">
+                    <h3 class="text-sm font-bold uppercase tracking-wider text-yellow-500 mb-1">Поточне досягнення</h3>
+                    <h2 id="achieve-title" class="text-2xl font-bold mb-2">Новобранець</h2>
+                    <p id="achieve-desc" class="text-sm opacity-70 leading-relaxed">Шлях тільки починається.</p>
+                </div>
+            </div>
+
+            <!-- Skills List -->
+            <div class="glass-card glass-blur rounded-3xl p-6">
+                <h3 class="font-bold mb-4 flex items-center gap-2">
+                    <i data-lucide="zap" class="w-5 h-5 text-purple-400"></i>
+                    Твої навички
+                </h3>
+                <div id="skills-list" class="space-y-2">
+                    <!-- Skills injected by JS -->
+                </div>
+                <p class="text-[10px] text-center mt-4 opacity-40">Кожна навичка додає +16% до ККД</p>
+            </div>
+        </div>
+
+        <!-- 3. STATS VIEW (New) -->
+        <div id="view-stats" class="tab-content px-4 space-y-4">
+            <div class="glass-card glass-blur rounded-3xl p-6">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="p-3 rounded-full bg-emerald-600 text-white shadow-lg shadow-emerald-600/30">
+                        <i data-lucide="bar-chart-3" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-bold">Статистика по місяцях</h2>
+                        <p class="text-xs opacity-60">Скільки днів служби у кожному місяці</p>
+                    </div>
+                </div>
+
+                <div id="stats-summary" class="text-xs opacity-70 mb-3">
+                    <!-- Заповнюється JS: всього місяців / днів -->
+                </div>
+
+                <div id="stats-list" class="space-y-2">
+                    <!-- Заповнюється JS -->
+                </div>
+
+                <p class="text-[10px] text-center mt-4 opacity-40">
+                    Максимальна довжина смужки = місяць з найбільшою кількістю днів служби
+                </p>
+            </div>
+        </div>
+
+        <!-- 4. SETTINGS VIEW -->
+        <div id="view-settings" class="tab-content px-4 space-y-6">
+            <div class="glass-card glass-blur rounded-3xl p-6">
+                <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
+                    <i data-lucide="settings" class="w-6 h-6"></i> Налаштування
+                </h2>
+
+                <div class="space-y-5">
+                    <!-- Name Input -->
+                    <div>
+                        <label class="text-xs font-bold uppercase tracking-wider ml-1 opacity-60">Позивний / Ім'я</label>
+                        <input type="text" id="input-name" class="w-full mt-2 p-4 rounded-xl bg-black/20 border border-white/10 focus:border-blue-500 outline-none transition-smooth text-lg" placeholder="Козак">
+                    </div>
+
+                    <!-- Date Input -->
+                    <div>
+                        <label class="text-xs font-bold uppercase tracking-wider ml-1 opacity-60">Дата початку служби</label>
+                        <input type="date" id="input-date" class="w-full mt-2 p-4 rounded-xl bg-black/20 border border-white/10 focus:border-blue-500 outline-none transition-smooth text-white [color-scheme:dark]">
+                    </div>
+
+                    <!-- Service Type -->
+                    <div>
+                        <label class="text-xs font-bold uppercase tracking-wider ml-1 opacity-60">Тип служби</label>
+                        <div class="grid grid-cols-2 gap-2 mt-2">
+                            <button type="button" onclick="setServiceType('mobilized')" id="btn-mobilized" class="p-3 rounded-xl border border-white/10 text-sm font-bold transition-smooth">Мобілізація</button>
+                            <button type="button" onclick="setServiceType('contract')" id="btn-contract" class="p-3 rounded-xl border border-white/10 text-sm font-bold transition-smooth">Контракт</button>
+                        </div>
+                        
+                        <!-- Contract Duration (Hidden by default) -->
+                        <div id="contract-duration-block" class="hidden mt-3 p-3 bg-white/5 rounded-xl">
+                            <label class="text-[10px] font-bold uppercase tracking-wider opacity-60">Тривалість контракту</label>
+                            <div class="flex justify-between gap-2 mt-2">
+                                <button type="button" onclick="setContractYears(3)" class="contract-year-btn flex-1 p-2 rounded-lg bg-black/30 text-xs font-bold hover:bg-blue-600 transition-smooth" data-year="3">3 р.</button>
+                                <button type="button" onclick="setContractYears(5)" class="contract-year-btn flex-1 p-2 rounded-lg bg-black/30 text-xs font-bold hover:bg-blue-600 transition-smooth" data-year="5">5 р.</button>
+                                <button type="button" onclick="setContractYears(7)" class="contract-year-btn flex-1 p-2 rounded-lg bg-black/30 text-xs font-bold hover:bg-blue-600 transition-smooth" data-year="7">7 р.</button>
+                                <button type="button" onclick="setContractYears(9)" class="contract-year-btn flex-1 p-2 rounded-lg bg-black/30 text-xs font-bold hover:bg-blue-600 transition-smooth" data-year="9">9 р.</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Rank -->
+                    <div>
+                        <label class="text-xs font-bold uppercase tracking-wider ml-1 opacity-60">Військове звання</label>
+                        <select id="input-rank" class="w-full mt-2 p-4 rounded-xl bg-black/20 border border-white/10 focus:border-blue-500 outline-none transition-smooth appearance-none">
+                            <!-- Ranks injected by JS -->
+                        </select>
+                         <div class="flex items-center gap-2 mt-3 p-3 bg-blue-600/10 rounded-xl text-xs font-medium text-blue-300">
+                             <input type="checkbox" id="is-navy" class="custom-checkbox hidden" onchange="toggleNavyRanks(this.checked)">
+                             <div class="w-5 h-5 rounded-full border-2 border-white/30 flex items-center justify-center transition-all duration-200">
+                                <i data-lucide="check" class="w-4 h-4 text-white opacity-0 transition-opacity"></i>
+                             </div>
+                             <label for="is-navy" class="cursor-pointer select-none">Показувати звання ВМС ЗСУ (Військово-Морські Сили)</label>
+                         </div>
+                    </div>
+
+                    <button type="button" onclick="saveData()" class="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl shadow-lg shadow-blue-600/40 active:scale-95 transition-smooth mt-4">
+                        Зберегти дані
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- BOTTOM NAV (iOS Dock) -->
+        <div id="bottom-nav" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 w-[90%] max-w-[380px] z-50 transition-smooth">
+            <div class="nav-bar glass-blur border rounded-full p-1.5 flex justify-between shadow-2xl gap-1">
+                <button type="button" onclick="toggleView('timer')" id="nav-timer" class="nav-btn flex-1 py-3 rounded-full flex justify-center items-center gap-2 transition-all">
+                    <i data-lucide="clock" class="w-5 h-5"></i>
+                    <span class="text-xs font-bold">Таймер</span>
+                </button>
+                <button type="button" onclick="toggleView('status')" id="nav-status" class="nav-btn flex-1 py-3 rounded-full flex justify-center items-center gap-2 transition-all">
+                    <i data-lucide="shield" class="w-5 h-5"></i>
+                    <span class="text-xs font-bold">Статус</span>
+                </button>
+                <button type="button" onclick="toggleView('stats')" id="nav-stats" class="nav-btn flex-1 py-3 rounded-full flex justify-center items-center gap-2 transition-all">
+                    <i data-lucide="bar-chart-3" class="w-5 h-5"></i>
+                    <span class="text-xs font-bold">Статистика</span>
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Наш JS -->
+    <script src="app.js"></script>
 </body>
 </html>
