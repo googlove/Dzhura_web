@@ -143,3 +143,53 @@ body.theme-oled .nav-btn.nav-active { color: #ffffff; background: #222; }
     opacity: 0.7;
     font-feature-settings: "tnum";
 }
+/* --- MEDALS / ACHIEVEMENTS --- */
+
+.medal-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.6rem 0.65rem;
+    border-radius: 0.9rem;
+    background-color: rgba(15, 23, 42, 0.4); /* темний фон за замовчуванням */
+    font-size: 0.7rem;
+}
+
+body.theme-light .medal-item {
+    background-color: rgba(243, 244, 246, 0.9);
+}
+
+.medal-header {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.medal-title {
+    font-weight: 600;
+}
+
+.medal-desc {
+    opacity: 0.7;
+    font-size: 0.68rem;
+}
+
+/* Статуси медалі */
+
+.medal-unlocked {
+    border: 1px solid rgba(250, 204, 21, 0.7); /* yellow-300 */
+    box-shadow: 0 0 10px rgba(250, 204, 21, 0.3);
+}
+
+.medal-unlocked .medal-icon {
+    color: #facc15; /* yellow-400 */
+}
+
+.medal-locked {
+    opacity: 0.45;
+    border: 1px dashed rgba(148, 163, 184, 0.6); /* slate-400 */
+}
+
+.medal-locked .medal-icon {
+    color: rgba(148, 163, 184, 0.9);
+}
