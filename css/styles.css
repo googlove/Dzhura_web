@@ -1,200 +1,98 @@
-/* --- GLOBAL STYLES --- */
-body {
-    font-family: 'Inter', sans-serif;
-    overflow-x: hidden;
-    -webkit-tap-highlight-color: transparent;
+/* --- ДОДАТКОВІ СТИЛІ ДЛЯ НОВИХ ФУНКЦІЙ --- */
+
+/* 1. Стилі таймера (Секунди та Бокси) */
+.timer-box {
+    @apply glass-card p-3 rounded-2xl flex flex-col items-center justify-center transition-smooth;
+    min-width: 60px;
 }
 
-/* Вимикаємо скролбар для естетики */
-::-webkit-scrollbar { width: 0px; background: transparent; }
-
-/* --- ANIMATIONS --- */
-@keyframes blob {
-    0% { transform: translate(0px, 0px) scale(1); }
-    33% { transform: translate(30px, -50px) scale(1.1); }
-    66% { transform: translate(-20px, 20px) scale(0.9); }
-    100% { transform: translate(0px, 0px) scale(1); }
-}
-.animate-blob { animation: blob 10s infinite; }
-.animation-delay-2000 { animation-delay: 2s; }
-.animation-delay-4000 { animation-delay: 4s; }
-
-/* --- UTILS --- */
-.glass-blur { backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
-.transition-smooth { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-
-.tab-content { 
-    display: none; 
-    opacity: 0; 
-    transform: translateY(10px); 
-    transition: opacity 0.3s ease, transform 0.3s ease; 
-}
-.tab-content.active { 
-    display: block; 
-    opacity: 1; 
-    transform: translateY(0); 
+#detailed-timer-seconds {
+    text-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+    font-variant-numeric: tabular-nums;
 }
 
-/* Custom Checkbox Style */
-.custom-checkbox:checked + div { 
-    background-color: #3b82f6; 
-    border-color: #3b82f6; 
-}
-.custom-checkbox:checked + div svg { opacity: 1; }
-
-/* --- THEMES --- */
-
-/* Light Theme */
-body.theme-light { background-color: #f3f4f6; color: #1e293b; }
-body.theme-light .glass-card { 
-    background: rgba(255, 255, 255, 0.8);
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-}
-body.theme-light .nav-bar { background: rgba(255, 255, 255, 0.95); border-color: rgba(0,0,0,0.1); }
-
-body.theme-light input,
-body.theme-light select {
-    background-color: rgba(0, 0, 0, 0.05) !important;
-    color: #1e293b !important;
-    border-color: rgba(0, 0, 0, 0.15) !important;
-}
-body.theme-light #input-date {
-    color-scheme: light !important;
+/* 2. Шеврони (Patch Selector) */
+.patch-item {
+    @apply w-16 h-16 rounded-xl glass-card flex items-center justify-center cursor-pointer border-2 border-transparent transition-all active:scale-90;
 }
 
-/* Nav Bar Colors (Light) */
-body.theme-light .nav-btn { color: rgba(30, 41, 59, 0.5); }
-body.theme-light .nav-btn:hover { color: #1e293b; }
-body.theme-light .nav-btn.nav-active { color: #2563EB; background: #E5E7EB; }
-
-body.theme-light .rice-mark-active { 
-    stroke: #2563EB; 
-    filter: drop-shadow(0 0 2px rgba(37, 99, 235, 0.3)); 
-}
-body.theme-light .rice-mark-inactive { stroke: rgba(0,0,0,0.1); }
-
-/* Dark Theme */
-body.theme-dark { background-color: #0f172a; color: #ffffff; }
-body.theme-dark .glass-card { 
-    background: rgba(30, 41, 59, 0.4); 
-    border: 1px solid rgba(255, 255, 255, 0.1); 
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-}
-body.theme-dark .nav-bar { background: rgba(15, 23, 42, 0.8); border-color: rgba(255,255,255,0.1); }
-
-body.theme-dark .nav-btn { color: rgba(255, 255, 255, 0.5); }
-body.theme-dark .nav-btn:hover { color: #ffffff; }
-body.theme-dark .nav-btn.nav-active { color: #ffffff; background: #1f2937; }
-
-body.theme-dark .rice-mark-active { 
-    stroke: #60A5FA; 
-    filter: drop-shadow(0 0 4px #60A5FA); 
-}
-body.theme-dark .rice-mark-inactive { stroke: rgba(255,255,255,0.1); }
-
-/* OLED Theme */
-body.theme-oled { background-color: #000000; color: #ffffff; }
-body.theme-oled .bg-blobs { display: none; }
-body.theme-oled .glass-card { 
-    background: #111; 
-    border: 1px solid #222; 
-}
-body.theme-oled .nav-bar { background: #000; border-top: 1px solid #333; }
-body.theme-oled .rice-mark-active { stroke: #ffffff; }
-body.theme-oled .rice-mark-inactive { stroke: #333; }
-body.theme-oled .nav-btn { color: rgba(255, 255, 255, 0.5); }
-body.theme-oled .nav-btn:hover { color: #ffffff; }
-body.theme-oled .nav-btn.nav-active { color: #ffffff; background: #222; }
-
-/* --- STATS VIEW --- */
-
-.stats-row {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    font-size: 0.75rem;
+.patch-item.active {
+    @apply border-blue-500 bg-blue-500/20 shadow-lg shadow-blue-500/20;
 }
 
-.stats-month-label {
-    width: 4.5rem;
-    flex-shrink: 0;
-    opacity: 0.7;
+.patch-item img {
+    @apply w-10 h-10 object-contain;
 }
 
-.stats-bar-wrapper {
-    flex: 1;
-    background-color: rgba(148, 163, 184, 0.25); /* gray-400/25 */
-    border-radius: 9999px;
-    overflow: hidden;
-    height: 0.5rem;
+/* 3. Навігація (iOS Dock Style) */
+.nav-item {
+    @apply relative flex flex-col items-center justify-center p-3 rounded-full text-white/40 transition-all duration-300;
 }
 
-.stats-bar {
-    height: 100%;
-    border-radius: 9999px;
-    background-image: linear-gradient(to right, #3b82f6, #22c55e); /* from-blue-500 to-green-500 */
+.nav-item i {
+    @apply w-6 h-6 transition-transform;
 }
 
-.stats-days-label {
-    width: 3rem;
-    text-align: right;
-    flex-shrink: 0;
-    opacity: 0.7;
-    font-feature-settings: "tnum";
-}
-/* --- MEDALS / ACHIEVEMENTS --- */
-
-.medal-item {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    padding: 0.6rem 0.65rem;
-    border-radius: 0.9rem;
-    background-color: rgba(15, 23, 42, 0.4); /* темний фон за замовчуванням */
-    font-size: 0.7rem;
+.nav-item.active {
+    @apply text-blue-500 bg-white/5;
 }
 
-body.theme-light .medal-item {
-    background-color: rgba(243, 244, 246, 0.9);
+.nav-item.active i {
+    @apply scale-110;
 }
 
-.medal-header {
-    display: flex;
-    align-items: center;
-    gap: 0.35rem;
+/* Індикатор активної вкладки (крапка) */
+.nav-item.active::after {
+    content: '';
+    @apply absolute -bottom-1 w-1 h-1 bg-blue-500 rounded-full;
 }
 
-.medal-title {
-    font-weight: 600;
+/* 4. Налаштування (Inputs) */
+.settings-input {
+    @apply w-full p-4 rounded-xl bg-black/20 border border-white/10 outline-none focus:border-blue-500 transition-smooth text-sm;
 }
 
-.medal-desc {
-    opacity: 0.7;
-    font-size: 0.68rem;
+body.theme-light .settings-input {
+    @apply bg-white border-black/10 text-slate-900;
 }
 
-/* Статуси медалі */
-
-.medal-unlocked {
-    border: 1px solid rgba(250, 204, 21, 0.7); /* yellow-300 */
-    box-shadow: 0 0 4px rgba(250, 204, 21, 0.35); /* менш “розмазане” світіння */
+/* 5. Військо (Профілі побратимів) */
+.profile-card {
+    @apply glass-card p-4 rounded-2xl border border-white/5 flex items-center gap-4 active:scale-[0.98] transition-all;
 }
 
-.medal-unlocked .medal-icon {
-    color: #facc15; /* yellow-400 */
+.profile-avatar {
+    @apply w-12 h-12 rounded-full bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center font-bold text-white shadow-inner;
 }
 
-.medal-locked {
-    opacity: 0.45;
-    border: 1px dashed rgba(148, 163, 184, 0.6); /* slate-400 */
+/* 6. Повітряна тривога (Banner) */
+#alarm-banner {
+    @apply transition-all duration-500;
 }
 
-.medal-locked .medal-icon {
-    color: rgba(148, 163, 184, 0.9);
+.alarm-active {
+    @apply border-red-500 bg-red-500/10 shadow-lg shadow-red-500/10;
+    animation: pulse-red 2s infinite;
 }
 
-/* додатковий відступ для картки з медалями, щоб точно не прилипала ні до чого */
-.medals-card {
-    margin-top: 1.5rem; /* ~24px */
+@keyframes pulse-red {
+    0% { border-color: rgba(239, 68, 68, 0.5); }
+    50% { border-color: rgba(239, 68, 68, 1); }
+    100% { border-color: rgba(239, 68, 68, 0.5); }
+}
+
+/* 7. Адаптація під мобільні пристрої */
+@media (max-width: 380px) {
+    #percent-display { @apply text-5xl; }
+    .timer-box { @apply p-2; }
+    .timer-box span:first-child { @apply text-base; }
+}
+
+/* Кастомний скрол для горизонтального вибору шевронів */
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+.hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
