@@ -59,6 +59,10 @@ body.theme-oled .bg-blobs { display: none; }
 .animation-delay-2000 { animation-delay: 2s; }
 .animation-delay-4000 { animation-delay: 4s; }
 
+#progress-stroke {
+    transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 /* --- COMPONENTS --- */
 .timer-box {
     background: var(--glass-bg);
@@ -76,23 +80,24 @@ body.theme-oled .bg-blobs { display: none; }
     min-width: 65px;
 }
 
+/* НОВА НАВІГАЦІЯ — iOS-подібна */
 .nav-bar {
     position: fixed;
-    bottom: 2rem;
+    bottom: max(1rem, env(safe-area-inset-bottom));
     left: 1.5rem;
     right: 1.5rem;
-    height: 5rem;
-    background: rgba(28, 28, 30, 0.8);
-    backdrop-filter: blur(30px);
-    -webkit-backdrop-filter: blur(30px);
-    border-radius: 2.5rem;
+    height: 5.5rem;
+    background: rgba(28, 28, 30, 0.85);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    border-radius: 3rem;
     border: 1px solid rgba(255,255,255,0.1);
     display: flex;
     align-items: center;
     justify-content: space-around;
-    padding: 0 0.5rem;
-    z-index: 50;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    padding: 0 1rem;
+    z-index: 100;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
 }
 
 .nav-item {
@@ -101,27 +106,35 @@ body.theme-oled .bg-blobs { display: none; }
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 0.75rem;
+    width: 4.5rem;
+    height: 4.5rem;
     border-radius: 9999px;
-    color: rgba(255,255,255,0.4);
-    transition: all 0.3s ease;
+    color: rgba(255,255,255,0.5);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.nav-item:active {
+    transform: scale(0.88);
 }
 
 .nav-item.active {
     color: #60a5fa;
-    transform: translateY(-4px);
 }
 
 .nav-item.active::after {
     content: '';
     position: absolute;
-    bottom: -4px;
-    width: 6px;
-    height: 6px;
+    bottom: -0.75rem;
+    width: 2rem;
+    height: 0.75rem;
     background: #60a5fa;
-    border-radius: 50%;
+    border-radius: 9999px;
+    opacity: 0.7;
 }
 
+/* Табы */
 .tab-content {
     display: none;
     opacity: 0;
@@ -135,6 +148,7 @@ body.theme-oled .bg-blobs { display: none; }
     transform: scale(1);
 }
 
+/* Інпуты та лейбли */
 .label-xs {
     display: block;
     font-size: 0.75rem;
@@ -165,13 +179,14 @@ body.theme-oled .bg-blobs { display: none; }
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* --- RESPONSIVE --- */
+/* Safe-area для iOS PWA */
+#app {
+    padding-bottom: max(6rem, env(safe-area-inset-bottom));
+}
+
+/* RESPONSIVE */
 @media (max-width: 380px) {
     .text-6xl { font-size: 3.5rem; }
     .timer-box { padding: 0.5rem; min-width: 55px; }
-    .nav-bar { left: 1rem; right: 1rem; bottom: 1.5rem; }
-}
-
-#progress-stroke {
-    transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+    .nav-bar { left: 1rem; right: 1rem; bottom: max(0.75rem, env(safe-area-inset-bottom)); }
 }
