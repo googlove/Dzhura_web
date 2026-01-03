@@ -1,105 +1,177 @@
-// --- DATABASE ---
+// --- КОНСТАНТИ ТА ДАНІ ---
 const DB = {
-    ranks_navy: [
-        { id: 1, title: "Рекрут", days: 0 },
-        { id: 2, title: "Матрос", days: 120 },
-        { id: 3, title: "Старший матрос", days: 180 },
-        { id: 4, title: "Старшина 2 статті", days: 360 },
-        { id: 5, title: "Старшина 1 статті", days: 730 },
-        { id: 6, title: "Головний старшина", days: 1095 },
-        { id: 7, title: "Головний корабельний старшина", days: 1460 },
-        { id: 8, title: "Штаб-старшина", days: 1825 },
-        { id: 9, title: "Майстер-старшина", days: 2190 },
-        { id: 10, title: "Старший майстер-старшина", days: 2555 },
-        { id: 11, title: "Головний майстер-старшина", days: 2920 },
-        { id: 12, title: "Молодший лейтенант", days: 1460 },
-        { id: 13, title: "Лейтенант", days: 1825 },
-        { id: 14, title: "Старший лейтенант", days: 2190 },
-        { id: 15, title: "Капітан-лейтенант", days: 2555 },
-        { id: 16, title: "Капітан 3 рангу", days: 2920 },
-        { id: 17, title: "Капітан 2 рангу", days: 3285 },
-        { id: 18, title: "Капітан 1 рангу", days: 3650 }
+    ranks_army: [
+        { id: 1, title: "Рекрут", days: 0 }, { id: 2, title: "Солдат", days: 100 },
+        { id: 18, title: "Полковник", days: 3650 }
     ],
+    // ... ваші звання тут ...
+    
     holidays: [
-        { date: '01-01', title: 'Хвилина мовчання', time: '09:00' },
         { date: '05-23', title: 'День Морської піхоти' },
         { date: '07-04', title: 'День ВМС ЗСУ' },
-        { date: '12-06', title: 'День ЗСУ' }
+        { date: '10-01', title: 'День захисників України' },
+        { date: '12-06', title: 'День ЗСУ' },
+        { date: '12-12', title: 'День Сухопутних військ' }
     ],
     patches: [
-        { id: 'vms', img: 'https://i.imgur.com/8QzQf7g.png' }, // Замініть на реальні лінки
-        { id: 'marines', img: 'https://i.imgur.com/...png' }
+        { id: 'zsu', name: 'ЗСУ', icon: 'shield' },
+        { id: 'vms', name: 'ВМС', icon: 'anchor' },
+        { id: 'dshv', name: 'ДШВ', icon: 'zap' },
+        { id: 'ngu', name: 'НГУ', icon: 'flame' }
     ]
 };
 
 let AppData = {
-    activeProfileIndex: 0,
-    profiles: [
-        { name: 'Джура', startDate: new Date().toISOString(), rankId: 1, isNavy: true, patch: 'vms' }
-    ],
+    user: {
+        name: 'Мій Таймер',
+        startDate: new Date().toISOString().split('T')[0],
+        rankId: 1,
+        isNavy: false,
+        patchId: 'zsu'
+    },
+    buddies: [], // Масив інших військових
+    activeProfileId: 'user', // 'user' або index в buddies
     theme: 'dark'
 };
 
-// --- CORE FUNCTIONS ---
+// --- ТАЙМЕР ДО СЕКУНД ---
+function updateMasterTimer() {
+    const profile = AppData.activeProfileId === 'user' ? AppData.user : AppData.buddies[AppData.activeProfileId];
+    if (!profile) return;
 
-function updateTimer() {
-    const p = AppData.profiles[AppData.activeProfileIndex];
-    const start = new Date(p.startDate);
+    const start = new Date(profile.startDate);
     const now = new Date();
     
-    // Умовна тривалість 1.5 роки (548 днів)
-    const end = new Date(start.getTime() + (548 * 24 * 60 * 60 * 1000));
-    
-    const diff = end - now;
-    const passed = now - start;
+    // Припустимо дембель через 18 місяців (умовно для прикладу)
+    const end = new Date(start);
+    end.setMonth(start.getMonth() + 18); 
 
-    if (diff > 0) {
-        const total = end - start;
-        const percent = Math.floor((passed / total) * 100);
-        
-        document.getElementById('percent-display').innerHTML = `${percent}<span class="text-2xl text-blue-500">%</span>`;
-        
-        // Розрахунок детальних одиниць
-        const secs = Math.floor(diff / 1000);
-        const mins = Math.floor(secs / 60);
-        const hours = Math.floor(mins / 60);
-        const days = Math.floor(hours / 24);
-        
-        const y = Math.floor(days / 365);
-        const m = Math.floor((days % 365) / 30);
-        const w = Math.floor(((days % 365) % 30) / 7);
-        const d = ((days % 365) % 30) % 7;
+    const totalDiff = end - start;
+    const passedDiff = now - start;
+    const remainingDiff = end - now;
 
-        document.getElementById('t-years').innerText = y;
-        document.getElementById('t-months').innerText = m;
-        document.getElementById('t-weeks').innerText = w;
-        document.getElementById('t-days').innerText = d;
-        document.getElementById('t-hours').innerText = (hours % 24).toString().padStart(2, '0');
-        document.getElementById('t-mins').innerText = (mins % 60).toString().padStart(2, '0');
-        document.getElementById('t-secs').innerText = (secs % 60).toString().padStart(2, '0');
-
-        generateRiceMarks(percent);
+    if (remainingDiff <= 0) {
+        document.getElementById('percent-display').innerHTML = "100%";
+        return;
     }
+
+    // Відсотки
+    const percent = Math.min(100, (passedDiff / totalDiff) * 100).toFixed(2);
+    document.getElementById('percent-display').innerHTML = `${Math.floor(percent)}<span class="text-2xl text-blue-500">%</span>`;
+
+    // Розширений час
+    const diff = remainingDiff;
+    const secs = Math.floor(diff / 1000) % 60;
+    const mins = Math.floor(diff / (1000 * 60)) % 60;
+    const hours = Math.floor(diff / (1000 * 60 * 60)) % 24;
+    const daysTotal = Math.floor(diff / (1000 * 60 * 60 * 24));
     
-    requestAnimationFrame(updateTimer); // Плавність до секунд
+    const years = Math.floor(daysTotal / 365);
+    const months = Math.floor((daysTotal % 365) / 30);
+    const weeks = Math.floor(((daysTotal % 365) % 30) / 7);
+    const days = ((daysTotal % 365) % 30) % 7;
+
+    // Оновлення UI
+    updateEl('t-years', years);
+    updateEl('t-months', months);
+    updateEl('t-weeks', weeks);
+    updateEl('t-days', days);
+    updateEl('t-hours', hours.toString().padStart(2, '0'));
+    updateEl('t-mins', mins.toString().padStart(2, '0'));
+    updateEl('detailed-timer-seconds', secs.toString().padStart(2, '0'));
+
+    // Сповіщення кожні 100 днів
+    const passedDays = Math.floor(passedDiff / (1000 * 60 * 60 * 24));
+    if (passedDays > 0 && passedDays % 100 === 0) {
+        sendNotification(`Вітаємо! Вже ${passedDays} днів служби пройдено!`);
+    }
+
+    generateRiceMarks(Math.floor(percent));
 }
 
-// API Тривог (Приклад інтеграції)
-async function fetchAlarms() {
-    try {
-        // Використовуйте реальний токен та API (наприклад alerts.in.ua)
-        const status = "Немає тривог"; 
-        document.getElementById('alarm-status').innerText = status;
-        document.getElementById('alarm-dot').className = "w-2 h-2 rounded-full bg-emerald-500";
-    } catch (e) {
-        console.log("Alarm API Error");
+// --- ФУНКЦІЇ ВІЙСЬКА (ПРОФІЛІ) ---
+function renderArmy() {
+    const list = document.getElementById('army-list');
+    list.innerHTML = '';
+
+    // Спершу додаємо себе як кнопку перемикання
+    list.innerHTML += createProfileCard('Я (Мій Таймер)', AppData.user.startDate, 'user');
+
+    // Додаємо побратимів
+    AppData.buddies.forEach((buddy, index) => {
+        list.innerHTML += createProfileCard(buddy.name, buddy.startDate, index);
+    });
+}
+
+function createProfileCard(name, date, id) {
+    const activeClass = AppData.activeProfileId === id ? 'border-blue-500 bg-blue-500/10' : 'border-white/5';
+    return `
+        <div onclick="switchProfile('${id}')" class="glass-card p-4 rounded-2xl border-2 ${activeClass} flex justify-between items-center transition-all">
+            <div>
+                <p class="font-bold text-sm">${name}</p>
+                <p class="text-[10px] opacity-50">З: ${date}</p>
+            </div>
+            <i data-lucide="chevron-right" class="w-4 h-4 opacity-30"></i>
+        </div>
+    `;
+}
+
+function switchProfile(id) {
+    AppData.activeProfileId = id;
+    renderArmy();
+    toggleView('timer');
+}
+
+// --- API ТРИВОГ ТА ГЕО ---
+function initGeoAndAlarms() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(async (pos) => {
+            // Тут можна зробити fetch до API тривог по координатах
+            document.getElementById('geo-location').innerText = "Київська обл.";
+        });
+    }
+}
+
+// --- СЛУЖБОВІ ФУНКЦІЇ ---
+function updateEl(id, val) {
+    const el = document.getElementById(id);
+    if (el) el.innerText = val;
+}
+
+function toggleView(viewId) {
+    document.querySelectorAll('.tab-content').forEach(v => v.classList.remove('active'));
+    document.getElementById(`view-${viewId}`).classList.add('active');
+    
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById(`nav-${viewId}`).classList.add('active');
+    
+    if (viewId === 'army') renderArmy();
+    if (viewId === 'calendar') renderHolidays();
+    lucide.createIcons();
+}
+
+function renderHolidays() {
+    const list = document.getElementById('holidays-list');
+    list.innerHTML = DB.holidays.map(h => `
+        <div class="flex items-center gap-3 p-3 bg-white/5 rounded-xl">
+            <div class="text-blue-400 font-bold text-xs">${h.date.split('-').reverse().join('.')}</div>
+            <div class="text-sm font-medium">${h.title}</div>
+        </div>
+    `).join('');
+}
+
+// Повідомлення
+function sendNotification(text) {
+    if (Notification.permission === "granted") {
+        new Notification("Джура ∞", { body: text });
     }
 }
 
 // Ініціалізація
+setInterval(updateMasterTimer, 1000);
 window.onload = () => {
-    // Завантаження даних...
-    updateTimer();
-    setInterval(fetchAlarms, 60000); // Оновлення тривог раз на хвилину
+    initGeoAndAlarms();
+    renderArmy();
     lucide.createIcons();
+    if ("Notification" in window) Notification.requestPermission();
 };
