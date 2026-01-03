@@ -17,19 +17,19 @@
     
     <link rel="stylesheet" href="css/styles.css">
 </head>
-<body class="theme-dark min-h-screen w-full relative">
+<body class="theme-dark min-h-screen w-full relative font-inter">
 
-    <div class="bg-blobs fixed inset-0 z-0 overflow-hidden pointer-events-none">
-        <div class="absolute top-[-10%] left-[-10%] w-[80vw] h-[80vw] rounded-full mix-blend-multiply filter blur-[80px] opacity-50 animate-blob bg-blue-600"></div>
-        <div class="absolute top-[20%] right-[-10%] w-[80vw] h-[80vw] rounded-full mix-blend-multiply filter blur-[80px] opacity-50 animate-blob animation-delay-2000 bg-indigo-600"></div>
-        <div class="absolute bottom-[-10%] left-[20%] w-[80vw] h-[80vw] rounded-full mix-blend-multiply filter blur-[80px] opacity-50 animate-blob animation-delay-4000 bg-cyan-600"></div>
+    <div class="bg-blobs fixed inset-0 z-0 overflow-hidden pointer-events-none opacity-70">
+        <div class="absolute top-[-10%] left-[-10%] w-[80vw] h-[80vw] rounded-full mix-blend-multiply filter blur-[100px] animate-blob bg-blue-600"></div>
+        <div class="absolute top-[20%] right-[-10%] w-[80vw] h-[80vw] rounded-full mix-blend-multiply filter blur-[100px] animate-blob animation-delay-2000 bg-indigo-600"></div>
+        <div class="absolute bottom-[-10%] left-[20%] w-[80vw] h-[80vw] rounded-full mix-blend-multiply filter blur-[100px] animate-blob animation-delay-4000 bg-cyan-600"></div>
     </div>
 
-    <div id="app" class="relative z-10 max-w-md mx-auto min-h-screen flex flex-col pb-24">
+    <div id="app" class="relative z-10 max-w-md mx-auto min-h-screen flex flex-col pb-28">
 
         <header class="flex justify-between items-center p-6">
             <div class="flex items-center gap-3">
-                <div class="p-2 rounded-2xl glass-card flex items-center justify-center">
+                <div class="p-2 rounded-2xl glass-card">
                     <i data-lucide="shield" class="w-6 h-6 text-blue-500 fill-current opacity-80"></i>
                 </div>
                 <div>
@@ -54,15 +54,28 @@
                 </div>
 
                 <div class="relative w-[280px] h-[280px] flex items-center justify-center">
-                    <svg id="rice-circle" width="300" height="300" viewBox="0 0 300 300" class="absolute inset-0 transform -rotate-90 w-full h-full"></svg>
+                    <svg width="300" height="300" viewBox="0 0 300 300" class="absolute inset-0 -rotate-90">
+                        <circle cx="150" cy="150" r="130" stroke="rgba(255,255,255,0.08)" stroke-width="20" fill="none"/>
+                        <circle cx="150" cy="150" r="130" stroke="url(#progressGradient)" stroke-width="20" fill="none" 
+                                stroke-dasharray="817" stroke-dashoffset="817" stroke-linecap="round" id="progress-stroke"/>
+                        <defs>
+                            <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#60a5fa"/>
+                                <stop offset="100%" stop-color="#34d399"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
                     <div class="flex flex-col items-center z-10 text-center">
-                        <span id="percent-display" class="text-6xl font-bold tracking-tighter tabular-nums">0<span class="text-2xl text-blue-500">%</span></span>
+                        <span class="text-6xl font-bold tracking-tighter tabular-nums">
+                            <span id="percent-number" class="bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">0</span>
+                            <span class="text-2xl opacity-80">%</span>
+                        </span>
                         <span class="text-xs font-bold uppercase tracking-widest opacity-50 mt-2">Пройдено</span>
                         <span class="text-[10px] opacity-40 mt-1" id="days-ratio">0 / 0 днів</span>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-3 gap-3 w-full mt-4">
+                <div class="grid grid-cols-3 gap-3 w-full mt-6">
                     <div class="timer-box">
                         <span id="counter-years" class="text-2xl font-bold font-mono text-blue-400">0</span>
                         <span class="text-[10px] uppercase opacity-50">Років</span>
@@ -186,16 +199,16 @@
 
         <nav class="nav-bar">
             <button onclick="toggleView('timer')" id="nav-timer" class="nav-item active">
-                <i data-lucide="clock"></i>
-                <span class="text-[10px] font-bold">Таймер</span>
+                <i data-lucide="clock" class="w-6 h-6"></i>
+                <span class="text-[10px] font-bold mt-1">Таймер</span>
             </button>
             <button onclick="toggleView('status')" id="nav-status" class="nav-item">
-                <i data-lucide="shield"></i>
-                <span class="text-[10px] font-bold">Статус</span>
+                <i data-lucide="shield" class="w-6 h-6"></i>
+                <span class="text-[10px] font-bold mt-1">Статус</span>
             </button>
             <button onclick="toggleView('stats')" id="nav-stats" class="nav-item">
-                <i data-lucide="bar-chart-3"></i>
-                <span class="text-[10px] font-bold">Аналіз</span>
+                <i data-lucide="bar-chart-3" class="w-6 h-6"></i>
+                <span class="text-[10px] font-bold mt-1">Аналіз</span>
             </button>
         </nav>
 
