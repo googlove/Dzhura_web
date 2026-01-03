@@ -1,9 +1,83 @@
-/* --- ДОДАТКОВІ СТИЛІ ДЛЯ НОВИХ ФУНКЦІЙ --- */
+/* --- GLOBAL STYLES & RESET --- */
+body {
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
 
-/* 1. Стилі таймера (Секунди та Бокси) */
+/* Приховуємо скролбар для всіх браузерів */
+::-webkit-scrollbar { width: 0px; background: transparent; }
+.hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* --- THEMES ENGINE --- */
+:root {
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --text-main: #ffffff;
+    --accent: #3b82f6;
+}
+
+body.theme-light {
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(0, 0, 0, 0.08);
+    --text-main: #1c1c1e;
+    --accent: #2563eb;
+    background-color: #f2f2f7;
+    color: var(--text-main);
+}
+
+body.theme-dark {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+body.theme-oled {
+    background-color: #000000;
+}
+body.theme-oled .bg-blobs { display: none; }
+
+/* --- GLASSMORPHISM CORE --- */
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+}
+
+.glass-blur {
+    background: rgba(28, 28, 30, 0.7);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+}
+
+/* --- ANIMATIONS --- */
+@keyframes blob {
+    0% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(30px, -50px) scale(1.1); }
+    66% { transform: translate(-20px, 20px) scale(0.9); }
+    100% { transform: translate(0, 0) scale(1); }
+}
+.animate-blob { animation: blob 10s infinite; }
+.animation-delay-2000 { animation-delay: 2s; }
+.animation-delay-4000 { animation-delay: 4s; }
+
+@keyframes pulse-red {
+    0%, 100% { border-color: rgba(239, 68, 68, 0.5); background-color: rgba(239, 68, 68, 0.05); }
+    50% { border-color: rgba(239, 68, 68, 1); background-color: rgba(239, 68, 68, 0.15); }
+}
+
+/* --- COMPONENTS --- */
+
+/* 1. Таймер */
 .timer-box {
-    @apply glass-card p-3 rounded-2xl flex flex-col items-center justify-center transition-smooth;
-    min-width: 60px;
+    @apply glass-card p-3 rounded-2xl flex flex-col items-center justify-center;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    min-width: 65px;
 }
 
 #detailed-timer-seconds {
@@ -13,86 +87,74 @@
 
 /* 2. Шеврони (Patch Selector) */
 .patch-item {
-    @apply w-16 h-16 rounded-xl glass-card flex items-center justify-center cursor-pointer border-2 border-transparent transition-all active:scale-90;
+    @apply w-16 h-16 rounded-2xl glass-card flex items-center justify-center cursor-pointer border-2 border-transparent transition-all active:scale-90;
 }
-
 .patch-item.active {
-    @apply border-blue-500 bg-blue-500/20 shadow-lg shadow-blue-500/20;
-}
-
-.patch-item img {
-    @apply w-10 h-10 object-contain;
+    border-color: var(--accent);
+    background: rgba(59, 130, 246, 0.15);
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
 }
 
 /* 3. Навігація (iOS Dock Style) */
+.nav-bar {
+    @apply fixed bottom-8 left-6 right-6 h-20 glass-blur rounded-[2.5rem] border border-white/10 flex items-center justify-around px-2 z-50 shadow-2xl;
+}
+
 .nav-item {
     @apply relative flex flex-col items-center justify-center p-3 rounded-full text-white/40 transition-all duration-300;
 }
-
-.nav-item i {
-    @apply w-6 h-6 transition-transform;
-}
-
 .nav-item.active {
-    @apply text-blue-500 bg-white/5;
+    @apply text-blue-500;
+    transform: translateY(-2px);
 }
-
-.nav-item.active i {
-    @apply scale-110;
-}
-
-/* Індикатор активної вкладки (крапка) */
 .nav-item.active::after {
     content: '';
     @apply absolute -bottom-1 w-1 h-1 bg-blue-500 rounded-full;
 }
 
-/* 4. Налаштування (Inputs) */
-.settings-input {
-    @apply w-full p-4 rounded-xl bg-black/20 border border-white/10 outline-none focus:border-blue-500 transition-smooth text-sm;
-}
-
-body.theme-light .settings-input {
-    @apply bg-white border-black/10 text-slate-900;
-}
-
-/* 5. Військо (Профілі побратимів) */
-.profile-card {
-    @apply glass-card p-4 rounded-2xl border border-white/5 flex items-center gap-4 active:scale-[0.98] transition-all;
-}
-
-.profile-avatar {
-    @apply w-12 h-12 rounded-full bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center font-bold text-white shadow-inner;
-}
-
-/* 6. Повітряна тривога (Banner) */
-#alarm-banner {
-    @apply transition-all duration-500;
-}
-
-.alarm-active {
-    @apply border-red-500 bg-red-500/10 shadow-lg shadow-red-500/10;
-    animation: pulse-red 2s infinite;
-}
-
-@keyframes pulse-red {
-    0% { border-color: rgba(239, 68, 68, 0.5); }
-    50% { border-color: rgba(239, 68, 68, 1); }
-    100% { border-color: rgba(239, 68, 68, 0.5); }
-}
-
-/* 7. Адаптація під мобільні пристрої */
-@media (max-width: 380px) {
-    #percent-display { @apply text-5xl; }
-    .timer-box { @apply p-2; }
-    .timer-box span:first-child { @apply text-base; }
-}
-
-/* Кастомний скрол для горизонтального вибору шевронів */
-.hide-scrollbar::-webkit-scrollbar {
+/* 4. Вклади (Tabs) */
+.tab-content {
     display: none;
+    opacity: 0;
+    transform: scale(0.98);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.hide-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+.tab-content.active {
+    display: block;
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* 5. Поля введення */
+.ios-input {
+    @apply w-full p-4 rounded-2xl bg-white/5 border border-white/10 outline-none transition-all font-bold;
+    color: var(--text-main);
+}
+.ios-input:focus {
+    border-color: var(--accent);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* 6. Профілі */
+.profile-card {
+    @apply glass-card p-4 rounded-3xl flex items-center justify-between transition-all active:scale-[0.98];
+}
+.profile-avatar {
+    @apply w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center font-bold text-white shadow-inner;
+}
+
+/* 7. Тривога */
+.alarm-active {
+    animation: pulse-red 2s infinite;
+    border-width: 1px;
+}
+
+/* --- UTILS --- */
+.transition-smooth { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+
+/* Адаптація під малі екрани */
+@media (max-width: 380px) {
+    #percent-display { font-size: 3.5rem; }
+    .timer-box { padding: 0.5rem; min-width: 55px; }
+    .nav-bar { left: 1rem; right: 1rem; height: 18px; }
 }
