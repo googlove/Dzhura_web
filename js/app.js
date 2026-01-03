@@ -71,7 +71,7 @@ const DB = {
 
 let AppData = {
     name: 'Джура',
-    startDate: new Date(),
+    startDate: new Date().toISOString().split('T')[0],
     serviceType: 'mobilized',
     contractYears: 3,
     currentRankId: 1,
@@ -99,22 +99,72 @@ function toggleView(viewId) {
     document.getElementById(`nav-${viewId}`).classList.add('active');
 
     if (viewId === 'status') { renderSkills(); calculateKKD(); updateAchievement(); renderMedals(); }
-    if (viewId === 'stats') { renderMonthlyStats(); }
+    if (viewId === 'stats') { renderStats(); }
+
     localStorage.setItem('DzhuraLastView', viewId);
+}
+
+function updateProgressCircle(percent) {
+    const circle = document.getElementById('progress-stroke');
+    if (!circle) return;
+    const circumference = 817;
+    const offset = circumference - (circumference * (percent / 100));
+    circle.style.strokeDashoffset = offset;
+}
+
+function getTotalServiceDays() {
+    const diff = new Date() - new Date(AppData.startDate);
+    return diff > 0 ? Math.floor(diff / 86400000) : 0;
+}
+
+function autoPromote() {
+    const days = getTotalServiceDays();
+    const ranks = AppData.isNavy ? DB.ranks_navy : DB.ranks_army;
+    const promotedRank = ranks.reduce((acc, rank) => (rank.days <= days ? rank : acc), ranks[0]);
+    if (promotedRank.id > AppData.currentRankId) {
+        AppData.currentRankId = promotedRank.id;
+    }
+}
+
+function updateDisplay() {
+    const days = getTotalServiceDays();
+    autoPromote();
+
+    let perc = 0;
+    const ranks = AppData.isNavy ? DB.ranks_navy : DB.ranks_army;
+    const maxDaysInRanks = ranks[ranks.length - 1].days;
+
+    if (AppData.serviceType === 'mobilized') {
+        document.getElementById('days-left').textContent = '∞';
+        document.getElementById('days-ratio').textContent = `${days} днів у строю`;
+        perc = days > 0 ? Math.min(100, Math.round((days / maxDaysInRanks) * 100)) : 0;
+    } else {
+        const total = AppData.contractYears * 365;
+        perc = Math.min(100, Math.round((days / total) * 100));
+        document.getElementById('days-ratio').textContent = `${days} / ${total} днів`;
+        document.getElementById('days-left').textContent = days >= total ? 'Дембель!' : (total - days);
+    }
+
+    document.getElementById('percent-number').textContent = Math.floor(perc);
+    updateProgressCircle(perc);
+
+    document.getElementById('counter-years').textContent = Math.floor(days / 365);
+    document.getElementById('counter-months').textContent = Math.floor((days % 365) / 30);
+    document.getElementById('counter-days').textContent = days % 30;
+
+    document.getElementById('user-name-display').textContent = AppData.name;
+    updateRankDisplay();
+    calculateKKD(); // оновлюємо міні-KKD
 }
 
 function calculateKKD() {
     const savedSkills = JSON.parse(localStorage.getItem('DzhuraSkills') || '[]');
-    const ranks = AppData.isNavy ? DB.ranks_navy : DB.ranks_army;
     let kkd = 10 + (AppData.currentRankId - 1) * 4 + savedSkills.length * 16;
     kkd = Math.min(100, kkd);
 
-    const bar = document.getElementById('kkd-bar');
-    const val = document.getElementById('kkd-value');
-    const mini = document.getElementById('kkd-mini-display');
-    if (bar) bar.style.width = kkd + '%';
-    if (val) val.textContent = kkd + '%';
-    if (mini) mini.textContent = kkd + '%';
+    document.getElementById('kkd-bar')?.style = `width: ${kkd}%;`;
+    document.getElementById('kkd-value')?.textContent = `${kkd}%`;
+    document.getElementById('kkd-mini-display')?.textContent = `${kkd}%`;
     return kkd;
 }
 
@@ -122,9 +172,15 @@ function updateAchievement() {
     const kkd = calculateKKD();
     const t = document.getElementById('achieve-title');
     const d = document.getElementById('achieve-desc');
-    if (kkd < 30) { t.innerText = "Новобранець"; d.innerText = "Шлях тільки починається."; }
-    else if (kkd < 70) { t.innerText = "Досвідчений"; d.innerText = "Ви впевнено тримаєте стрій."; }
-    else { t.innerText = "Морський вовк"; d.innerText = "Легенда підрозділу."; }
+    if (kkd < 30) { t.textContent = "Новобранець"; d.textContent = "Шлях тільки починається."; }
+    else if (kkd < 70) { t.textContent = "Досвідчений"; d.textContent = "Ви впевнено тримаєте стрій."; }
+    else { t.textContent = "Морський вовк"; d.textContent = "Легенда підрозділу."; }
+}
+
+function updateRankDisplay() {
+    const ranks = AppData.isNavy ? DB.ranks_navy : DB.ranks_army;
+    const rank = ranks.find(r => r.id === AppData.currentRankId);
+    document.getElementById('rank-display').textContent = rank ? rank.title.toUpperCase() : 'РЕКРУТ';
 }
 
 function renderSkills() {
@@ -136,13 +192,16 @@ function renderSkills() {
     DB.skills.forEach(skill => {
         const active = saved.includes(skill.id);
         const div = document.createElement('div');
-        div.className = 'profile-card mb-2';
+        div.className = 'glass-card p-4 rounded-3xl flex items-center justify-between mb-3 transition-all';
         div.innerHTML = `
-            <div class="flex items-center gap-3">
-                <i data-lucide="${skill.icon}" class="w-5 h-5 ${active ? 'text-blue-500' : 'opacity-30'}"></i>
-                <div><p class="text-sm font-bold">${skill.title}</p><p class="text-[10px] opacity-50">${skill.description}</p></div>
+            <div class="flex items-center gap-4">
+                <i data-lucide="${skill.icon}" class="w-8 h-8 ${active ? 'text-blue-500' : 'opacity-30'}"></i>
+                <div>
+                    <p class="font-bold">${skill.title}</p>
+                    <p class="text-xs opacity-50">${skill.description}</p>
+                </div>
             </div>
-            <input type="checkbox" onchange="toggleSkill('${skill.id}')" ${active ? 'checked' : ''} class="w-5 h-5 rounded-lg accent-blue-500">
+            <input type="checkbox" onchange="toggleSkill('${skill.id}')" ${active ? 'checked' : ''} class="w-6 h-6 rounded-lg accent-blue-500">
         `;
         list.appendChild(div);
     });
@@ -151,117 +210,168 @@ function renderSkills() {
 
 function toggleSkill(id) {
     let saved = JSON.parse(localStorage.getItem('DzhuraSkills') || '[]');
-    saved = saved.includes(id) ? saved.filter(i => i !== id) : [...saved, id];
+    if (saved.includes(id)) {
+        saved = saved.filter(i => i !== id);
+    } else {
+        saved.push(id);
+    }
     localStorage.setItem('DzhuraSkills', JSON.stringify(saved));
     calculateKKD();
+    updateAchievement();
 }
 
 function renderMedals() {
     const list = document.getElementById('medals-list');
     if (!list) return;
     list.innerHTML = '';
-    const stats = { days: getTotalServiceDays(), skills: JSON.parse(localStorage.getItem('DzhuraSkills') || '[]').length, kkd: calculateKKD() };
+    const days = getTotalServiceDays();
+    const skillsCount = JSON.parse(localStorage.getItem('DzhuraSkills') || '[]').length;
+    const kkd = calculateKKD();
 
     MEDALS.forEach(m => {
-        const ok = m.check(stats);
-        list.innerHTML += `
-            <div class="glass-card p-3 rounded-2xl flex flex-col items-center opacity-${ok ? '100' : '20'}">
-                <i data-lucide="medal" class="w-8 h-8 ${ok ? 'text-yellow-500' : ''}"></i>
-                <p class="text-[10px] font-bold mt-1">${m.title}</p>
-            </div>`;
+        const achieved = m.check({ days, skills: skillsCount, kkd });
+        const div = document.createElement('div');
+        div.className = `glass-card p-4 rounded-2xl flex flex-col items-center ${achieved ? '' : 'opacity-30'}`;
+        div.innerHTML = `
+            <i data-lucide="medal" class="w-12 h-12 ${achieved ? 'text-yellow-500' : 'text-gray-500'}"></i>
+            <p class="text-xs font-bold mt-2">${m.title}</p>
+        `;
+        list.appendChild(div);
     });
     lucide.createIcons();
 }
 
-function updateDisplay() {
+function renderStats() {
+    const list = document.getElementById('stats-list');
+    if (!list) return;
+    list.innerHTML = '';
     const days = getTotalServiceDays();
-    const total = AppData.serviceType === 'contract' ? AppData.contractYears * 365 : 540;
-    const perc = Math.min(100, (days / total) * 100).toFixed(2);
+    const skillsCount = JSON.parse(localStorage.getItem('DzhuraSkills') || '[]').length;
+    const kkd = calculateKKD();
 
-    document.getElementById('percent-display').innerHTML = `${Math.floor(perc)}<span class="text-2xl text-blue-500">%</span>`;
-    document.getElementById('days-ratio').innerText = `${days} / ${total} днів`;
-    document.getElementById('days-left').innerText = Math.max(0, total - days);
-    
-    document.getElementById('counter-years').innerText = Math.floor(days / 365);
-    document.getElementById('counter-months').innerText = Math.floor((days % 365) / 30);
-    document.getElementById('counter-days').innerText = days % 30;
+    const stats = [
+        { icon: 'calendar-days', title: 'Днів служби', value: days },
+        { icon: 'clock', title: 'Років / Місяців / Днів', value: `${Math.floor(days / 365)} / ${Math.floor((days % 365) / 30)} / ${days % 30}` },
+        { icon: 'trending-up', title: 'Бойовий ККД', value: `${kkd}%` },
+        { icon: 'zap', title: 'Навичок освоєно', value: skillsCount },
+        { icon: 'shield', title: 'Поточне звання', value: document.getElementById('rank-display').textContent }
+    ];
 
-    drawRiceCircle(perc);
-    updateRankDisplay();
-}
-
-function drawRiceCircle(percent) {
-    const svg = document.getElementById('rice-circle');
-    if (!svg) return;
-    svg.innerHTML = '';
-    for (let i = 0; i < 60; i++) {
-        const angle = (i * 6 - 90) * (Math.PI / 180);
-        const x1 = 150 + 120 * Math.cos(angle), y1 = 150 + 120 * Math.sin(angle);
-        const x2 = 150 + 135 * Math.cos(angle), y2 = 150 + 135 * Math.sin(angle);
-        svg.innerHTML += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${i < (percent * 0.6) ? '#3b82f6' : 'rgba(255,255,255,0.1)'}" stroke-width="3" stroke-linecap="round" />`;
-    }
-}
-
-function getTotalServiceDays() {
-    const diff = new Date() - new Date(AppData.startDate);
-    return diff > 0 ? Math.floor(diff / 86400000) : 0;
-}
-
-function updateRankDisplay() {
-    const ranks = AppData.isNavy ? DB.ranks_navy : DB.ranks_army;
-    const rank = ranks.find(r => r.id == AppData.currentRankId);
-    document.getElementById('rank-display').textContent = rank ? rank.title.toUpperCase() : 'РЕКРУТ';
+    stats.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'glass-card p-5 rounded-3xl flex items-center gap-5';
+        div.innerHTML = `
+            <i data-lucide="${item.icon}" class="w-10 h-10 text-blue-400"></i>
+            <div>
+                <p class="text-sm opacity-60">${item.title}</p>
+                <p class="text-2xl font-bold">${item.value}</p>
+            </div>
+        `;
+        list.appendChild(div);
+    });
+    lucide.createIcons();
 }
 
 function generateRankOptions() {
     const sel = document.getElementById('input-rank');
     if (!sel) return;
     sel.innerHTML = '';
-    (AppData.isNavy ? DB.ranks_navy : DB.ranks_army).forEach(r => {
-        sel.innerHTML += `<option value="${r.id}">${r.title}</option>`;
+    const ranks = AppData.isNavy ? DB.ranks_navy : DB.ranks_army;
+    ranks.forEach(r => {
+        const opt = document.createElement('option');
+        opt.value = r.id;
+        opt.textContent = r.title;
+        sel.appendChild(opt);
     });
     sel.value = AppData.currentRankId;
 }
 
 function setServiceType(type, save = true) {
     AppData.serviceType = type;
-    document.getElementById('btn-mobilized').className = type === 'mobilized' ? 'p-3 rounded-xl bg-blue-600 text-white text-sm font-bold' : 'p-3 rounded-xl border border-white/10 text-sm font-bold opacity-50';
-    document.getElementById('btn-contract').className = type === 'contract' ? 'p-3 rounded-xl bg-blue-600 text-white text-sm font-bold' : 'p-3 rounded-xl border border-white/10 text-sm font-bold opacity-50';
+    const mobilizedBtn = document.getElementById('btn-mobilized');
+    const contractBtn = document.getElementById('btn-contract');
+    mobilizedBtn.className = type === 'mobilized' ? 'p-3 rounded-xl bg-blue-600 text-white text-sm font-bold transition-smooth' : 'p-3 rounded-xl border border-white/10 text-sm font-bold opacity-60 transition-smooth';
+    contractBtn.className = type === 'contract' ? 'p-3 rounded-xl bg-blue-600 text-white text-sm font-bold transition-smooth' : 'p-3 rounded-xl border border-white/10 text-sm font-bold opacity-60 transition-smooth';
     document.getElementById('contract-duration-block').classList.toggle('hidden', type !== 'contract');
+
+    // Виділення активного терміну контракту
+    document.querySelectorAll('.contract-year-btn').forEach(btn => {
+        btn.classList.toggle('bg-blue-600 text-white', btn.dataset.year == AppData.contractYears);
+        btn.classList.toggle('bg-black/30', btn.dataset.year != AppData.contractYears);
+    });
+
     if (save) saveData(false);
+    updateDisplay();
 }
 
-function setContractYears(y) { AppData.contractYears = y; saveData(false); updateDisplay(); }
+function setContractYears(y) {
+    AppData.contractYears = Number(y);
+    document.querySelectorAll('.contract-year-btn').forEach(btn => {
+        btn.classList.toggle('bg-blue-600 text-white', btn.dataset.year == y);
+        btn.classList.toggle('bg-black/30', btn.dataset.year != y);
+    });
+    updateDisplay();
+    saveData(false);
+}
 
-function toggleNavyRanks(v) { AppData.isNavy = v; generateRankOptions(); saveData(false); updateRankDisplay(); }
+function toggleNavyRanks(checked) {
+    AppData.isNavy = checked;
+    generateRankOptions();
+    autoPromote(); // перерахунок при зміні ВМС/ЗСУ
+    updateRankDisplay();
+    updateDisplay();
+    saveData(false);
+}
 
 function toggleTheme() {
-    const t = ['dark', 'light', 'oled'];
-    AppData.theme = t[(t.indexOf(AppData.theme) + 1) % 3];
-    document.body.className = `theme-${AppData.theme} min-h-screen w-full relative`;
+    const themes = ['dark', 'light', 'oled'];
+    const icons = { dark: 'moon', light: 'sun', oled: 'moon' };
+    const index = themes.indexOf(AppData.theme);
+    AppData.theme = themes[(index + 1) % themes.length];
+
+    document.body.className = `theme-${AppData.theme} min-h-screen w-full relative font-inter`;
+    const icon = document.querySelector('#theme-icon');
+    if (icon) icon.setAttribute('data-lucide', icons[AppData.theme]);
+    lucide.createIcons();
     saveData(false);
 }
 
 function saveData(alertMe = true) {
-    AppData.name = document.getElementById('input-name').value;
+    AppData.name = document.getElementById('input-name').value.trim() || 'Джура';
     AppData.startDate = document.getElementById('input-date').value;
-    AppData.currentRankId = document.getElementById('input-rank').value;
+    AppData.currentRankId = Number(document.getElementById('input-rank').value);
+
     localStorage.setItem('DzhuraAppData', JSON.stringify(AppData));
     updateDisplay();
-    if (alertMe) alert('Дані збережено');
+    if (alertMe) alert('Дані збережено!');
 }
 
 function loadData() {
     const saved = localStorage.getItem('DzhuraAppData');
-    if (saved) AppData = JSON.parse(saved);
+    if (saved) {
+        AppData = { ...AppData, ...JSON.parse(saved) };
+    }
+
     document.getElementById('input-name').value = AppData.name;
-    document.getElementById('input-date').value = new Date(AppData.startDate).toISOString().split('T')[0];
+    document.getElementById('input-date').value = AppData.startDate;
     document.getElementById('is-navy').checked = AppData.isNavy;
-    document.body.className = `theme-${AppData.theme} min-h-screen w-full relative`;
+
+    document.body.className = `theme-${AppData.theme} min-h-screen w-full relative font-inter`;
+    const icon = document.querySelector('#theme-icon');
+    if (icon) icon.setAttribute('data-lucide', AppData.theme === 'light' ? 'sun' : 'moon');
+
     generateRankOptions();
     setServiceType(AppData.serviceType, false);
+
     updateDisplay();
     toggleView(localStorage.getItem('DzhuraLastView') || 'timer');
+    lucide.createIcons();
 }
 
-window.onload = loadData;
+// Оновлення кожну хвилину (для точності при зміні дати)
+setInterval(updateDisplay, 60000);
+
+window.addEventListener('load', () => {
+    loadData();
+    updateDisplay();
+});
