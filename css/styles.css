@@ -171,3 +171,7 @@ body.theme-oled .bg-blobs { display: none; }
     .timer-box { padding: 0.5rem; min-width: 55px; }
     .nav-bar { left: 1rem; right: 1rem; bottom: 1.5rem; }
 }
+
+#progress-stroke {
+    transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
