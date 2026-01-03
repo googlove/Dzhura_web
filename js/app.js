@@ -365,8 +365,9 @@ function loadData() {
 
     updateDisplay();
     toggleView(localStorage.getItem('DzhuraLastView') || 'timer');
-    lucide.createIcons();
-}
+    lucide.createIcons({
+    attrs: { 'pointer-events': 'none' } // глобально для всіх іконок
+});
 
 // Оновлення кожну хвилину (для точності при зміні дати)
 setInterval(updateDisplay, 60000);
