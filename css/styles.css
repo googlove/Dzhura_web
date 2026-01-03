@@ -190,3 +190,13 @@ body.theme-oled .bg-blobs { display: none; }
     .timer-box { padding: 0.5rem; min-width: 55px; }
     .nav-bar { left: 1rem; right: 1rem; bottom: max(0.75rem, env(safe-area-inset-bottom)); }
 }
+
+.nav-item i,
+.nav-item svg {
+    pointer-events: none !important;
+}
+
+.nav-item {
+    cursor: pointer;
+    user-select: none;
+}
