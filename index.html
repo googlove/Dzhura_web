@@ -6,103 +6,71 @@
     <title>Джура ∞</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700;900&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@900&family=JetBrains+Mono:wght@800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="min-h-screen relative overflow-x-hidden font-['Exo_2']">
+<body class="theme-pixel min-h-screen relative font-['Exo_2']" id="body-root">
+    <div class="camo-overlay"></div>
 
-    <div class="pixel-camo"></div>
-    <div class="scanline fixed inset-0 z-50 pointer-events-none"></div>
-
-    <main class="relative z-10 h-screen overflow-y-auto pb-32 pt-4 px-4 max-w-md mx-auto hide-scrollbar">
-        
-        <header class="flex justify-between items-center mb-6 glass-panel p-4 rounded-xl border-l-4 border-yellow-500">
+    <main class="relative z-10 max-w-md mx-auto p-4 pb-32">
+        <header class="glass-panel p-4 mb-6 flex justify-between items-center border-l-4 border-theme">
             <div>
-                <div id="realtime-clock" class="text-2xl font-mono font-bold text-white tracking-tighter">00:00:00</div>
-                <div id="money-display" class="text-yellow-400 font-black text-xl mt-1">0 ₴</div>
+                <div id="money-display" class="text-xl font-black text-theme tracking-tighter">0 ₴</div>
+                <div id="display-rank" class="text-[10px] text-white/50 uppercase font-bold">Рекрут</div>
             </div>
-            <div class="text-right">
-                <h1 id="user-name-display" class="font-black uppercase text-base text-white">Боєць</h1>
-                <span id="rank-badge-display" class="text-[12px] text-yellow-500 font-bold uppercase tracking-widest">Рекрут</span>
+            <div class="flex gap-3">
+                <button onclick="UI.setTheme('pixel')" class="theme-dot bg-[#bef264]" title="Піксель"></button>
+                <button onclick="UI.setTheme('night')" class="theme-dot bg-[#334155]" title="Ніч"></button>
+                <button onclick="UI.setTheme('red')" class="theme-dot bg-[#ef4444]" title="Червоний"></button>
             </div>
         </header>
 
-        <section id="view-timer" class="tab-view space-y-6">
-            <div class="relative flex justify-center py-2">
-                <svg width="240" height="240" viewBox="0 0 260 260" class="transform -rotate-90">
-                    <circle cx="130" cy="130" r="120" stroke="rgba(0,0,0,0.4)" stroke-width="14" fill="none" />
-                    <circle id="progress-ring" cx="130" cy="130" r="120" stroke="#ca8a04" stroke-width="14" fill="none" stroke-dasharray="754" stroke-dashoffset="754" stroke-linecap="round" />
+        <section id="view-timer" class="tab-view space-y-8">
+            <div class="flex justify-center relative">
+                <svg width="280" height="280" class="rotate-[-90deg]">
+                    <circle cx="140" cy="140" r="120" class="circle-bg" stroke-width="12" fill="none"/>
+                    <circle id="progress-ring" cx="140" cy="140" r="120" class="circle-main" stroke-width="12" fill="none" stroke-dasharray="754" stroke-dashoffset="754" stroke-linecap="round"/>
                 </svg>
                 <div class="absolute inset-0 flex flex-col items-center justify-center">
-                    <span class="text-[14px] text-yellow-500 font-black uppercase tracking-widest">СЛУЖБА</span>
-                    <div id="main-days-counter" class="main-counter">0</div>
-                    <span class="text-[14px] text-white font-black uppercase">Днів</span>
+                    <span class="text-xs font-black tracking-widest text-theme uppercase">СЛУЖБА</span>
+                    <div id="main-days-counter" class="text-8xl font-mono font-black text-white leading-none">0</div>
+                    <span class="text-sm font-bold text-white uppercase mt-2">Днів</span>
                 </div>
             </div>
 
             <div class="grid grid-cols-3 gap-3">
-                <div class="timer-card"><span id="t-year">0</span><p>Років</p></div>
-                <div class="timer-card"><span id="t-month">0</span><p>Місяців</p></div>
-                <div class="timer-card"><span id="t-day">0</span><p>Днів</p></div>
-                <div class="timer-card"><span id="t-hour">0</span><p>Годин</p></div>
-                <div class="timer-card"><span id="t-min">0</span><p>Хвилин</p></div>
-                <div class="timer-card"><span id="t-sec">0</span><p>Секунд</p></div>
+                <div class="stat-card"><span id="t-year">0</span><label>Років</label></div>
+                <div class="stat-card"><span id="t-month">0</span><label>Місяців</label></div>
+                <div class="stat-card"><span id="t-day">0</span><label>Днів</label></div>
             </div>
-
-            <div id="events-tracker" class="space-y-4 mt-6"></div>
+            <div id="events-tracker" class="space-y-3"></div>
         </section>
 
-        <section id="view-settings" class="hidden tab-view space-y-6">
-            <div class="glass-panel p-5 rounded-2xl space-y-4">
-                <h3 class="text-yellow-500 font-black uppercase text-sm border-b border-white/10 pb-2">Дані служби</h3>
-                <div>
-                    <label class="label-mil">Позивний</label>
-                    <input type="text" id="in-name" class="mil-input" placeholder="Введіть ім'я">
+        <section id="view-settings" class="tab-view hidden space-y-4">
+            <div class="glass-panel p-5 space-y-4">
+                <label class="block text-theme text-[10px] font-black uppercase ml-1">Персональні дані</label>
+                <input type="text" id="in-name" class="mil-input" placeholder="ПОЗИВНИЙ">
+                <input type="date" id="in-date" class="mil-input">
+                
+                <div class="flex items-center gap-3 p-4 bg-white/5 rounded-xl border border-white/10">
+                    <input type="checkbox" id="check-navy" onchange="App.toggleNavy()" class="w-6 h-6 accent-[#bef264]">
+                    <span class="text-xs font-black text-white uppercase">ВМС (ФЛОТ)</span>
                 </div>
-                <div>
-                    <label class="label-mil">Дата призову</label>
-                    <input type="date" id="in-date" class="mil-input">
-                </div>
-                <div class="flex items-center gap-3 p-3 bg-black/40 rounded-xl border border-white/10">
-                    <input type="checkbox" id="check-navy" onchange="App.toggleNavy()" class="w-6 h-6 accent-yellow-600">
-                    <span class="text-sm font-black uppercase text-white">ВМС (Флот)</span>
-                </div>
-                <div>
-                    <label class="label-mil">Звання</label>
-                    <select id="input-rank" class="mil-input"></select>
-                </div>
+
+                <label class="block text-theme text-[10px] font-black uppercase ml-1">Військове звання</label>
+                <select id="input-rank" class="mil-input"></select>
             </div>
 
-            <div class="glass-panel p-5 rounded-2xl space-y-4">
-                <h3 class="text-yellow-500 font-black uppercase text-sm border-b border-white/10 pb-2">Фінанси та Відпустки</h3>
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="label-mil">Зарплата</label>
-                        <input type="number" id="in-salary" class="mil-input">
-                    </div>
-                    <div>
-                        <label class="label-mil">Вахти (4к)</label>
-                        <input type="number" id="in-watches" class="mil-input">
-                    </div>
-                </div>
-                <div class="space-y-3 pt-2">
-                    <div><label class="label-mil">Відпустка 1 (15+2)</label><input type="date" id="vac-1" class="mil-input"></div>
-                    <div><label class="label-mil">Відпустка 2 (15+2)</label><input type="date" id="vac-2" class="mil-input"></div>
-                    <div><label class="label-mil">Сімейні (10 дн)</label><input type="date" id="vac-fam" class="mil-input"></div>
-                    <div><label class="label-mil">Звільнення (4 дн)</label><input type="date" id="vac-city" class="mil-input"></div>
-                </div>
-            </div>
-
-            <button onclick="App.save()" class="save-btn">ЗБЕРЕГТИ ДАНІ</button>
+            <button onclick="App.save()" class="mil-save-btn">ЗБЕРЕГТИ ДАНІ</button>
         </section>
     </main>
 
-    <nav class="fixed bottom-6 left-6 right-6 h-20 bg-black/90 backdrop-blur-2xl border border-white/10 rounded-3xl flex justify-around items-center z-[100] shadow-2xl">
-        <button onclick="UI.nav('timer')" id="nav-timer" class="nav-btn active">
-            <i data-lucide="home" class="w-7 h-7"></i><span>Головна</span>
+    <nav class="fixed bottom-6 left-6 right-6 h-20 bg-black/95 rounded-[2rem] flex justify-around items-center z-50 border border-white/5 shadow-2xl">
+        <button onclick="UI.nav('timer')" id="nav-timer" class="nav-item active">
+            <i data-lucide="clock" class="w-6 h-6"></i><span>Головна</span>
         </button>
-        <button onclick="UI.nav('settings')" id="nav-settings" class="nav-btn">
-            <i data-lucide="settings" class="w-7 h-7"></i><span>Налаштування</span>
+        <button onclick="UI.nav('settings')" id="nav-settings" class="nav-item">
+            <i data-lucide="shield-check" class="w-6 h-6"></i><span>Налаштування</span>
         </button>
     </nav>
 
