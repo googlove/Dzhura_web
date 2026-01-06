@@ -1,103 +1,70 @@
-/* --- GLOBAL RESET --- */
-body {
-    font-family: 'Exo 2', sans-serif; /* Військовий шрифт */
-    -webkit-tap-highlight-color: transparent;
-    background-color: #1a1c10; /* Dark Olive */
-    color: #e4e4e4;
-    overflow-x: hidden;
-}
-
-::-webkit-scrollbar { width: 0; background: transparent; }
-.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-/* --- MILITARY THEME --- */
+/* GLOBAL */
 :root {
-    --glass-bg: rgba(30, 35, 20, 0.75);
-    --glass-border: rgba(100, 110, 80, 0.25);
-    --accent: #ca8a04; /* Yellow-600 for contrast */
-    --text-muted: rgba(255, 255, 255, 0.4);
+    --c-olive-dark: #373b30;
+    --c-olive-light: #525545;
+    --c-tan: #757161;
+    --c-black: #1a1c16;
 }
 
-/* ФОН ПІКСЕЛЬ/ЗСУ (CSS Pattern) */
-.military-bg {
-    background-color: #12140e;
-    opacity: 0.8;
-    background-image:  
-        repeating-linear-gradient(45deg, #1a1c14 25%, transparent 25%, transparent 75%, #1a1c14 75%, #1a1c14), 
-        repeating-linear-gradient(45deg, #1a1c14 25%, #12140e 25%, #12140e 75%, #1a1c14 75%, #1a1c14);
-    background-position: 0 0, 10px 10px;
-    background-size: 20px 20px;
+body {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* --- MM-14 PIXEL CAMO GENERATOR --- */
+.pixel-camo {
+    background-color: #4b4f42; /* Основний оливковий */
+    /* Складний патерн градієнтів для імітації пікселя */
+    background-image: 
+        linear-gradient(45deg, #2d3026 25%, transparent 25%, transparent 75%, #2d3026 75%, #2d3026),
+        linear-gradient(45deg, #2d3026 25%, transparent 25%, transparent 75%, #2d3026 75%, #2d3026),
+        linear-gradient(90deg, #6b6957 1px, transparent 1px),
+        linear-gradient(#6b6957 1px, transparent 1px);
+    background-size: 40px 40px, 40px 40px, 10px 10px, 10px 10px;
+    background-position: 0 0, 20px 20px, 0 0, 0 0;
+    opacity: 0.4;
+    filter: contrast(120%) brightness(80%);
 }
 
 .vignette {
-    background: radial-gradient(circle, transparent 40%, #000000 120%);
+    background: radial-gradient(circle at center, transparent 30%, #000 130%);
 }
 
-/* --- COMPONENTS --- */
+/* CRT Scanline Effect */
+.scanline {
+    background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1));
+    background-size: 100% 4px;
+    opacity: 0.6;
+    pointer-events: none;
+}
 
-.glass-card {
-    background: var(--glass-bg);
+/* GLASS UI */
+.glass-panel {
+    background: rgba(20, 22, 18, 0.75);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid var(--glass-border);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
 }
 
-.glass-blur {
-    background: rgba(15, 18, 10, 0.85);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-}
-
-/* Inputs Style */
-.mil-input {
-    @apply w-full p-4 rounded-xl bg-black/30 border border-white/10 outline-none focus:border-yellow-600 transition-all font-mono text-sm tracking-wider uppercase;
-}
-.label-mil {
-    @apply block text-[10px] opacity-40 uppercase font-black mb-2 tracking-[0.15em] ml-1;
-}
-
-/* Timer Boxes */
-.timer-box {
-    @apply glass-card p-3 rounded-xl flex flex-col items-center justify-center border-t border-white/10;
-    background: rgba(0,0,0,0.2);
-}
-
-/* Nav Items */
-.nav-item {
-    @apply relative flex flex-col items-center justify-center p-3 rounded-xl text-white/30 transition-all duration-500 ease-out;
-}
-.nav-item.active {
-    @apply text-yellow-500 bg-yellow-500/10;
-    transform: translateY(-4px);
-}
-.nav-item span {
-    font-size: 9px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-top: 2px;
-}
-
-/* Tabs Animation */
-.tab-content {
+.hide-scrollbar::-webkit-scrollbar {
     display: none;
-    opacity: 0;
-    transform: translateY(10px);
-    transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
-.tab-content.active {
-    display: block;
-    opacity: 1;
-    transform: translateY(0);
+.hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
-/* Buttons Logic */
-button { cursor: pointer; user-select: none; }
-button:active { transform: scale(0.96); }
+/* ANIMATIONS */
+@keyframes pulse-slow {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(0.95); }
+}
+.animate-pulse-slow {
+    animation: pulse-slow 3s infinite ease-in-out;
+}
 
-/* SVG Stroke Animation */
-line { transition: stroke 0.3s ease; }
-
-/* Utilities */
-.transition-smooth { transition: all 0.4s ease; }
+/* NAV BUTTONS */
+.nav-btn.active {
+    color: #ca8a04; /* Yellow-600 */
+    text-shadow: 0 0 10px rgba(202, 138, 4, 0.5);
+    transform: translateY(-2px);
+}
