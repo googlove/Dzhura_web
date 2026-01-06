@@ -1,80 +1,162 @@
 :root {
-  --bg: #6b704b;
-}
-[data-theme="dark"] {
-  --bg: #12140e;
-}
-
-body { background: var(--bg); }
-
-.pixel-camo {
-  background:
-    linear-gradient(45deg,#828a61 25%,transparent 25% 75%,#828a61 75%),
-    linear-gradient(45deg,#6b704b 25%,transparent 25% 75%,#6b704b 75%);
-  background-size: 44px 44px;
-  opacity: .9;
+    --bg-camo: url('https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/MM-14_camouflage_pattern.svg/1024px-MM-14_camouflage_pattern.svg.png');
+    --glass-bg: rgba(20, 30, 20, 0.45);
+    --glass-border: rgba(251, 191, 36, 0.2);
+    --text-primary: #fbbf24;
+    --text-secondary: #b8ff6e;
+    --shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
 }
 
-.glass-panel {
-  background: rgba(0,0,0,.45);
-  backdrop-filter: blur(15px);
-  border: 1px solid rgba(255,255,255,.1);
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-.timer-card {
-  background: rgba(0,0,0,.5);
-  border-radius: 16px;
-  text-align: center;
-  padding: 10px;
+body {
+    min-height: 100vh;
+    background: #0a120a var(--bg-camo) center/cover no-repeat fixed;
+    font-family: 'Exo 2', sans-serif;
+    color: var(--text-secondary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
 }
 
-.timer-card span {
-  font-size: 1.5rem;
-  font-weight: 900;
-  color: white;
+.container {
+    width: 100%;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
-.timer-card p {
-  font-size: 10px;
-  text-transform: uppercase;
-  color: #ca8a04;
+header {
+    text-align: center;
+    padding: 1rem 0;
 }
 
-.mil-input {
-  width: 100%;
-  background: white;
-  border: 3px solid #ca8a04;
-  border-radius: 14px;
-  padding: 10px;
-  font-weight: 900;
+header h1 {
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--text-primary);
+    text-shadow: 0 0 15px rgba(251, 191, 36, 0.6);
 }
 
-.label-mil {
-  font-size: 11px;
-  color: white;
-  font-weight: 900;
-  text-transform: uppercase;
+.card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 20px;
+    border: 1px solid var(--glass-border);
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
 }
 
-.bottom-nav {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  right: 20px;
-  height: 70px;
-  background: rgba(0,0,0,.8);
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  border-radius: 24px;
+h2 {
+    font-size: 1.4rem;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    text-align: center;
+    font-weight: 800;
 }
 
-.nav-btn {
-  color: rgba(255,255,255,.4);
-  font-size: 10px;
-  text-transform: uppercase;
+label {
+    display: block;
+    margin: 0.8rem 0 0.4rem;
+    font-weight: 600;
+    color: var(--text-secondary);
 }
 
-.nav-btn.active {
-  color: #ca8a04;
+input, select {
+    width: 100%;
+    padding: 0.8rem;
+    border-radius: 12px;
+    border: none;
+    background: rgba(0, 0, 0, 0.3);
+    color: white;
+    font-size: 1rem;
+    backdrop-filter: blur(10px);
+}
+
+input:focus, select:focus {
+    outline: 2px solid var(--text-primary);
+}
+
+#main-counter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.circle {
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: rgba(30, 50, 30, 0.6);
+    backdrop-filter: blur(15px);
+    border: 4px solid var(--text-primary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 30px rgba(251, 191, 36, 0.4);
+}
+
+.big-number {
+    font-size: 4.5rem;
+    font-weight: 900;
+    color: var(--text-primary);
+    line-height: 1;
+}
+
+.big-text {
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-align: center;
+    margin-top: 0.5rem;
+    color: var(--text-secondary);
+}
+
+#infinity {
+    font-size: 8rem;
+    color: var(--text-primary);
+    opacity: 0.8;
+}
+
+.time-breakdown {
+    text-align: center;
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+.earned {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--text-primary);
+}
+
+.vacation-item {
+    margin-bottom: 1.2rem;
+}
+
+.countdown {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+@media (max-width: 480px) {
+    .circle {
+        width: 180px;
+        height: 180px;
+    }
+    .big-number {
+        font-size: 3.8rem;
+    }
+    header h1 {
+        font-size: 2.2rem;
+    }
 }
