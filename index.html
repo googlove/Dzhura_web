@@ -3,147 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Джура ∞</title>
-
+    <title>Джура™</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;600;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="theme-military min-h-screen w-full relative overflow-hidden">
+<body class="bg-black min-h-screen w-full relative overflow-hidden text-gray-200 font-['Exo_2'] selection:bg-yellow-600 selection:text-black">
 
-    <div class="military-bg fixed inset-0 z-0 pointer-events-none"></div>
+    <div class="pixel-camo fixed inset-0 z-0 pointer-events-none"></div>
+    <div class="scanline fixed inset-0 z-50 pointer-events-none"></div>
     <div class="vignette fixed inset-0 z-0 pointer-events-none"></div>
 
-    <main class="relative z-10 pb-28 pt-6 px-4 max-w-lg mx-auto h-screen overflow-y-auto hide-scrollbar">
+    <main class="relative z-10 h-screen overflow-y-auto pb-24 pt-4 px-4 max-w-md mx-auto hide-scrollbar">
         
-        <header class="flex justify-between items-start mb-6 glass-card p-4 rounded-2xl border-l-4 border-yellow-600/50">
+        <header class="flex justify-between items-center mb-6 glass-panel p-4 rounded-xl border-l-4 border-yellow-600">
             <div>
-                <p class="text-[10px] uppercase tracking-[0.2em] opacity-60 font-mono mb-1 text-yellow-500">Системний час</p>
-                <div id="doomsday-clock" class="text-3xl font-black font-mono leading-none tracking-tight text-white/90">
-                    00:00:00
-                </div>
+                <p class="text-[10px] uppercase text-yellow-500 font-bold tracking-widest mb-1">Оперативний час</p>
+                <div id="realtime-clock" class="text-2xl font-mono font-bold text-white leading-none">00:00:00</div>
             </div>
             <div class="text-right">
-                <h1 id="header-name" class="font-bold text-lg leading-tight text-white">Боєць</h1>
-                <p id="header-rank" class="text-[10px] opacity-50 tracking-widest uppercase font-bold text-yellow-500">Рекрут</p>
+                <h1 id="user-name" class="font-black uppercase text-lg text-white">Боєць</h1>
+                <span id="rank-badge" class="text-[9px] bg-black/40 px-2 py-1 rounded text-yellow-500 font-bold uppercase tracking-wider border border-white/10">Рекрут</span>
             </div>
         </header>
 
-        <section id="view-timer" class="tab-content active">
+        <section id="view-timer" class="space-y-4 tab-view">
             
-            <div class="relative flex justify-center items-center py-8">
-                <svg width="280" height="280" viewBox="0 0 300 300" class="absolute transform -rotate-90 pointer-events-none">
-                    <circle cx="150" cy="150" r="140" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="4" />
-                    <g id="rice-circle-svg"></g> </svg>
+            <div class="relative flex justify-center py-6">
+                <svg width="260" height="260" viewBox="0 0 260 260" class="transform -rotate-90">
+                    <circle cx="130" cy="130" r="120" stroke="rgba(255,255,255,0.05)" stroke-width="8" fill="none" />
+                    <circle id="progress-ring" cx="130" cy="130" r="120" stroke="#ca8a04" stroke-width="8" fill="none" stroke-dasharray="754" stroke-dashoffset="754" stroke-linecap="round" class="transition-all duration-1000" />
+                </svg>
                 
-                <div class="text-center z-10 mt-2">
-                    <div id="percent-display" class="text-6xl font-black mb-0 tabular-nums tracking-tighter drop-shadow-lg">0%</div>
-                    <div class="text-[10px] uppercase tracking-[0.3em] opacity-40 font-bold mt-2">Служби</div>
+                <div class="absolute inset-0 flex flex-col items-center justify-center pt-2">
+                    <span class="text-[9px] uppercase tracking-[0.2em] text-white/40 font-bold">В СТРОЮ</span>
+                    <div id="total-days-counter" class="text-5xl font-black text-white drop-shadow-lg font-mono">0</div>
+                    <span class="text-[10px] text-yellow-500 font-bold uppercase tracking-widest mt-1">Днів</span>
                 </div>
             </div>
 
-            <div class="glass-card p-4 rounded-2xl flex items-center justify-between mb-4 border border-white/5 bg-black/20">
-                <div>
-                    <p class="text-[10px] uppercase opacity-50 font-bold tracking-wider">До демобілізації</p>
-                    <p class="text-xs opacity-30">Термін невизначений</p>
+            <div class="glass-panel p-5 rounded-xl flex items-center justify-between border border-white/10 relative overflow-hidden group">
+                <div class="absolute inset-0 bg-yellow-600/5 group-hover:bg-yellow-600/10 transition-all"></div>
+                <div class="relative z-10">
+                    <p class="text-[9px] uppercase text-white/50 font-bold tracking-widest mb-1">До Демобілізації</p>
+                    <p class="text-xs text-yellow-500 font-bold">Термін невизначений</p>
                 </div>
-                <div class="text-5xl font-light text-yellow-500/80 leading-none">
-                    ∞
+                <div class="relative z-10 text-5xl text-white/90 font-light leading-none animate-pulse-slow">∞</div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2">
+                <div class="glass-panel p-3 rounded-xl text-center border-t-2 border-white/10">
+                    <span id="stat-years" class="block text-2xl font-mono font-bold text-white">0</span>
+                    <span class="text-[8px] uppercase text-white/40 font-bold tracking-wider">Років</span>
+                </div>
+                <div class="glass-panel p-3 rounded-xl text-center border-t-2 border-white/10">
+                    <span id="stat-months" class="block text-2xl font-mono font-bold text-white">0</span>
+                    <span class="text-[8px] uppercase text-white/40 font-bold tracking-wider">Місяців</span>
+                </div>
+                <div class="glass-panel p-3 rounded-xl text-center border-t-2 border-white/10">
+                    <span id="stat-weeks" class="block text-2xl font-mono font-bold text-white">0</span>
+                    <span class="text-[8px] uppercase text-white/40 font-bold tracking-wider">Тижнів</span>
                 </div>
             </div>
 
-            <div class="grid grid-cols-4 gap-2 mt-4">
-                <div class="timer-box">
-                    <span class="block text-xl font-black" id="t-years">0</span>
-                    <span class="text-[8px] opacity-50 uppercase tracking-widest">Роки</span>
-                </div>
-                <div class="timer-box">
-                    <span class="block text-xl font-black" id="t-months">0</span>
-                    <span class="text-[8px] opacity-50 uppercase tracking-widest">Міс</span>
-                </div>
-                <div class="timer-box">
-                    <span class="block text-xl font-black" id="t-weeks">0</span>
-                    <span class="text-[8px] opacity-50 uppercase tracking-widest">Тиж</span>
-                </div>
-                <div class="timer-box">
-                    <span class="block text-xl font-black" id="t-days">0</span>
-                    <span class="text-[8px] opacity-50 uppercase tracking-widest">Дні</span>
-                </div>
+            <div class="glass-panel p-3 rounded-xl flex justify-between items-center px-6">
+                <span class="text-[9px] uppercase tracking-widest text-white/50 font-bold">Секунди служби</span>
+                <span id="stat-seconds-total" class="font-mono text-lg text-yellow-500 font-bold">0</span>
             </div>
+
         </section>
 
-        <section id="view-army" class="tab-content">
-            <div class="flex justify-between items-end mb-4 px-1">
-                <h2 class="text-xl font-black uppercase tracking-wide">Особовий склад</h2>
-                <button onclick="UI.openModal()" class="text-yellow-500 text-xs font-bold uppercase tracking-wider border border-yellow-500/30 px-3 py-1 rounded hover:bg-yellow-500/10 transition-all">+ Додати</button>
-            </div>
-            <div id="army-list" class="space-y-3"></div>
-        </section>
+        <section id="view-settings" class="hidden tab-view space-y-6">
+            <h2 class="text-xl font-black uppercase text-white px-1">Налаштування</h2>
+            
+            <div class="glass-panel p-6 rounded-2xl space-y-5 bg-black/40">
+                <div>
+                    <label class="block text-[10px] uppercase text-yellow-500 font-bold tracking-widest mb-2">Позивний</label>
+                    <input type="text" id="input-name" class="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-white focus:border-yellow-600 outline-none uppercase font-bold tracking-wider">
+                </div>
 
-        <section id="view-settings" class="tab-content">
-            <h2 class="text-xl font-black uppercase tracking-wide mb-6 px-1">Параметри</h2>
-            <div class="glass-card p-6 rounded-3xl space-y-6 bg-black/20">
                 <div>
-                    <label class="label-mil">Позивний</label>
-                    <input type="text" id="set-name" class="mil-input">
+                    <label class="block text-[10px] uppercase text-yellow-500 font-bold tracking-widest mb-2">Дата початку служби</label>
+                    <input type="date" id="input-date" class="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-white focus:border-yellow-600 outline-none [color-scheme:dark]">
                 </div>
+
                 <div>
-                    <label class="label-mil">Дата призову</label>
-                    <input type="date" id="set-date" class="mil-input text-white [color-scheme:dark]">
-                </div>
-                <div>
-                    <label class="label-mil">Тип служби</label>
-                    <div class="grid grid-cols-2 gap-2 mt-1">
-                        <button id="btn-mobilized" onclick="App.setService('mobilized')" class="p-3 rounded-xl border border-white/10 text-xs font-bold uppercase transition-all">Мобілізація</button>
-                        <button id="btn-contract" onclick="App.setService('contract')" class="p-3 rounded-xl border border-white/10 text-xs font-bold uppercase transition-all">Контракт</button>
-                    </div>
-                </div>
-                <div>
-                    <label class="label-mil">Звання</label>
-                    <select id="input-rank" class="mil-input appearance-none"></select>
+                    <label class="block text-[10px] uppercase text-yellow-500 font-bold tracking-widest mb-2">Звання</label>
+                    <select id="input-rank" class="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white outline-none appearance-none font-bold"></select>
                     
-                    <div class="flex items-center gap-3 mt-4 p-3 border border-white/5 rounded-xl">
-                         <input type="checkbox" id="is-navy" class="w-5 h-5 accent-yellow-600 bg-transparent border-white/20" onchange="App.toggleNavy(this.checked)">
-                         <label for="is-navy" class="text-xs font-bold uppercase opacity-70">ВМС (Корабельні звання)</label>
+                    <div class="mt-4 flex items-center gap-3">
+                        <input type="checkbox" id="check-navy" class="w-5 h-5 accent-yellow-600 bg-transparent rounded border-white/30" onchange="App.toggleNavy()">
+                        <label for="check-navy" class="text-xs font-bold uppercase text-white/70">ВМС (Флот)</label>
                     </div>
                 </div>
 
-                <button onclick="App.saveUser()" class="w-full bg-yellow-600/80 hover:bg-yellow-600 p-4 rounded-xl font-black uppercase tracking-widest text-black shadow-lg shadow-yellow-900/20 active:scale-95 transition-all mt-4">
-                    Зберегти
+                <button onclick="App.saveData()" class="w-full py-4 bg-yellow-700 hover:bg-yellow-600 text-white font-black uppercase tracking-widest rounded-xl shadow-lg shadow-yellow-900/40 active:scale-95 transition-all">
+                    Зберегти дані
                 </button>
             </div>
         </section>
 
     </main>
 
-    <nav class="fixed bottom-6 left-4 right-4 h-16 glass-blur rounded-2xl border border-white/5 flex items-center justify-around px-2 z-50 shadow-2xl bg-black/60">
-        <button onclick="UI.switchTab('timer')" id="nav-timer" class="nav-item active">
-            <i data-lucide="crosshair"></i>
-            <span>Таймер</span>
+    <nav class="fixed bottom-6 left-6 right-6 h-16 bg-[#1a1c16]/90 backdrop-blur-xl border border-white/10 rounded-2xl flex justify-around items-center z-50 shadow-2xl">
+        <button onclick="UI.nav('timer')" id="btn-timer" class="nav-btn active flex flex-col items-center gap-1 p-2 text-white/30 transition-all">
+            <i data-lucide="clock" class="w-5 h-5"></i>
+            <span class="text-[8px] font-bold uppercase tracking-wider">Таймер</span>
         </button>
-        <button onclick="UI.switchTab('army')" id="nav-army" class="nav-item">
-            <i data-lucide="users"></i>
-            <span>Склад</span>
-        </button>
-        <button onclick="UI.switchTab('settings')" id="nav-settings" class="nav-item">
-            <i data-lucide="settings"></i>
-            <span>Налаштування</span>
+        <button onclick="UI.nav('settings')" id="btn-settings" class="nav-btn flex flex-col items-center gap-1 p-2 text-white/30 transition-all">
+            <i data-lucide="settings-2" class="w-5 h-5"></i>
+            <span class="text-[8px] font-bold uppercase tracking-wider">Дані</span>
         </button>
     </nav>
-
-    <div id="modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] hidden items-center justify-center p-6">
-        <div class="glass-card w-full max-w-xs p-6 rounded-2xl border border-white/10">
-            <h3 class="font-black text-center mb-6 uppercase tracking-wider text-yellow-500">Новий боєць</h3>
-            <input type="text" id="buddy-name" placeholder="Позивний" class="mil-input mb-3">
-            <input type="date" id="buddy-date" class="mil-input mb-6 [color-scheme:dark]">
-            <div class="flex gap-2">
-                <button onclick="UI.closeModal()" class="flex-1 p-3 rounded-xl border border-white/10 text-xs font-bold uppercase hover:bg-white/5">Відміна</button>
-                <button onclick="App.addBuddy()" class="flex-1 p-3 rounded-xl bg-yellow-600 text-black text-xs font-bold uppercase hover:bg-yellow-500">Додати</button>
-            </div>
-        </div>
-    </div>
 
     <script src="js/app.js"></script>
 </body>
