@@ -1,84 +1,60 @@
 :root {
-    --p-light: #9ca37d; 
-    --p-mid: #828a61;   
-    --p-dark: #6b704b;  
-    --p-accent: #5d633a;
-    --text: #ffffff;
-    --glass: rgba(255, 255, 255, 0.4);
+    --p-light: #9ca37d; --p-mid: #828a61; --p-dark: #6b704b; --p-accent: #5d633a;
 }
-
 [data-theme="dark"] {
-    --p-light: #1a1c16; 
-    --p-mid: #2d3026;   
-    --p-dark: #12140e;  
-    --p-accent: #373b30;
-    --text: #e4e4e4;
-    --glass: rgba(20, 22, 18, 0.8);
+    --p-light: #1a1c16; --p-mid: #2d3026; --p-dark: #12140e; --p-accent: #373b30;
 }
 
-body { 
-    background-color: var(--p-light); 
-    color: var(--text); 
-    overflow: hidden; 
-    transition: background-color 0.5s ease;
-    font-family: 'Exo 2', sans-serif;
-}
+body { background-color: var(--p-light); transition: background-color 0.4s; }
 
-/* ГЕНЕРАЦІЯ ПІКСЕЛЯ КОДОМ */
+/* ТАКТИЧНИЙ ПІКСЕЛЬ КОДОМ */
 .pixel-camo {
     background-image: 
         linear-gradient(45deg, var(--p-mid) 25%, transparent 25%, transparent 75%, var(--p-mid) 75%, var(--p-mid)),
         linear-gradient(45deg, var(--p-dark) 25%, transparent 25%, transparent 75%, var(--p-dark) 75%, var(--p-dark)),
         linear-gradient(90deg, var(--p-accent) 2px, transparent 2px),
         linear-gradient(var(--p-accent) 2px, transparent 2px);
-    background-size: 40px 40px, 40px 40px, 10px 10px, 10px 10px;
-    background-position: 0 0, 20px 20px, 0 0, 0 0;
-    opacity: 0.8;
+    background-size: 44px 44px, 44px 44px, 11px 11px, 11px 11px;
+    background-position: 0 0, 22px 22px, 0 0, 0 0;
+    opacity: 0.85;
 }
 
-.glass-panel { 
-    background: var(--glass); 
-    backdrop-filter: blur(12px); 
-    border: 1px solid rgba(255,255,255,0.2); 
-}
+.glass-panel { background: rgba(0, 0, 0, 0.45); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); }
 
-/* --- ВИПРАВЛЕННЯ ПОЛІВ ВВОДУ (ТЕКСТ ТЕПЕР ВИДНО) --- */
+/* КАРТКИ ТАЙМЕРА */
+.timer-card { @apply glass-panel p-3 rounded-2xl text-center border-b-2 border-white/5; }
+.timer-card span { @apply block text-2xl font-mono font-black text-white; }
+.timer-card p { @apply text-[10px] uppercase font-black text-yellow-500 tracking-tighter; }
+
+/* --- НАЛАШТУВАННЯ ПОЛІВ (ЧОРНИЙ ТЕКСТ) --- */
 .mil-input {
     width: 100%;
-    background-color: #ffffff !important; /* Чисто білий фон */
-    color: #000000 !important;             /* Глибокий чорний текст */
-    border: 2px solid #000000 !important;  /* Чорна рамка для чіткості */
-    border-radius: 8px;
-    padding: 10px;
-    font-size: 16px;                       /* Збільшений шрифт */
-    font-weight: 700 !important;           /* Жирний текст */
-    appearance: none;                      /* Видалення системних стилів */
-    -webkit-appearance: none;
-    opacity: 1 !important;
-}
-
-/* Спеціально для дат і випадаючих списків */
-input[type="date"].mil-input, select.mil-input {
+    background-color: #ffffff !important;
     color: #000000 !important;
+    border: 3px solid #ca8a04 !important;
+    border-radius: 14px;
+    padding: 12px 16px;
+    font-size: 18px !important;
+    font-weight: 900 !important;
+    outline: none;
+    transition: all 0.2s;
 }
+.mil-input:focus { border-color: #ffffff !important; box-shadow: 0 0 15px rgba(202, 138, 4, 0.5); }
 
-.label-mil { 
-    display: block;
-    text-transform: uppercase;
-    font-weight: 900;
-    font-size: 11px;
-    color: #000000; /* Чорні заголовки полів */
-    margin-bottom: 4px;
-    margin-left: 4px;
+.label-mil { @apply block text-[11px] font-black uppercase text-white mb-2 ml-1 tracking-widest; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
+
+/* --- ТЕКСТ ПОДІЙ НА ГОЛОВНІЙ (БІЛИЙ ТА ВЕЛИКИЙ) --- */
+.event-badge {
+    @apply glass-panel p-4 rounded-2xl border-l-8 border-white animate-pulse;
+    background: rgba(255, 255, 255, 0.15);
 }
+.event-label { @apply text-xs font-black uppercase text-yellow-400 mb-1 tracking-widest; }
+.event-time { @apply text-xl font-black text-white uppercase leading-tight; }
+.event-sub { @apply text-[10px] font-bold text-white/80 uppercase mt-1; }
 
-.timer-card { @apply glass-panel p-2 rounded-lg text-center border-t border-white/20; }
-.timer-card span { @apply block text-xl font-mono font-bold text-white; }
-.timer-card p { @apply text-[8px] uppercase opacity-70 font-bold tracking-widest text-white; }
+.nav-btn { @apply flex flex-col items-center gap-1 text-white/40 transition-all; }
+.nav-btn.active { @apply text-yellow-500; transform: scale(1.1); }
+.nav-btn span { @apply text-[10px] font-black uppercase tracking-tighter; }
 
-.nav-btn { @apply flex flex-col items-center gap-1 text-white/50 transition-all cursor-pointer; }
-.nav-btn.active { @apply text-yellow-500; transform: translateY(-2px); }
-.nav-btn span { @apply text-[8px] font-bold uppercase; }
-
-.scanline { background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.03) 50%); background-size: 100% 4px; pointer-events: none; }
+.scanline { background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.05) 50%); background-size: 100% 4px; }
 .hide-scrollbar::-webkit-scrollbar { display: none; }
