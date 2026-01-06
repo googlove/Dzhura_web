@@ -14,6 +14,25 @@ const forms = {
     second: ['секунда', 'секунди', 'секунд']
 };
 
+const ranks = {
+    army: [
+        'Рекрут', 'Солдат', 'Старший солдат',
+        'Молодший сержант', 'Сержант', 'Старший сержант', 'Головний сержант',
+        'Штаб-сержант', 'Майстер-сержант', 'Старший майстер-сержант', 'Головний майстер-сержант',
+        'Молодший лейтенант', 'Лейтенант', 'Старший лейтенант', 'Капітан',
+        'Майор', 'Підполковник', 'Полковник',
+        'Бригадний генерал', 'Генерал-майор', 'Генерал-лейтенант', 'Генерал'
+    ],
+    navy: [
+        'Рекрут', 'Матрос', 'Старший матрос',
+        'Старшина 2 статті', 'Старшина 1 статті', 'Головний старшина', 'Головний корабельний старшина',
+        'Штаб-старшина', 'Майстер-старшина', 'Старший майстер-старшина', 'Головний майстер-старшина',
+        'Молодший лейтенант', 'Лейтенант', 'Старший лейтенант', 'Капітан-лейтенант',
+        'Капітан 3 рангу', 'Капітан 2 рангу', 'Капітан 1 рангу',
+        'Коммодор', 'Контр-адмірал', 'Віце-адмірал', 'Адмірал'
+    ]
+};
+
 // Елементи
 const els = {
     serviceType: document.getElementById('serviceType'),
@@ -21,13 +40,25 @@ const els = {
     endDate: document.getElementById('endDate'),
     endDateContainer: document.getElementById('endDateContainer'),
     salary: document.getElementById('salary'),
+    watches: document.getElementById('watches'),
+    themeSelect: document.getElementById('themeSelect'),
+    branch: document.getElementById('branch'),
+    rank: document.getElementById('rank'),
+    callsign: document.getElementById('callsign'),
+    unit: document.getElementById('unit'),
     bigNumber: document.getElementById('bigNumber'),
     bigText: document.getElementById('bigText'),
     infinity: document.getElementById('infinity'),
     passedTime: document.getElementById('passedTime'),
     remainingTime: document.getElementById('remainingTime'),
     remainingCard: document.getElementById('remainingCard'),
-    earned: document.getElementById('earned'),
+    baseEarned: document.getElementById('baseEarned'),
+    watchEarned: document.getElementById('watchEarned'),
+    totalEarned: document.getElementById('totalEarned'),
+    displayCallsign: document.getElementById('displayCallsign'),
+    displayRank: document.getElementById('displayRank'),
+    displayBranch: document.getElementById('displayBranch'),
+    displayUnit: document.getElementById('displayUnit'),
     vacs: {
         vac1: document.getElementById('vac1'),
         vac2: document.getElementById('vac2'),
@@ -40,12 +71,63 @@ const els = {
     }
 };
 
-// Збереження/завантаження з localStorage
+// Табы
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        document.getElementById(btn.dataset.tab).classList.add('active');
+    });
+});
+
+// Заповнення списку звань
+function populateRanks() {
+    const branch = els.branch.value;
+    els.rank.innerHTML = '<option value="">Оберіть звання</option>';
+
+    if (branch && ranks[branch]) {
+        ranks[branch].forEach(r => {
+            const opt = document.createElement('option');
+            opt.value = r;
+            opt.textContent = r;
+            els.rank.appendChild(opt);
+        });
+    }
+
+    // Відновлення збереженого звання, якщо підходить
+    const savedRank = localStorage.getItem('rank');
+    if (savedRank && ranks[branch]?.includes(savedRank)) {
+        els.rank.value = savedRank;
+    }
+}
+
+// Оновлення відображення особистої інформації
+function updatePersonalInfo() {
+    els.displayCallsign.textContent = localStorage.getItem('callsign') || 'Не вказано';
+    els.displayUnit.textContent = localStorage.getItem('unit') || 'Не вказано';
+    els.displayRank.textContent = localStorage.getItem('rank') || 'Не вказано';
+
+    const branch = localStorage.getItem('branch');
+    let branchName = 'Не вказано';
+    if (branch === 'army') branchName = 'Сухопутні війська ЗСУ';
+    if (branch === 'navy') branchName = 'Військово-морські сили ЗСУ';
+    els.displayBranch.textContent = branchName;
+}
+
+// Збереження/завантаження
 function save() {
     localStorage.setItem('serviceType', els.serviceType.value);
     localStorage.setItem('startDate', els.startDate.value);
     localStorage.setItem('endDate', els.endDate.value);
     localStorage.setItem('salary', els.salary.value);
+    localStorage.setItem('watches', els.watches.value);
+    localStorage.setItem('theme', document.documentElement.dataset.theme);
+    localStorage.setItem('branch', els.branch.value);
+    localStorage.setItem('rank', els.rank.value);
+    localStorage.setItem('callsign', els.callsign.value);
+    localStorage.setItem('unit', els.unit.value);
     ['vac1', 'vac2', 'vacCity', 'vacFamily'].forEach(id => {
         localStorage.setItem(id, els.vacs[id].value);
     });
@@ -56,9 +138,22 @@ function load() {
     els.startDate.value = localStorage.getItem('startDate') || '';
     els.endDate.value = localStorage.getItem('endDate') || '';
     els.salary.value = localStorage.getItem('salary') || '';
+    els.watches.value = localStorage.getItem('watches') || '0';
+    els.branch.value = localStorage.getItem('branch') || 'army';
+    els.callsign.value = localStorage.getItem('callsign') || '';
+    els.unit.value = localStorage.getItem('unit') || '';
     ['vac1', 'vac2', 'vacCity', 'vacFamily'].forEach(id => {
         els.vacs[id].value = localStorage.getItem(id) || '';
     });
+
+    const savedTheme = localStorage.getItem('theme') || 'pixel';
+    setTheme(savedTheme);
+}
+
+// Тема
+function setTheme(theme) {
+    document.documentElement.dataset.theme = theme;
+    els.themeSelect.value = theme;
 }
 
 // Форматування часу
@@ -105,30 +200,35 @@ function update() {
     const start = new Date(startStr);
     const now = new Date();
     const passedMs = now - start;
+    const passedDays = Math.floor(passedMs / 86400000);
 
     // Пройшло часу
     els.passedTime.textContent = formatTime(passedMs);
 
     // Зарплата
     const monthly = parseFloat(els.salary.value) || 0;
-    const passedDays = Math.floor(passedMs / 86400000);
-    const earnedApprox = Math.round(monthly * (passedDays / 30));
-    els.earned.textContent = earnedApprox.toLocaleString('uk-UA');
+    const baseEarned = Math.round(monthly * (passedDays / 30.42));
+    const watches = parseInt(els.watches.value) || 0;
+    const watchEarned = watches * 4000;
+    const total = baseEarned + watchEarned;
 
-    // Головний лічильник та ∞
+    els.baseEarned.textContent = baseEarned.toLocaleString('uk-UA');
+    els.watchEarned.textContent = watchEarned.toLocaleString('uk-UA');
+    els.totalEarned.textContent = total.toLocaleString('uk-UA');
+
+    // Головний лічильник
     const type = els.serviceType.value;
     if (type === 'contract' && els.endDate.value) {
         const end = new Date(els.endDate.value);
         const remainingMs = end - now;
-
         const remainingDays = Math.floor(remainingMs / 86400000);
+
         els.bigNumber.textContent = remainingDays > 0 ? remainingDays : 0;
         els.bigText.textContent = 'ДНІВ ЗАЛИШИЛОСЯ ДО ДЕМБЕЛЯ';
         els.infinity.style.display = 'none';
         els.remainingCard.style.display = 'block';
         els.remainingTime.textContent = formatTime(remainingMs);
     } else {
-        const passedDays = Math.floor(passedMs / 86400000);
         els.bigNumber.textContent = passedDays;
         els.bigText.textContent = 'ДНІВ ПРОЙШЛО';
         els.infinity.style.display = type === 'mobilized' ? 'block' : 'none';
@@ -146,9 +246,11 @@ function update() {
             els.vacs['to' + key.charAt(0).toUpperCase() + key.slice(1)].textContent = 'Не вказано';
         }
     });
+
+    // Оновлення особистої інформації
+    updatePersonalInfo();
 }
 
-// Показ/приховування поля дати дембеля
 function toggleEndDate() {
     els.endDateContainer.style.display = els.serviceType.value === 'contract' ? 'block' : 'none';
     update();
@@ -157,15 +259,25 @@ function toggleEndDate() {
 // Події
 load();
 toggleEndDate();
+populateRanks();
+updatePersonalInfo();
+update();
 
 els.serviceType.addEventListener('change', () => { toggleEndDate(); save(); });
 els.startDate.addEventListener('change', () => { save(); update(); });
 els.endDate.addEventListener('change', () => { save(); update(); });
 els.salary.addEventListener('input', () => { save(); update(); });
-Object.keys(els.vacs).filter(k => k.startsWith('vac') && k.length === 4).forEach(id => {
+els.watches.addEventListener('input', () => { save(); update(); });
+els.themeSelect.addEventListener('change', () => {
+    setTheme(els.themeSelect.value);
+    save();
+});
+els.branch.addEventListener('change', () => { populateRanks(); save(); updatePersonalInfo(); });
+els.rank.addEventListener('change', () => { save(); updatePersonalInfo(); });
+els.callsign.addEventListener('input', () => { save(); updatePersonalInfo(); });
+els.unit.addEventListener('input', () => { save(); updatePersonalInfo(); });
+Object.keys(els.vacs).filter(k => k.length === 4 && k.startsWith('vac')).forEach(id => {
     els.vacs[id].addEventListener('change', () => { save(); update(); });
 });
 
-// Оновлення кожну секунду
 setInterval(update, 1000);
-update();
