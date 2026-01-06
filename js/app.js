@@ -134,5 +134,4 @@ const UI = {
     }
 };
 
-window.addEventListener('DOMContentLoaded', () => App.init(document.body.style.background = "none";
-));
+window.addEventListener('DOMContentLoaded', () => App.init(document.body.style.background = "none"));
