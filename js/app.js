@@ -4,9 +4,9 @@ const App = {
         navy: ["Рекрут", "Матрос", "Старший матрос", "Старшина 2 статті", "Старшина 1 статті", "Головний старшина", "Головний корабельний старшина", "Штаб-старшина", "Майстер-старшина", "Старший майстер-старшина", "Головний майстер-старшина", "Молодший лейтенант", "Лейтенант", "Старший лейтенант", "Капітан-лейтенант", "Капітан 3 рангу", "Капітан 2 рангу", "Капітан 1 рангу", "Коммодор"]
     },
 
-    data: JSON.parse(localStorage.getItem('jura_final_v3')) || {
+    data: JSON.parse(localStorage.getItem('jura_tactical_v5')) || {
         name: "Боєць", start: new Date().toISOString().split('T')[0],
-        salary: 20000, watches: 0, theme: 'dark', isNavy: false, rank: "Солдат",
+        salary: 20000, watches: 0, theme: 'light', isNavy: false, rank: "Солдат",
         vac1: '', vac2: '', vacFam: '', vacCity: ''
     },
 
@@ -14,33 +14,24 @@ const App = {
         this.renderRanks();
         this.fillInputs();
         this.applyTheme();
-        
-        // Запуск таймерів
         setInterval(() => this.tick(), 1000);
         this.tick();
-        
         lucide.createIcons();
     },
 
     tick() {
         const now = new Date();
         const start = new Date(this.data.start);
-        
-        // Годинник
         document.getElementById('realtime-clock').innerText = now.toLocaleTimeString('uk-UA');
 
-        // Гроші
         const totalMoney = parseInt(this.data.salary || 0) + (parseInt(this.data.watches || 0) * 4000);
         document.getElementById('money-display').innerText = totalMoney.toLocaleString() + " ₴";
 
-        // Розрахунок часу
         let diff = now - start;
         if (diff < 0) diff = 0;
-
         const s = Math.floor(diff / 1000);
         const d = Math.floor(s / 86400);
         
-        // Оновлення лічильників
         document.getElementById('main-days-counter').innerText = d;
         document.getElementById('t-year').innerText = Math.floor(d / 365);
         document.getElementById('t-month').innerText = Math.floor((d % 365) / 30);
@@ -49,18 +40,17 @@ const App = {
         document.getElementById('t-min').innerText = Math.floor((s % 3600) / 60);
         document.getElementById('t-sec').innerText = s % 60;
 
-        // Кільце прогресу (на основі 3 років)
         const progress = Math.min(d / 1095, 1);
-        document.getElementById('progress-ring').style.strokeDashoffset = 754 - (progress * 754);
-
+        const ring = document.getElementById('progress-ring');
+        if(ring) ring.style.strokeDashoffset = 754 - (progress * 754);
+        
         this.updateEvents(now);
     },
 
     updateEvents(now) {
         const container = document.getElementById('events-tracker');
         container.innerHTML = '';
-        
-        const check = (dateStr, days, label, color = "green") => {
+        const check = (dateStr, days, label) => {
             if (!dateStr) return;
             const s = new Date(dateStr);
             const e = new Date(s); e.setDate(s.getDate() + days);
@@ -68,46 +58,29 @@ const App = {
             if (now >= s && now <= e) {
                 const left = Math.ceil((e - now) / 86400000);
                 container.innerHTML += `
-                    <div class="glass-panel p-3 rounded-xl border-l-4 border-${color}-500 animate-pulse">
-                        <p class="text-[9px] font-bold uppercase text-${color}-500">${label}</p>
-                        <p class="text-sm font-black text-white uppercase">Залишилось: ${left} дн.</p>
+                    <div class="event-badge">
+                        <p class="event-label">${label}</p>
+                        <p class="event-time">ЗАЛИШИЛОСЬ: ${left} ДНІВ</p>
+                        <p class="event-sub">Повернення: ${e.toLocaleDateString('uk-UA')}</p>
                     </div>`;
             } else if (s > now) {
                 const to = Math.ceil((s - now) / 86400000);
                 container.innerHTML += `
-                    <div class="glass-panel p-3 rounded-xl opacity-50">
-                        <p class="text-[9px] font-bold uppercase text-white/40">${label}</p>
-                        <p class="text-[10px] text-white/60 uppercase">Через ${to} дн.</p>
+                    <div class="glass-panel p-3 rounded-xl opacity-60">
+                        <p class="text-[10px] font-black uppercase text-yellow-500">${label}</p>
+                        <p class="text-sm font-bold text-white uppercase">Через ${to} дн.</p>
                     </div>`;
             }
         };
-
-        check(this.data.vac1, 17, "Перша відпустка");
-        check(this.data.vac2, 17, "Друга відпустка");
-        check(this.data.vacFam, 10, "Сімейні обставини", "yellow");
-        check(this.data.vacCity, 4, "Звільнення у місто", "blue");
-    },
-
-    save() {
-        this.data.name = document.getElementById('in-name').value;
-        this.data.start = document.getElementById('in-date').value;
-        this.data.salary = document.getElementById('in-salary').value;
-        this.data.watches = document.getElementById('in-watches').value;
-        this.data.rank = document.getElementById('input-rank').value;
-        this.data.isNavy = document.getElementById('check-navy').checked;
-        
-        this.data.vac1 = document.getElementById('vac-1').value;
-        this.data.vac2 = document.getElementById('vac-2').value;
-        this.data.vacFam = document.getElementById('vac-fam').value;
-        this.data.vacCity = document.getElementById('vac-city').value;
-
-        localStorage.setItem('jura_final_v3', JSON.stringify(this.data));
-        this.updateHeader();
-        UI.nav('timer');
+        check(this.data.vac1, 17, "Відпустка №1");
+        check(this.data.vac2, 17, "Відпустка №2");
+        check(this.data.vacFam, 10, "Сімейні обставини");
+        check(this.data.vacCity, 4, "Звільнення у місто");
     },
 
     renderRanks() {
         const sel = document.getElementById('input-rank');
+        if(!sel) return;
         sel.innerHTML = '';
         const list = this.data.isNavy ? this.ranks.navy : this.ranks.army;
         list.forEach(r => {
@@ -121,6 +94,23 @@ const App = {
     toggleNavy() {
         this.data.isNavy = document.getElementById('check-navy').checked;
         this.renderRanks();
+    },
+
+    save() {
+        this.data.name = document.getElementById('in-name').value;
+        this.data.start = document.getElementById('in-date').value;
+        this.data.salary = document.getElementById('in-salary').value;
+        this.data.watches = document.getElementById('in-watches').value;
+        this.data.rank = document.getElementById('input-rank').value;
+        this.data.isNavy = document.getElementById('check-navy').checked;
+        this.data.vac1 = document.getElementById('vac-1').value;
+        this.data.vac2 = document.getElementById('vac-2').value;
+        this.data.vacFam = document.getElementById('vac-fam').value;
+        this.data.vacCity = document.getElementById('vac-city').value;
+        
+        localStorage.setItem('jura_tactical_v5', JSON.stringify(this.data));
+        this.updateHeader();
+        UI.nav('timer');
     },
 
     fillInputs() {
@@ -145,13 +135,13 @@ const App = {
     toggleTheme() {
         this.data.theme = this.data.theme === 'dark' ? 'light' : 'dark';
         this.applyTheme();
-        localStorage.setItem('jura_final_v3', JSON.stringify(this.data));
+        localStorage.setItem('jura_tactical_v5', JSON.stringify(this.data));
     },
 
     applyTheme() {
         document.documentElement.setAttribute('data-theme', this.data.theme);
         const ring = document.getElementById('progress-ring');
-        if (ring) ring.setAttribute('stroke', this.data.theme === 'dark' ? '#ca8a04' : '#4b512d');
+        if (ring) ring.setAttribute('stroke', this.data.theme === 'dark' ? '#ca8a04' : '#ffffff');
     }
 };
 
@@ -164,5 +154,4 @@ const UI = {
     }
 };
 
-// Запуск при повному завантаженні
 window.addEventListener('DOMContentLoaded', () => App.init());
