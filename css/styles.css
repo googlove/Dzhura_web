@@ -1,162 +1,138 @@
-:root {
-    --bg-camo: url('https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/MM-14_camouflage_pattern.svg/1024px-MM-14_camouflage_pattern.svg.png');
-    --glass-bg: rgba(20, 30, 20, 0.45);
-    --glass-border: rgba(251, 191, 36, 0.2);
-    --text-primary: #fbbf24;
-    --text-secondary: #b8ff6e;
-    --shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
-}
+<!DOCTYPE html>
+<html lang="uk" data-theme="pixel">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Джура</title>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Джура</h1>
+        </header>
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+        <div id="main" class="tab-content active">
+            <div id="main-counter" class="card">
+                <div class="circle">
+                    <div class="big-number" id="bigNumber">0</div>
+                    <div class="big-text" id="bigText">ДНІВ ПРОЙШЛО</div>
+                </div>
+                <div id="infinity" style="display:none;">&infin;</div>
+            </div>
 
-body {
-    min-height: 100vh;
-    background: #0a120a var(--bg-camo) center/cover no-repeat fixed;
-    font-family: 'Exo 2', sans-serif;
-    color: var(--text-secondary);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 1rem;
-}
+            <div class="card">
+                <h2>Особиста інформація</h2>
+                <p><strong>Позивний:</strong> <span id="displayCallsign">Не вказано</span></p>
+                <p><strong>Звання:</strong> <span id="displayRank">Не вказано</span></p>
+                <p><strong>Структура:</strong> <span id="displayBranch">Не вказано</span></p>
+                <p><strong>Військова частина:</strong> <span id="displayUnit">Не вказано</span></p>
+            </div>
 
-.container {
-    width: 100%;
-    max-width: 420px;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
+            <div class="card">
+                <h2>Пройшло часу з початку служби</h2>
+                <div class="time-breakdown" id="passedTime">-</div>
+            </div>
 
-header {
-    text-align: center;
-    padding: 1rem 0;
-}
+            <div class="card" id="remainingCard" style="display:none;">
+                <h2>Залишилось до дембеля</h2>
+                <div class="time-breakdown" id="remainingTime">-</div>
+            </div>
 
-header h1 {
-    font-size: 2.5rem;
-    font-weight: 900;
-    color: var(--text-primary);
-    text-shadow: 0 0 15px rgba(251, 191, 36, 0.6);
-}
+            <div class="card">
+                <h2>Зарплата</h2>
+                <p>Основна: <span id="baseEarned">0</span> грн</p>
+                <p>За вахти (4000 грн/вахта): <span id="watchEarned">0</span> грн</p>
+                <p class="earned">Всього приблизно: <span id="totalEarned">0</span> грн</p>
+            </div>
+        </div>
 
-.card {
-    background: var(--glass-bg);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-radius: 20px;
-    border: 1px solid var(--glass-border);
-    padding: 1.5rem;
-    box-shadow: var(--shadow);
-}
+        <div id="settings" class="tab-content">
+            <div class="card">
+                <h2>Налаштування служби</h2>
 
-h2 {
-    font-size: 1.4rem;
-    color: var(--text-primary);
-    margin-bottom: 1rem;
-    text-align: center;
-    font-weight: 800;
-}
+                <label>Тип служби</label>
+                <select id="serviceType">
+                    <option value="mobilized">Мобілізований</option>
+                    <option value="contract">Контракт</option>
+                </select>
 
-label {
-    display: block;
-    margin: 0.8rem 0 0.4rem;
-    font-weight: 600;
-    color: var(--text-secondary);
-}
+                <label>Дата початку служби</label>
+                <input type="date" id="startDate">
 
-input, select {
-    width: 100%;
-    padding: 0.8rem;
-    border-radius: 12px;
-    border: none;
-    background: rgba(0, 0, 0, 0.3);
-    color: white;
-    font-size: 1rem;
-    backdrop-filter: blur(10px);
-}
+                <div id="endDateContainer">
+                    <label>Дата закінчення контракту (дембель)</label>
+                    <input type="date" id="endDate">
+                </div>
 
-input:focus, select:focus {
-    outline: 2px solid var(--text-primary);
-}
+                <label>Місячна зарплата (грн)</label>
+                <input type="number" id="salary" placeholder="наприклад, 25000">
 
-#main-counter {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-}
+                <label>Кількість несених вахт (по 4000 грн)</label>
+                <input type="number" id="watches" min="0" value="0">
 
-.circle {
-    width: 220px;
-    height: 220px;
-    border-radius: 50%;
-    background: rgba(30, 50, 30, 0.6);
-    backdrop-filter: blur(15px);
-    border: 4px solid var(--text-primary);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 0 30px rgba(251, 191, 36, 0.4);
-}
+                <label>Тема оформлення</label>
+                <select id="themeSelect">
+                    <option value="pixel">Піксельний режим (ЗСУ)</option>
+                    <option value="night">Нічний режим</option>
+                    <option value="red">Червоний режим</option>
+                    <option value="dark">Темний режим</option>
+                </select>
+            </div>
 
-.big-number {
-    font-size: 4.5rem;
-    font-weight: 900;
-    color: var(--text-primary);
-    line-height: 1;
-}
+            <div class="card">
+                <h2>Особиста інформація</h2>
 
-.big-text {
-    font-size: 1.1rem;
-    font-weight: 700;
-    text-align: center;
-    margin-top: 0.5rem;
-    color: var(--text-secondary);
-}
+                <label>Структура</label>
+                <select id="branch">
+                    <option value="army">Сухопутні війська ЗСУ</option>
+                    <option value="navy">Військово-морські сили ЗСУ</option>
+                </select>
 
-#infinity {
-    font-size: 8rem;
-    color: var(--text-primary);
-    opacity: 0.8;
-}
+                <label>Військове звання</label>
+                <select id="rank">
+                    <option value="">Спочатку оберіть структуру</option>
+                </select>
 
-.time-breakdown {
-    text-align: center;
-    font-size: 1.1rem;
-    line-height: 1.8;
-}
+                <label>Позивний</label>
+                <input type="text" id="callsign" placeholder="Ваш позивний">
 
-.earned {
-    font-size: 1.8rem;
-    font-weight: 800;
-    color: var(--text-primary);
-}
+                <label>Військова частина</label>
+                <input type="text" id="unit" placeholder="наприклад, А1234">
+            </div>
 
-.vacation-item {
-    margin-bottom: 1.2rem;
-}
+            <div class="card">
+                <h2>Відпустки та звільнення</h2>
+                <div class="vacation-item">
+                    <label>До відпустки №1 (15 + 2 дні на дорогу)</label>
+                    <input type="date" id="vac1">
+                    <div class="countdown" id="toVac1">-</div>
+                </div>
+                <div class="vacation-item">
+                    <label>До відпустки №2 (15 + 2 дні на дорогу)</label>
+                    <input type="date" id="vac2">
+                    <div class="countdown" id="toVac2">-</div>
+                </div>
+                <div class="vacation-item">
+                    <label>До звільнення в місто (4 дні)</label>
+                    <input type="date" id="vacCity">
+                    <div class="countdown" id="toVacCity">-</div>
+                </div>
+                <div class="vacation-item">
+                    <label>За сімейними обставинами (10 днів)</label>
+                    <input type="date" id="vacFamily">
+                    <div class="countdown" id="toVacFamily">-</div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-.countdown {
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: var(--text-primary);
-}
+    <nav class="tab-nav">
+        <button class="tab-btn active" data-tab="main">Таймер</button>
+        <button class="tab-btn" data-tab="settings">Налаштування</button>
+    </nav>
 
-@media (max-width: 480px) {
-    .circle {
-        width: 180px;
-        height: 180px;
-    }
-    .big-number {
-        font-size: 3.8rem;
-    }
-    header h1 {
-        font-size: 2.2rem;
-    }
-}
+    <script src="js/app.js"></script>
+</body>
+</html>
