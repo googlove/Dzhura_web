@@ -1,378 +1,230 @@
-// --- DATA BASE (JSON) ---
+// --- DATA BASE ---
 const DB = {
     ranks_army: [
-        { id: 1, title: "Рекрут", days: 0 }, 
-        { id: 2, title: "Солдат", days: 120 }, 
-        { id: 3, title: "Старший солдат", days: 180 },
-        { id: 4, title: "Молодший сержант", days: 360 }, 
-        { id: 5, title: "Сержант", days: 730 }, 
-        { id: 6, title: "Старший сержант", days: 1095 }, 
-        { id: 7, title: "Головний сержант", days: 1460 }, 
-        { id: 8, title: "Штаб-сержант", days: 1825 }, 
-        { id: 9, title: "Майстер-сержант", days: 2190 },
-        { id: 10, title: "Старший майстер-сержант", days: 2555 }, 
-        { id: 11, title: "Головний майстер-сержант", days: 2920 },
-        { id: 12, title: "Молодший лейтенант", days: 1460 }, 
-        { id: 13, title: "Лейтенант", days: 1825 }, 
-        { id: 14, title: "Старший лейтенант", days: 2190 }, 
-        { id: 15, title: "Капітан", days: 2555 }, 
-        { id: 16, title: "Майор", days: 2920 }, 
-        { id: 17, title: "Підполковник", days: 3285 }, 
-        { id: 18, title: "Полковник", days: 3650 }
+        { id: 1, title: "Рекрут" }, { id: 2, title: "Солдат" }, { id: 3, title: "Ст. Солдат" },
+        { id: 4, title: "Мол. Сержант" }, { id: 5, title: "Сержант" }, { id: 6, title: "Ст. Сержант" },
+        { id: 7, title: "Голов. Сержант" }, { id: 8, title: "Штаб-сержант" }, { id: 9, title: "Майстер-сержант" },
+        { id: 10, title: "Ст. М-сержант" }, { id: 11, title: "Голов. М-сержант" }, { id: 12, title: "Мол. Лейтенант" },
+        { id: 13, title: "Лейтенант" }, { id: 14, title: "Ст. Лейтенант" }, { id: 15, title: "Капітан" },
+        { id: 16, title: "Майор" }, { id: 17, title: "Підполковник" }, { id: 18, title: "Полковник" }
     ],
     ranks_navy: [
-        { id: 1, title: "Рекрут", days: 0 }, 
-        { id: 2, title: "Матрос", days: 120 }, 
-        { id: 3, title: "Старший матрос", days: 180 },
-        { id: 4, title: "Старшина 2 статті", days: 360 }, 
-        { id: 5, title: "Старшина 1 статті", days: 730 }, 
-        { id: 6, title: "Головний старшина", days: 1095 }, 
-        { id: 7, title: "Головний корабельний старшина", days: 1460 }, 
-        { id: 8, title: "Штаб-старшина", days: 1825 }, 
-        { id: 9, title: "Майстер-старшина", days: 2190 },
-        { id: 10, title: "Старший майстер-старшина", days: 2555 }, 
-        { id: 11, title: "Головний майстер-старшина", days: 2920 },
-        { id: 12, title: "Молодший лейтенант", days: 1460 }, 
-        { id: 13, title: "Лейтенант", days: 1825 }, 
-        { id: 14, title: "Старший лейтенант", days: 2190 }, 
-        { id: 15, title: "Капітан-лейтенант", days: 2555 },
-        { id: 16, title: "Капітан 3 рангу", days: 2920 },
-        { id: 17, title: "Капітан 2 рангу", days: 3285 },
-        { id: 18, title: "Капітан 1 рангу", days: 3650 },
-        { id: 19, title: "Коммодор", days: 4015 },
-        { id: 20, title: "Контр-адмірал", days: 4380 },
-        { id: 21, title: "Віце-адмірал", days: 4745 },
-        { id: 22, title: "Адмірал", days: 5110 }
-    ],
-    skills: [
-        { id: 'komendor', category: 'Бойові / палуба', icon: 'shield', title: 'Комендор', description: 'Оборона корабля, робота з озброєнням.' },
-        { id: 'boatswain', category: 'Бойові / палуба', icon: 'anchor', title: 'Боцман', description: 'Такелаж, швартування, якірні операції.' },
-        { id: 'marsovy', category: 'Бойові / палуба', icon: 'binoculars', title: 'Марсовий', description: 'Спостереження за горизонтом, сигнали.' },
-        { id: 'helm_signalman', category: 'Місток і керування', icon: 'navigation', title: 'Рульовий-сигнальник', description: 'Керування кораблем, ведення курсу.' },
-        { id: 'senior_helm', category: 'Місток і керування', icon: 'compass', title: 'Старший рульовий', description: 'Керування у складних умовах.' },
-        { id: 'operator_kbu', category: 'Корабельні системи / зв’язок', icon: 'satellite', title: 'Оператор КБУ', description: 'Дрони, Starlink, робота з ПК.' },
-        { id: 'senior_operator', category: 'Корабельні системи / зв’язок', icon: 'activity', title: 'Старший оператор', description: 'РЛС, комплекси зв’язку.' },
-        { id: 'motorist', category: 'Машинна команда', icon: 'cog', title: 'Моторист', description: 'Обслуговування двигунів та систем.' },
-        { id: 'senior_motorist', category: 'Машинна команда', icon: 'gauge', title: 'Старший моторист', description: 'Контроль силових агрегатів.' },
-        { id: 'electrician', category: 'Машинна команда', icon: 'zap', title: 'Електрик', description: 'Електроживлення та навігація.' },
-        { id: 'senior_electrician', category: 'Машинна команда', icon: 'plug', title: 'Старший електрик', description: 'Генератори та аварійні системи.' },
-        { id: 'bataler', category: 'Забезпечення', icon: 'package', title: 'Баталер', description: 'Постачання та контроль запасів.' },
-        { id: 'commander_operators', category: 'Командири відділень', icon: 'search', title: 'К-р відд. операторів', description: 'Керівництво операторами КБУ.' },
-        { id: 'commander_helm', category: 'Командири відділень', icon: 'radar', title: 'К-р рульових', description: 'Організація вахт на містку.' },
-        { id: 'commander_komendors', category: 'Командири відділень', icon: 'shield-alert', title: 'К-р комендорів', description: 'Координація корабельної охорони.' },
-        { id: 'miles_helming', category: 'Досвід / статистика', icon: 'map', title: 'Морські милі', description: 'Реальний досвід керування.' },
-        { id: 'watch_hours', category: 'Досвід / статистика', icon: 'clock', title: 'Години вахти', description: 'Відпрацьовано години на вахті.' },
-        { id: 'machinery_hours', category: 'Досвід / статистика', icon: 'cpu', title: 'Машинні години', description: 'Робота в машинному відділенні.' },
-        { id: 'docking_operations', category: 'Досвід / статистика', icon: 'anchor', title: 'Швартування', description: 'Участь у складних маневрах.' },
-        { id: 'combat_alerts', category: 'Досвід / статистика', icon: 'alarm-clock', title: 'Бойові тривоги', description: 'Досвід реальних тривог.' },
-        { id: 'repairs_done', category: 'Досвід / статистика', icon: 'wrench', title: 'Ремонтні роботи', description: 'Відновлення систем та механізмів.' }
+        { id: 1, title: "Рекрут" }, { id: 2, title: "Матрос" }, { id: 3, title: "Ст. Матрос" },
+        { id: 4, title: "Старшина 2 ст." }, { id: 5, title: "Старшина 1 ст." }, { id: 6, title: "Голов. Старшина" },
+        { id: 7, title: "Голов. Кор. Старшина" }, { id: 8, title: "Штаб-старшина" }, { id: 9, title: "Майстер-старшина" },
+        { id: 10, title: "Ст. М-старшина" }, { id: 11, title: "Голов. М-старшина" }, { id: 12, title: "Мол. Лейтенант" },
+        { id: 13, title: "Лейтенант" }, { id: 14, title: "Ст. Лейтенант" }, { id: 15, title: "Кап-лейтенант" },
+        { id: 16, title: "Капітан 3 р." }, { id: 17, title: "Капітан 2 р." }, { id: 18, title: "Капітан 1 р." },
+        { id: 19, title: "Коммодор" }, { id: 20, title: "Контр-адмірал" }
     ]
 };
 
-let AppData = {
-    name: 'Джура',
-    startDate: new Date().toISOString().split('T')[0],
-    serviceType: 'mobilized',
-    contractYears: 3,
-    currentRankId: 1,
-    isNavy: false,
-    theme: 'dark'
+const App = {
+    state: {
+        user: JSON.parse(localStorage.getItem('jura_mil_user')) || { 
+            name: 'Боєць', 
+            date: new Date().toISOString().split('T')[0], 
+            rank: 1, 
+            navy: false,
+            type: 'mobilized' 
+        },
+        buddies: JSON.parse(localStorage.getItem('jura_mil_buddies')) || [],
+        activeId: 'user'
+    },
+
+    init() {
+        this.fillRanks();
+        this.syncUI();
+        UI.renderArmy();
+        
+        // Запуск циклів
+        setInterval(() => this.tickTimer(), 1000); // Таймер служби
+        setInterval(() => this.tickClock(), 1000); // Годинник реального часу
+        
+        this.tickTimer(); 
+        this.tickClock();
+        lucide.createIcons();
+    },
+
+    // Головний таймер служби
+    tickTimer() {
+        const profile = this.state.activeId === 'user' ? this.state.user : this.state.buddies[this.state.activeId];
+        if (!profile) return;
+
+        UI.updateHeader(profile);
+
+        const start = new Date(profile.date);
+        const now = new Date();
+        const diff = now - start;
+
+        // Встановлюємо "вічний" термін (нескінченність)
+        // Для візуалізації прогресу беремо умовні 18 міс (548 днів), але текст буде ∞
+        const totalRef = 548 * 24 * 60 * 60 * 1000; 
+        const percent = Math.min(100, (diff / totalRef) * 100);
+
+        document.getElementById('percent-display').innerText = `${percent.toFixed(0)}%`;
+        
+        // Детальний час
+        const s = Math.floor(diff / 1000);
+        const y = Math.floor(s / 31536000);
+        const mo = Math.floor((s % 31536000) / 2592000);
+        const w = Math.floor((s % 2592000) / 604800);
+        const d = Math.floor((s % 604800) / 86400);
+
+        document.getElementById('t-years').innerText = y;
+        document.getElementById('t-months').innerText = mo;
+        document.getElementById('t-weeks').innerText = w;
+        document.getElementById('t-days').innerText = d;
+
+        UI.drawRice(percent);
+    },
+
+    // Годинник "Судного дня" (реальний час)
+    tickClock() {
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('uk-UA', { hour12: false });
+        document.getElementById('doomsday-clock').innerText = timeStr;
+    },
+
+    saveUser() {
+        this.state.user.name = document.getElementById('set-name').value || 'Боєць';
+        this.state.user.date = document.getElementById('set-date').value;
+        this.state.user.rank = document.getElementById('input-rank').value;
+        localStorage.setItem('jura_mil_user', JSON.stringify(this.state.user));
+        alert('Дані оновлено');
+        UI.switchTab('timer');
+    },
+
+    setService(type) {
+        this.state.user.type = type;
+        this.syncUI();
+    },
+
+    toggleNavy(checked) {
+        this.state.user.navy = checked;
+        this.fillRanks();
+    },
+
+    fillRanks() {
+        const select = document.getElementById('input-rank');
+        select.innerHTML = '';
+        const list = this.state.user.navy ? DB.ranks_navy : DB.ranks_army;
+        list.forEach(r => {
+            const opt = document.createElement('option');
+            opt.value = r.id;
+            opt.innerText = r.title;
+            select.appendChild(opt);
+        });
+        select.value = this.state.user.rank;
+    },
+
+    addBuddy() {
+        const name = document.getElementById('buddy-name').value;
+        const date = document.getElementById('buddy-date').value;
+        if(name && date) {
+            this.state.buddies.push({name, date, rank: 1, navy: false});
+            localStorage.setItem('jura_mil_buddies', JSON.stringify(this.state.buddies));
+            UI.closeModal();
+            UI.renderArmy();
+        }
+    },
+
+    syncUI() {
+        const u = this.state.user;
+        document.getElementById('set-name').value = u.name;
+        document.getElementById('set-date').value = u.date;
+        document.getElementById('is-navy').checked = u.navy;
+        
+        // Кнопки типу служби
+        const btnM = document.getElementById('btn-mobilized');
+        const btnC = document.getElementById('btn-contract');
+        
+        if(u.type === 'mobilized') {
+            btnM.className = 'p-3 rounded-xl bg-yellow-600 text-black text-xs font-bold uppercase';
+            btnC.className = 'p-3 rounded-xl border border-white/10 text-xs font-bold uppercase opacity-50';
+        } else {
+            btnC.className = 'p-3 rounded-xl bg-yellow-600 text-black text-xs font-bold uppercase';
+            btnM.className = 'p-3 rounded-xl border border-white/10 text-xs font-bold uppercase opacity-50';
+        }
+    }
 };
 
-const MEDALS = [
-    { id: 'first_day',   title: 'Перший день', desc: 'Початок шляху.', check: ({ days }) => days >= 1 },
-    { id: 'week',        title: 'Тиждень', desc: '7 днів служби.', check: ({ days }) => days >= 7 },
-    { id: 'month',       title: 'Місяць', desc: '30 днів у строю.', check: ({ days }) => days >= 30 },
-    { id: 'hundred',     title: 'Сотня', desc: '100 днів служби.', check: ({ days }) => days >= 100 },
-    { id: 'half_year',   title: 'Пів року', desc: '180 днів.', check: ({ days }) => days >= 180 },
-    { id: 'year',        title: 'Рік', desc: '365 днів служби.', check: ({ days }) => days >= 365 },
-    { id: 'skills_3',    title: 'Фахівець', desc: '3+ бойові навички.', check: ({ skills }) => skills >= 3 },
-    { id: 'full_kkd',    title: 'Еліта', desc: '100% бойового ККД.', check: ({ kkd }) => kkd >= 100 }
-];
+const UI = {
+    switchTab(id) {
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        document.getElementById(`view-${id}`).classList.add('active');
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.getElementById(`nav-${id}`).classList.add('active');
+    },
 
-// --- CORE FUNCTIONS ---
-function toggleView(viewId) {
-    document.querySelectorAll('.tab-content').forEach(v => v.classList.remove('active'));
-    document.getElementById(`view-${viewId}`).classList.add('active');
+    updateHeader(p) {
+        document.getElementById('header-name').innerText = p.name;
+        const list = (p.navy || App.state.user.navy) ? DB.ranks_navy : DB.ranks_army;
+        const r = list.find(x => x.id == (p.rank || App.state.user.rank));
+        document.getElementById('header-rank').innerText = r ? r.title : 'Рекрут';
+    },
 
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    document.getElementById(`nav-${viewId}`).classList.add('active');
+    drawRice(percent) {
+        const svg = document.getElementById('rice-circle-svg');
+        svg.innerHTML = '';
+        const total = 60;
+        const active = Math.floor((percent / 100) * total);
+        
+        for(let i=0; i<total; i++) {
+            const angle = (i * 6) * (Math.PI / 180);
+            const x1 = 150 + 125 * Math.cos(angle);
+            const y1 = 150 + 125 * Math.sin(angle);
+            const x2 = 150 + 140 * Math.cos(angle);
+            const y2 = 150 + 140 * Math.sin(angle);
+            
+            const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            line.setAttribute("x1", x1); line.setAttribute("y1", y1);
+            line.setAttribute("x2", x2); line.setAttribute("y2", y2);
+            line.setAttribute("stroke", i < active ? "#ca8a04" : "rgba(255,255,255,0.1)");
+            line.setAttribute("stroke-width", "3");
+            line.setAttribute("stroke-linecap", "round");
+            svg.appendChild(line);
+        }
+    },
 
-    if (viewId === 'status') { renderSkills(); calculateKKD(); updateAchievement(); renderMedals(); }
-    if (viewId === 'stats') { renderStats(); }
+    renderArmy() {
+        const list = document.getElementById('army-list');
+        list.innerHTML = '';
+        
+        // Картка користувача
+        list.innerHTML += this.createCard(App.state.user.name, 'Я', 'user');
+        
+        // Побратими
+        App.state.buddies.forEach((b, idx) => {
+            list.innerHTML += this.createCard(b.name, 'Побратим', idx);
+        });
+        lucide.createIcons();
+    },
 
-    localStorage.setItem('DzhuraLastView', viewId);
-}
-
-function updateProgressCircle(percent) {
-    const circle = document.getElementById('progress-stroke');
-    if (!circle) return;
-    const circumference = 817;
-    const offset = circumference - (circumference * (percent / 100));
-    circle.style.strokeDashoffset = offset;
-}
-
-function getTotalServiceDays() {
-    const diff = new Date() - new Date(AppData.startDate);
-    return diff > 0 ? Math.floor(diff / 86400000) : 0;
-}
-
-function autoPromote() {
-    const days = getTotalServiceDays();
-    const ranks = AppData.isNavy ? DB.ranks_navy : DB.ranks_army;
-    const promotedRank = ranks.reduce((acc, rank) => (rank.days <= days ? rank : acc), ranks[0]);
-    if (promotedRank.id > AppData.currentRankId) {
-        AppData.currentRankId = promotedRank.id;
-    }
-}
-
-function updateDisplay() {
-    const days = getTotalServiceDays();
-    autoPromote();
-
-    let perc = 0;
-    const ranks = AppData.isNavy ? DB.ranks_navy : DB.ranks_army;
-    const maxDaysInRanks = ranks[ranks.length - 1].days;
-
-    if (AppData.serviceType === 'mobilized') {
-        document.getElementById('days-left').textContent = '∞';
-        document.getElementById('days-ratio').textContent = `${days} днів у строю`;
-        perc = days > 0 ? Math.min(100, Math.round((days / maxDaysInRanks) * 100)) : 0;
-    } else {
-        const total = AppData.contractYears * 365;
-        perc = Math.min(100, Math.round((days / total) * 100));
-        document.getElementById('days-ratio').textContent = `${days} / ${total} днів`;
-        document.getElementById('days-left').textContent = days >= total ? 'Дембель!' : (total - days);
-    }
-
-    document.getElementById('percent-number').textContent = Math.floor(perc);
-    updateProgressCircle(perc);
-
-    document.getElementById('counter-years').textContent = Math.floor(days / 365);
-    document.getElementById('counter-months').textContent = Math.floor((days % 365) / 30);
-    document.getElementById('counter-days').textContent = days % 30;
-
-    document.getElementById('user-name-display').textContent = AppData.name;
-    updateRankDisplay();
-    calculateKKD(); // оновлюємо міні-KKD
-}
-
-function calculateKKD() {
-    const savedSkills = JSON.parse(localStorage.getItem('DzhuraSkills') || '[]');
-    let kkd = 10 + (AppData.currentRankId - 1) * 4 + savedSkills.length * 16;
-    kkd = Math.min(100, kkd);
-
-    document.getElementById('kkd-bar')?.style = `width: ${kkd}%;`;
-    document.getElementById('kkd-value')?.textContent = `${kkd}%`;
-    document.getElementById('kkd-mini-display')?.textContent = `${kkd}%`;
-    return kkd;
-}
-
-function updateAchievement() {
-    const kkd = calculateKKD();
-    const t = document.getElementById('achieve-title');
-    const d = document.getElementById('achieve-desc');
-    if (kkd < 30) { t.textContent = "Новобранець"; d.textContent = "Шлях тільки починається."; }
-    else if (kkd < 70) { t.textContent = "Досвідчений"; d.textContent = "Ви впевнено тримаєте стрій."; }
-    else { t.textContent = "Морський вовк"; d.textContent = "Легенда підрозділу."; }
-}
-
-function updateRankDisplay() {
-    const ranks = AppData.isNavy ? DB.ranks_navy : DB.ranks_army;
-    const rank = ranks.find(r => r.id === AppData.currentRankId);
-    document.getElementById('rank-display').textContent = rank ? rank.title.toUpperCase() : 'РЕКРУТ';
-}
-
-function renderSkills() {
-    const list = document.getElementById('skills-list');
-    if (!list) return;
-    list.innerHTML = '';
-    const saved = JSON.parse(localStorage.getItem('DzhuraSkills') || '[]');
-
-    DB.skills.forEach(skill => {
-        const active = saved.includes(skill.id);
-        const div = document.createElement('div');
-        div.className = 'glass-card p-4 rounded-3xl flex items-center justify-between mb-3 transition-all';
-        div.innerHTML = `
+    createCard(name, role, id) {
+        const isActive = App.state.activeId === id;
+        const borderClass = isActive ? 'border-yellow-600 bg-yellow-600/10' : 'border-white/5';
+        const iconColor = isActive ? 'text-yellow-500' : 'text-white/30';
+        
+        return `
+        <div onclick="App.state.activeId = '${id}'; UI.renderArmy(); App.tickTimer()" 
+             class="glass-card p-4 rounded-xl flex justify-between items-center cursor-pointer transition-all active:scale-95 border ${borderClass}">
             <div class="flex items-center gap-4">
-                <i data-lucide="${skill.icon}" class="w-8 h-8 ${active ? 'text-blue-500' : 'opacity-30'}"></i>
+                <div class="p-2 rounded-lg bg-black/30 ${iconColor}">
+                    <i data-lucide="user" class="w-5 h-5"></i>
+                </div>
                 <div>
-                    <p class="font-bold">${skill.title}</p>
-                    <p class="text-xs opacity-50">${skill.description}</p>
+                    <p class="font-bold text-sm text-white leading-none">${name}</p>
+                    <p class="text-[10px] uppercase opacity-40 font-bold mt-1 tracking-wider">${role}</p>
                 </div>
             </div>
-            <input type="checkbox" onchange="toggleSkill('${skill.id}')" ${active ? 'checked' : ''} class="w-6 h-6 rounded-lg accent-blue-500">
-        `;
-        list.appendChild(div);
-    });
-    lucide.createIcons();
-}
+            ${isActive ? '<div class="w-2 h-2 rounded-full bg-yellow-500 shadow-[0_0_10px_#ca8a04]"></div>' : ''}
+        </div>`;
+    },
 
-function toggleSkill(id) {
-    let saved = JSON.parse(localStorage.getItem('DzhuraSkills') || '[]');
-    if (saved.includes(id)) {
-        saved = saved.filter(i => i !== id);
-    } else {
-        saved.push(id);
-    }
-    localStorage.setItem('DzhuraSkills', JSON.stringify(saved));
-    calculateKKD();
-    updateAchievement();
-}
+    openModal() { document.getElementById('modal').style.display = 'flex'; },
+    closeModal() { document.getElementById('modal').style.display = 'none'; }
+};
 
-function renderMedals() {
-    const list = document.getElementById('medals-list');
-    if (!list) return;
-    list.innerHTML = '';
-    const days = getTotalServiceDays();
-    const skillsCount = JSON.parse(localStorage.getItem('DzhuraSkills') || '[]').length;
-    const kkd = calculateKKD();
-
-    MEDALS.forEach(m => {
-        const achieved = m.check({ days, skills: skillsCount, kkd });
-        const div = document.createElement('div');
-        div.className = `glass-card p-4 rounded-2xl flex flex-col items-center ${achieved ? '' : 'opacity-30'}`;
-        div.innerHTML = `
-            <i data-lucide="medal" class="w-12 h-12 ${achieved ? 'text-yellow-500' : 'text-gray-500'}"></i>
-            <p class="text-xs font-bold mt-2">${m.title}</p>
-        `;
-        list.appendChild(div);
-    });
-    lucide.createIcons();
-}
-
-function renderStats() {
-    const list = document.getElementById('stats-list');
-    if (!list) return;
-    list.innerHTML = '';
-    const days = getTotalServiceDays();
-    const skillsCount = JSON.parse(localStorage.getItem('DzhuraSkills') || '[]').length;
-    const kkd = calculateKKD();
-
-    const stats = [
-        { icon: 'calendar-days', title: 'Днів служби', value: days },
-        { icon: 'clock', title: 'Років / Місяців / Днів', value: `${Math.floor(days / 365)} / ${Math.floor((days % 365) / 30)} / ${days % 30}` },
-        { icon: 'trending-up', title: 'Бойовий ККД', value: `${kkd}%` },
-        { icon: 'zap', title: 'Навичок освоєно', value: skillsCount },
-        { icon: 'shield', title: 'Поточне звання', value: document.getElementById('rank-display').textContent }
-    ];
-
-    stats.forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'glass-card p-5 rounded-3xl flex items-center gap-5';
-        div.innerHTML = `
-            <i data-lucide="${item.icon}" class="w-10 h-10 text-blue-400"></i>
-            <div>
-                <p class="text-sm opacity-60">${item.title}</p>
-                <p class="text-2xl font-bold">${item.value}</p>
-            </div>
-        `;
-        list.appendChild(div);
-    });
-    lucide.createIcons();
-}
-
-function generateRankOptions() {
-    const sel = document.getElementById('input-rank');
-    if (!sel) return;
-    sel.innerHTML = '';
-    const ranks = AppData.isNavy ? DB.ranks_navy : DB.ranks_army;
-    ranks.forEach(r => {
-        const opt = document.createElement('option');
-        opt.value = r.id;
-        opt.textContent = r.title;
-        sel.appendChild(opt);
-    });
-    sel.value = AppData.currentRankId;
-}
-
-function setServiceType(type, save = true) {
-    AppData.serviceType = type;
-    const mobilizedBtn = document.getElementById('btn-mobilized');
-    const contractBtn = document.getElementById('btn-contract');
-    mobilizedBtn.className = type === 'mobilized' ? 'p-3 rounded-xl bg-blue-600 text-white text-sm font-bold transition-smooth' : 'p-3 rounded-xl border border-white/10 text-sm font-bold opacity-60 transition-smooth';
-    contractBtn.className = type === 'contract' ? 'p-3 rounded-xl bg-blue-600 text-white text-sm font-bold transition-smooth' : 'p-3 rounded-xl border border-white/10 text-sm font-bold opacity-60 transition-smooth';
-    document.getElementById('contract-duration-block').classList.toggle('hidden', type !== 'contract');
-
-    // Виділення активного терміну контракту
-    document.querySelectorAll('.contract-year-btn').forEach(btn => {
-        btn.classList.toggle('bg-blue-600 text-white', btn.dataset.year == AppData.contractYears);
-        btn.classList.toggle('bg-black/30', btn.dataset.year != AppData.contractYears);
-    });
-
-    if (save) saveData(false);
-    updateDisplay();
-}
-
-function setContractYears(y) {
-    AppData.contractYears = Number(y);
-    document.querySelectorAll('.contract-year-btn').forEach(btn => {
-        btn.classList.toggle('bg-blue-600 text-white', btn.dataset.year == y);
-        btn.classList.toggle('bg-black/30', btn.dataset.year != y);
-    });
-    updateDisplay();
-    saveData(false);
-}
-
-function toggleNavyRanks(checked) {
-    AppData.isNavy = checked;
-    generateRankOptions();
-    autoPromote(); // перерахунок при зміні ВМС/ЗСУ
-    updateRankDisplay();
-    updateDisplay();
-    saveData(false);
-}
-
-function toggleTheme() {
-    const themes = ['dark', 'light', 'oled'];
-    const icons = { dark: 'moon', light: 'sun', oled: 'moon' };
-    const index = themes.indexOf(AppData.theme);
-    AppData.theme = themes[(index + 1) % themes.length];
-
-    document.body.className = `theme-${AppData.theme} min-h-screen w-full relative font-inter`;
-    const icon = document.querySelector('#theme-icon');
-    if (icon) icon.setAttribute('data-lucide', icons[AppData.theme]);
-    lucide.createIcons();
-    saveData(false);
-}
-
-function saveData(alertMe = true) {
-    AppData.name = document.getElementById('input-name').value.trim() || 'Джура';
-    AppData.startDate = document.getElementById('input-date').value;
-    AppData.currentRankId = Number(document.getElementById('input-rank').value);
-
-    localStorage.setItem('DzhuraAppData', JSON.stringify(AppData));
-    updateDisplay();
-    if (alertMe) alert('Дані збережено!');
-}
-
-function loadData() {
-    const saved = localStorage.getItem('DzhuraAppData');
-    if (saved) {
-        AppData = { ...AppData, ...JSON.parse(saved) };
-    }
-
-    document.getElementById('input-name').value = AppData.name;
-    document.getElementById('input-date').value = AppData.startDate;
-    document.getElementById('is-navy').checked = AppData.isNavy;
-
-    document.body.className = `theme-${AppData.theme} min-h-screen w-full relative font-inter`;
-    const icon = document.querySelector('#theme-icon');
-    if (icon) icon.setAttribute('data-lucide', AppData.theme === 'light' ? 'sun' : 'moon');
-
-    generateRankOptions();
-    setServiceType(AppData.serviceType, false);
-
-    updateDisplay();
-    toggleView(localStorage.getItem('DzhuraLastView') || 'timer');
-    lucide.createIcons({
-    attrs: { 'pointer-events': 'none' } // глобально для всіх іконок
-});
-
-// Оновлення кожну хвилину (для точності при зміні дати)
-setInterval(updateDisplay, 60000);
-
-window.addEventListener('load', () => {
-    loadData();
-    updateDisplay();
-});
+// Start
+App.init();
