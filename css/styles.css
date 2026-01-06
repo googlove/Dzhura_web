@@ -1,5 +1,4 @@
 :root {
-    /* Кольори для ММ-14 */
     --p-light: #9ca37d; 
     --p-mid: #828a61;   
     --p-dark: #6b704b;  
@@ -22,6 +21,7 @@ body {
     color: var(--text); 
     overflow: hidden; 
     transition: background-color 0.5s ease;
+    font-family: 'Exo 2', sans-serif;
 }
 
 /* ГЕНЕРАЦІЯ ПІКСЕЛЯ КОДОМ */
@@ -39,23 +39,42 @@ body {
 .glass-panel { 
     background: var(--glass); 
     backdrop-filter: blur(12px); 
-    -webkit-backdrop-filter: blur(12px); 
     border: 1px solid rgba(255,255,255,0.2); 
+}
+
+/* --- ВИПРАВЛЕННЯ ПОЛІВ ВВОДУ (ТЕКСТ ТЕПЕР ВИДНО) --- */
+.mil-input {
+    width: 100%;
+    background-color: #ffffff !important; /* Чисто білий фон */
+    color: #000000 !important;             /* Глибокий чорний текст */
+    border: 2px solid #000000 !important;  /* Чорна рамка для чіткості */
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 16px;                       /* Збільшений шрифт */
+    font-weight: 700 !important;           /* Жирний текст */
+    appearance: none;                      /* Видалення системних стилів */
+    -webkit-appearance: none;
+    opacity: 1 !important;
+}
+
+/* Спеціально для дат і випадаючих списків */
+input[type="date"].mil-input, select.mil-input {
+    color: #000000 !important;
+}
+
+.label-mil { 
+    display: block;
+    text-transform: uppercase;
+    font-weight: 900;
+    font-size: 11px;
+    color: #000000; /* Чорні заголовки полів */
+    margin-bottom: 4px;
+    margin-left: 4px;
 }
 
 .timer-card { @apply glass-panel p-2 rounded-lg text-center border-t border-white/20; }
 .timer-card span { @apply block text-xl font-mono font-bold text-white; }
 .timer-card p { @apply text-[8px] uppercase opacity-70 font-bold tracking-widest text-white; }
-
-/* ЧОРНИЙ ТЕКСТ У ПОЛЯХ ВВОДУ */
-.mil-input { 
-    @apply w-full border border-black/10 rounded-lg p-2 text-sm outline-none focus:border-yellow-600 transition-all;
-    background-color: rgba(255, 255, 255, 0.9);
-    color: #000000 !important; 
-    font-weight: 700;
-}
-
-.label-mil { @apply block text-[10px] uppercase font-black mb-1 ml-1 tracking-wider text-black; opacity: 0.7; }
 
 .nav-btn { @apply flex flex-col items-center gap-1 text-white/50 transition-all cursor-pointer; }
 .nav-btn.active { @apply text-yellow-500; transform: translateY(-2px); }
