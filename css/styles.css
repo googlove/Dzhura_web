@@ -1,84 +1,77 @@
-/* ПРИМУСОВЕ ВИДАЛЕННЯ БІЛОГО ФОНУ */
+/* ПРИМУСОВИЙ ФОН МУЛЬТИКАМ */
 html, body {
+    background-color: #3e4230 !important;
     margin: 0;
     padding: 0;
-    width: 100%;
-    min-height: 100vh;
-    /* Військовий темно-оливковий як базовий колір */
-    background-color: #3e4230 !important; 
-    color: #ffffff !important;
+    color: #ffffff;
 }
 
-/* ГЕНЕРАЦІЯ ПАТЕРНУ MULTICAM (ЧЕРЕЗ КЛАС) */
 .pixel-camo {
     position: fixed;
     inset: 0;
     z-index: -1;
-    /* Використовуємо градієнти для створення ефекту камуфляжу Multicam */
     background-color: #7d8256 !important;
     background-image: 
-        radial-gradient(circle at 20% 30%, #43412b 15%, transparent 20%),
-        radial-gradient(circle at 70% 60%, #5d633a 25%, transparent 30%),
-        radial-gradient(circle at 40% 80%, #a4a881 20%, transparent 25%),
-        radial-gradient(circle at 80% 20%, #3e4230 15%, transparent 20%);
-    background-size: 300px 300px !important;
+        radial-gradient(circle at 20% 30%, #43412b 15%, transparent 25%),
+        radial-gradient(circle at 70% 60%, #5d633a 20%, transparent 30%),
+        radial-gradient(circle at 40% 80%, #a4a881 18%, transparent 28%),
+        radial-gradient(circle at 80% 20%, #3e4230 15%, transparent 25%) !important;
+    background-size: 400px 400px !important;
     opacity: 1 !important;
 }
 
-/* СКЛЯНІ ПАНЕЛІ (ДЛЯ ЧИТАБЕЛЬНОСТІ ТЕКСТУ) */
-.glass-panel {
-    background: rgba(0, 0, 0, 0.75) !important; /* Напівпрозорий чорний */
-    backdrop-filter: blur(12px) !important;
-    -webkit-backdrop-filter: blur(12px) !important;
-    border: 1px solid rgba(255, 255, 255, 0.15) !important;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8) !important;
+/* СКЛО */
+.glass-panel { 
+    background: rgba(0, 0, 0, 0.75) !important; 
+    backdrop-filter: blur(12px); 
+    border: 1px solid rgba(255,255,255,0.15); 
 }
 
-/* ГОЛОВНИЙ ТЕКСТ (ТАЙМЕР) - МАКСИМАЛЬНО ВИДИМИЙ */
-#main-days-counter {
+/* ГОЛОВНИЙ ТЕКСТ ЛІЧИЛЬНИКА (БІЛИЙ І ВЕЛИКИЙ) */
+.main-counter {
     color: #ffffff !important;
-    font-size: 5.5rem !important; /* Дуже великий */
+    font-size: 6.5rem !important; /* Гігантський розмір */
     font-weight: 900 !important;
-    text-shadow: 0 0 20px rgba(255, 255, 255, 0.3), 4px 4px 0px #000 !important;
-    line-height: 1 !important;
+    font-family: 'JetBrains Mono', monospace;
+    line-height: 1;
+    filter: drop-shadow(0 0 15px rgba(255,255,255,0.2));
 }
 
-/* КАРТКИ ЧАСУ ТА ПОДІЙ */
-.timer-card span, .event-card p {
-    color: #ffffff !important;
-    font-weight: 800 !important;
-    text-transform: uppercase !important;
-}
+.timer-card { @apply glass-panel p-4 rounded-2xl text-center; }
+.timer-card span { @apply block text-3xl font-black text-white leading-none mb-1; }
+.timer-card p { @apply text-[11px] uppercase font-black text-yellow-500; }
 
-/* НАЛАШТУВАННЯ: ЧОРНИЙ ТЕКСТ В БІЛИХ ПОЛЯХ */
+/* ТЕКСТ ПОДІЙ (БІЛИЙ) */
+.event-card {
+    @apply glass-panel p-5 rounded-2xl border-l-8 border-white;
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+.event-card p:first-child { color: #fbbf24 !important; font-weight: 900; text-transform: uppercase; font-size: 0.8rem; }
+.event-card p:last-child { color: #ffffff !important; font-weight: 900; font-size: 1.8rem; text-transform: uppercase; line-height: 1; margin-top: 4px; }
+
+/* ПОЛЯ ВВОДУ (ЧОРНИЙ ТЕКСТ НА БІЛОМУ) */
 .mil-input {
-    background-color: #ffffff !important; /* Чисто білий фон поля */
-    color: #000000 !important;             /* Чисто чорний текст */
-    border: 3px solid #ca8a04 !important;  /* Золотава рамка */
-    border-radius: 10px !important;
-    padding: 12px !important;
-    font-size: 1.1rem !important;
+    width: 100% !important;
+    background-color: #ffffff !important; /* Білий фон */
+    color: #000000 !important;             /* Чорний текст */
+    border: 3px solid #ca8a04 !important;
+    border-radius: 12px !important;
+    padding: 12px 16px !important;
+    font-size: 1.2rem !important;
     font-weight: 900 !important;
-    appearance: none !important;
+    outline: none !important;
 }
 
-/* ПІДПИСИ ДО ПОЛІВ */
-.label-mil {
-    color: #fbbf24 !important; /* Яскраво-жовтий для видимості на камуфляжі */
-    font-weight: 900 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 1px !important;
-    margin-bottom: 5px !important;
-    display: block !important;
+.label-mil { @apply block text-[12px] font-black uppercase text-yellow-400 mb-2 ml-1; text-shadow: 1px 1px 2px #000; }
+
+.save-btn {
+    @apply w-full py-5 bg-yellow-600 text-white font-black uppercase rounded-2xl shadow-2xl transition-all active:scale-95 text-xl;
+    border: 2px solid rgba(255,255,255,0.2);
 }
 
-/* НАВІГАЦІЯ */
-nav {
-    background: rgba(15, 15, 10, 0.95) !important;
-    border-top: 2px solid #ca8a04 !important;
-}
+.nav-btn { @apply flex flex-col items-center gap-1 text-white/50 transition-all; }
+.nav-btn.active { @apply text-yellow-500 scale-110; }
+.nav-btn span { @apply text-[10px] font-black uppercase; }
 
-.nav-btn.active {
-    color: #fbbf24 !important;
-    transform: scale(1.1) !important;
-}
+.scanline { background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.1) 50%); background-size: 100% 4px; }
+.hide-scrollbar::-webkit-scrollbar { display: none; }
