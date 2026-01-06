@@ -1,70 +1,31 @@
-/* GLOBAL */
 :root {
-    --c-olive-dark: #373b30;
-    --c-olive-light: #525545;
-    --c-tan: #757161;
-    --c-black: #1a1c16;
+    --bg: #1a1c16; --p1: #2d3026; --p2: #12140e; --glass: rgba(20,22,18,0.85); --text: #e4e4e4; --acc: #ca8a04;
+}
+[data-theme="light"] {
+    --bg: #9ca37d; --p1: #828a61; --p2: #6b704b; --glass: rgba(255,255,255,0.7); --text: #1a1c16; --acc: #4b512d;
 }
 
-body {
-    -webkit-tap-highlight-color: transparent;
-}
+body { background-color: var(--bg); color: var(--text); overflow: hidden; }
 
-/* --- MM-14 PIXEL CAMO GENERATOR --- */
 .pixel-camo {
-    background-color: #4b4f42; /* Основний оливковий */
-    /* Складний патерн градієнтів для імітації пікселя */
     background-image: 
-        linear-gradient(45deg, #2d3026 25%, transparent 25%, transparent 75%, #2d3026 75%, #2d3026),
-        linear-gradient(45deg, #2d3026 25%, transparent 25%, transparent 75%, #2d3026 75%, #2d3026),
-        linear-gradient(90deg, #6b6957 1px, transparent 1px),
-        linear-gradient(#6b6957 1px, transparent 1px);
-    background-size: 40px 40px, 40px 40px, 10px 10px, 10px 10px;
-    background-position: 0 0, 20px 20px, 0 0, 0 0;
-    opacity: 0.4;
-    filter: contrast(120%) brightness(80%);
+        linear-gradient(45deg, var(--p1) 25%, transparent 25%, transparent 75%, var(--p1) 75%, var(--p1)),
+        linear-gradient(45deg, var(--p2) 25%, transparent 25%, transparent 75%, var(--p2) 75%, var(--p2));
+    background-size: 40px 40px; background-position: 0 0, 20px 20px; opacity: 0.4; position: fixed; inset: 0;
 }
 
-.vignette {
-    background: radial-gradient(circle at center, transparent 30%, #000 130%);
-}
+.glass-panel { background: var(--glass); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); }
 
-/* CRT Scanline Effect */
-.scanline {
-    background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1));
-    background-size: 100% 4px;
-    opacity: 0.6;
-    pointer-events: none;
-}
+.timer-card { @apply glass-panel p-2 rounded-lg text-center; }
+.timer-card span { @apply block text-xl font-mono font-bold; }
+.timer-card p { @apply text-[8px] uppercase opacity-50 font-bold; }
 
-/* GLASS UI */
-.glass-panel {
-    background: rgba(20, 22, 18, 0.75);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
-}
+.mil-input { @apply w-full bg-black/20 border border-white/10 rounded-lg p-2 text-sm outline-none focus:border-yellow-600; }
+.label-mil { @apply block text-[9px] uppercase font-bold opacity-50 mb-1 ml-1; }
 
-.hide-scrollbar::-webkit-scrollbar {
-    display: none;
-}
-.hide-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-}
+.nav-btn { @apply flex flex-col items-center gap-1 text-white/30 transition-all; }
+.nav-btn.active { @apply text-yellow-500; transform: translateY(-2px); }
+.nav-btn span { @apply text-[8px] font-bold uppercase; }
 
-/* ANIMATIONS */
-@keyframes pulse-slow {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.7; transform: scale(0.95); }
-}
-.animate-pulse-slow {
-    animation: pulse-slow 3s infinite ease-in-out;
-}
-
-/* NAV BUTTONS */
-.nav-btn.active {
-    color: #ca8a04; /* Yellow-600 */
-    text-shadow: 0 0 10px rgba(202, 138, 4, 0.5);
-    transform: translateY(-2px);
-}
+.scanline { background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.05) 50%); background-size: 100% 4px; }
+.hide-scrollbar::-webkit-scrollbar { display: none; }
