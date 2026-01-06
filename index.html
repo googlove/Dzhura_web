@@ -7,213 +7,144 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;600;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     
-    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0f172a">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="style.css">
 </head>
-<body class="theme-dark min-h-screen w-full relative font-inter">
+<body class="theme-military min-h-screen w-full relative overflow-hidden">
 
-    <div class="bg-blobs fixed inset-0 z-0 overflow-hidden pointer-events-none opacity-70">
-        <div class="absolute top-[-10%] left-[-10%] w-[80vw] h-[80vw] rounded-full mix-blend-multiply filter blur-[100px] animate-blob bg-blue-600"></div>
-        <div class="absolute top-[20%] right-[-10%] w-[80vw] h-[80vw] rounded-full mix-blend-multiply filter blur-[100px] animate-blob animation-delay-2000 bg-indigo-600"></div>
-        <div class="absolute bottom-[-10%] left-[20%] w-[80vw] h-[80vw] rounded-full mix-blend-multiply filter blur-[100px] animate-blob animation-delay-4000 bg-cyan-600"></div>
-    </div>
+    <div class="military-bg fixed inset-0 z-0 pointer-events-none"></div>
+    <div class="vignette fixed inset-0 z-0 pointer-events-none"></div>
 
-    <div id="app" class="relative z-10 max-w-md mx-auto min-h-screen flex flex-col pb-28">
-
-        <header class="flex justify-between items-center p-6">
-            <div class="flex items-center gap-3">
-                <div class="p-2 rounded-2xl glass-card">
-                    <i data-lucide="shield" class="w-6 h-6 text-blue-500 fill-current opacity-80"></i>
-                </div>
-                <div>
-                    <h1 class="text-xl font-bold tracking-tight" id="user-name-display">Джура</h1>
-                    <p class="text-[10px] uppercase tracking-wider opacity-60" id="rank-display">Рекрут</p>
+    <main class="relative z-10 pb-28 pt-6 px-4 max-w-lg mx-auto h-screen overflow-y-auto hide-scrollbar">
+        
+        <header class="flex justify-between items-start mb-6 glass-card p-4 rounded-2xl border-l-4 border-yellow-600/50">
+            <div>
+                <p class="text-[10px] uppercase tracking-[0.2em] opacity-60 font-mono mb-1 text-yellow-500">Системний час</p>
+                <div id="doomsday-clock" class="text-3xl font-black font-mono leading-none tracking-tight text-white/90">
+                    00:00:00
                 </div>
             </div>
-            <div class="flex gap-3">
-                <button type="button" onclick="toggleTheme()" class="p-3 rounded-full glass-card active:scale-90 transition-smooth">
-                    <i data-lucide="moon" id="theme-icon" class="w-5 h-5 text-blue-400"></i>
-                </button>
-                <button type="button" onclick="toggleView('settings')" class="p-3 rounded-full glass-card active:scale-90 transition-smooth">
-                    <i data-lucide="settings" class="w-5 h-5"></i>
-                </button>
+            <div class="text-right">
+                <h1 id="header-name" class="font-bold text-lg leading-tight text-white">Боєць</h1>
+                <p id="header-rank" class="text-[10px] opacity-50 tracking-widest uppercase font-bold text-yellow-500">Рекрут</p>
             </div>
         </header>
 
-        <div id="view-timer" class="tab-content active px-4 space-y-4">
-            <div class="glass-card rounded-[2.5rem] p-8 flex flex-col items-center justify-center relative overflow-hidden">
-                <div id="alarm-banner" class="absolute top-6 right-6 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border border-green-500/30 bg-green-500/10 text-green-400 transition-all">
-                    В строю
-                </div>
-
-                <div class="relative w-[280px] h-[280px] flex items-center justify-center">
-                    <svg width="300" height="300" viewBox="0 0 300 300" class="absolute inset-0 -rotate-90">
-                        <circle cx="150" cy="150" r="130" stroke="rgba(255,255,255,0.08)" stroke-width="20" fill="none"/>
-                        <circle cx="150" cy="150" r="130" stroke="url(#progressGradient)" stroke-width="20" fill="none" 
-                                stroke-dasharray="817" stroke-dashoffset="817" stroke-linecap="round" id="progress-stroke"/>
-                        <defs>
-                            <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#60a5fa"/>
-                                <stop offset="100%" stop-color="#34d399"/>
-                            </linearGradient>
-                        </defs>
-                    </svg>
-                    <div class="flex flex-col items-center z-10 text-center">
-                        <span class="text-6xl font-bold tracking-tighter tabular-nums">
-                            <span id="percent-number" class="bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">0</span>
-                            <span class="text-2xl opacity-80">%</span>
-                        </span>
-                        <span class="text-xs font-bold uppercase tracking-widest opacity-50 mt-2">Пройдено</span>
-                        <span class="text-[10px] opacity-40 mt-1" id="days-ratio">0 / 0 днів</span>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-3 gap-3 w-full mt-6">
-                    <div class="timer-box">
-                        <span id="counter-years" class="text-2xl font-bold font-mono text-blue-400">0</span>
-                        <span class="text-[10px] uppercase opacity-50">Років</span>
-                    </div>
-                    <div class="timer-box">
-                        <span id="counter-months" class="text-2xl font-bold font-mono text-blue-400">0</span>
-                        <span class="text-[10px] uppercase opacity-50">Місяців</span>
-                    </div>
-                    <div class="timer-box">
-                        <span id="counter-days" class="text-2xl font-bold font-mono text-blue-400">0</span>
-                        <span class="text-[10px] uppercase opacity-50">Днів</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-2 gap-4">
-                <div class="glass-card rounded-3xl p-5 flex flex-col justify-between h-36">
-                    <div class="p-2 bg-orange-500/10 w-fit rounded-xl text-orange-400"><i data-lucide="clock" class="w-6 h-6"></i></div>
-                    <div>
-                        <div id="days-left" class="text-3xl font-bold tabular-nums">∞</div>
-                        <div class="text-xs opacity-50">Днів до дембеля</div>
-                    </div>
-                </div>
-                <div class="glass-card rounded-3xl p-5 flex flex-col justify-between h-36 cursor-pointer active:scale-95 transition-smooth" onclick="toggleView('status')">
-                    <div class="p-2 bg-green-500/10 w-fit rounded-xl text-green-400"><i data-lucide="trending-up" class="w-6 h-6"></i></div>
-                    <div>
-                        <div id="kkd-mini-display" class="text-3xl font-bold">10%</div>
-                        <div class="text-xs opacity-50 flex items-center gap-1">Мій ККД <i data-lucide="arrow-right" class="w-3 h-3"></i></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="view-status" class="tab-content px-4 space-y-4">
-            <div class="glass-card rounded-3xl p-6">
-                <div class="flex items-center gap-4 mb-4">
-                    <div class="profile-avatar"><i data-lucide="activity" class="w-6 h-6"></i></div>
-                    <div><h2 class="text-lg font-bold">Бойовий ККД</h2><p class="text-xs opacity-50">Ефективність бійця</p></div>
-                </div>
-                <div class="relative h-6 bg-white/5 rounded-full overflow-hidden mb-2">
-                    <div id="kkd-bar" class="absolute top-0 left-0 h-full bg-gradient-to-r from-blue-500 to-green-400 transition-all duration-1000" style="width: 10%;"></div>
-                </div>
-                <div class="flex justify-between text-xs font-mono opacity-60"><span>0%</span><span id="kkd-value">10%</span><span>100%</span></div>
-            </div>
-
-            <div class="glass-card rounded-3xl p-6 relative overflow-hidden">
-                <div class="absolute -right-4 -top-4 opacity-10 rotate-12"><i data-lucide="award" class="w-32 h-32"></i></div>
-                <div class="relative z-10">
-                    <h3 class="text-sm font-bold uppercase tracking-wider text-yellow-500 mb-1">Досягнення</h3>
-                    <h2 id="achieve-title" class="text-2xl font-bold mb-2">Новобранець</h2>
-                    <p id="achieve-desc" class="text-sm opacity-70">Шлях тільки починається.</p>
-                </div>
-            </div>
-
-            <div class="glass-card rounded-3xl p-6">
-                <h3 class="font-bold mb-4 flex items-center gap-2"><i data-lucide="zap" class="w-5 h-5 text-purple-400"></i>Навички</h3>
-                <div id="skills-list" class="space-y-2"></div>
-            </div>
-
-            <div class="glass-card rounded-3xl p-6">
-                <h3 class="font-bold mb-4 flex items-center gap-2"><i data-lucide="medal" class="w-5 h-5 text-yellow-400"></i>Медалі</h3>
-                <div id="medals-list" class="grid grid-cols-2 gap-4"></div>
-            </div>
-        </div>
-
-        <div id="view-stats" class="tab-content px-4 space-y-4">
-            <div class="glass-card rounded-3xl p-6">
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="profile-avatar bg-emerald-600"><i data-lucide="bar-chart-3" class="w-6 h-6"></i></div>
-                    <h2 class="text-lg font-bold">Статистика служби</h2>
-                </div>
-                <div id="stats-list" class="space-y-3"></div>
-            </div>
-        </div>
-
-        <div id="view-settings" class="tab-content px-4 space-y-6">
-            <div class="glass-card rounded-[2.5rem] p-6 space-y-6">
-                <h2 class="text-xl font-bold flex items-center gap-2"><i data-lucide="settings" class="w-6 h-6"></i> Налаштування</h2>
+        <section id="view-timer" class="tab-content active">
+            
+            <div class="relative flex justify-center items-center py-8">
+                <svg width="280" height="280" viewBox="0 0 300 300" class="absolute transform -rotate-90 pointer-events-none">
+                    <circle cx="150" cy="150" r="140" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="4" />
+                    <g id="rice-circle-svg"></g> </svg>
                 
-                <div class="space-y-4">
-                    <div>
-                        <label class="label-xs">Позивний / Ім'я</label>
-                        <input type="text" id="input-name" class="settings-input" placeholder="Козак">
-                    </div>
-
-                    <div>
-                        <label class="label-xs">Дата початку служби</label>
-                        <input type="date" id="input-date" class="settings-input">
-                    </div>
-
-                    <div>
-                        <label class="label-xs">Тип служби</label>
-                        <div class="grid grid-cols-2 gap-2 mt-2">
-                            <button type="button" onclick="setServiceType('mobilized')" id="btn-mobilized" class="p-3 rounded-xl border border-white/10 text-sm font-bold transition-smooth">Мобілізація</button>
-                            <button type="button" onclick="setServiceType('contract')" id="btn-contract" class="p-3 rounded-xl border border-white/10 text-sm font-bold transition-smooth">Контракт</button>
-                        </div>
-                        <div id="contract-duration-block" class="hidden mt-3 p-3 bg-white/5 rounded-xl">
-                            <div class="flex justify-between gap-2">
-                                <button type="button" onclick="setContractYears(3)" class="contract-year-btn flex-1 p-2 rounded-lg bg-black/30 text-[10px] font-bold" data-year="3">3 р.</button>
-                                <button type="button" onclick="setContractYears(5)" class="contract-year-btn flex-1 p-2 rounded-lg bg-black/30 text-[10px] font-bold" data-year="5">5 р.</button>
-                                <button type="button" onclick="setContractYears(10)" class="contract-year-btn flex-1 p-2 rounded-lg bg-black/30 text-[10px] font-bold" data-year="10">10 р.</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="label-xs">Військове звання</label>
-                        <select id="input-rank" class="settings-input appearance-none"></select>
-                        <div class="flex items-center gap-2 mt-3 p-3 bg-blue-600/10 rounded-xl text-[10px] text-blue-300">
-                            <input type="checkbox" id="is-navy" onchange="toggleNavyRanks(this.checked)">
-                            <label for="is-navy" class="cursor-pointer select-none">Використовувати звання ВМС</label>
-                        </div>
-                    </div>
-
-                    <button type="button" onclick="saveData()" class="w-full py-4 bg-blue-600 text-white font-bold rounded-2xl shadow-lg shadow-blue-600/40 active:scale-95 transition-smooth">
-                        Зберегти дані
-                    </button>
+                <div class="text-center z-10 mt-2">
+                    <div id="percent-display" class="text-6xl font-black mb-0 tabular-nums tracking-tighter drop-shadow-lg">0%</div>
+                    <div class="text-[10px] uppercase tracking-[0.3em] opacity-40 font-bold mt-2">Служби</div>
                 </div>
             </div>
-        </div>
 
-   <nav class="nav-bar">
-    <button type="button" onclick="toggleView('timer')" id="nav-timer" class="nav-item active">
-        <i data-lucide="clock" class="w-8 h-8"></i>
-        <span class="text-xs font-bold mt-1">Таймер</span>
-    </button>
-    <button type="button" onclick="toggleView('status')" id="nav-status" class="nav-item">
-        <i data-lucide="shield" class="w-8 h-8"></i>
-        <span class="text-xs font-bold mt-1">Статус</span>
-    </button>
-    <button type="button" onclick="toggleView('stats')" id="nav-stats" class="nav-item">
-        <i data-lucide="bar-chart-3" class="w-8 h-8"></i>
-        <span class="text-xs font-bold mt-1">Аналіз</span>
-    </button>
-</nav>
+            <div class="glass-card p-4 rounded-2xl flex items-center justify-between mb-4 border border-white/5 bg-black/20">
+                <div>
+                    <p class="text-[10px] uppercase opacity-50 font-bold tracking-wider">До демобілізації</p>
+                    <p class="text-xs opacity-30">Термін невизначений</p>
+                </div>
+                <div class="text-5xl font-light text-yellow-500/80 leading-none">
+                    ∞
+                </div>
+            </div>
+
+            <div class="grid grid-cols-4 gap-2 mt-4">
+                <div class="timer-box">
+                    <span class="block text-xl font-black" id="t-years">0</span>
+                    <span class="text-[8px] opacity-50 uppercase tracking-widest">Роки</span>
+                </div>
+                <div class="timer-box">
+                    <span class="block text-xl font-black" id="t-months">0</span>
+                    <span class="text-[8px] opacity-50 uppercase tracking-widest">Міс</span>
+                </div>
+                <div class="timer-box">
+                    <span class="block text-xl font-black" id="t-weeks">0</span>
+                    <span class="text-[8px] opacity-50 uppercase tracking-widest">Тиж</span>
+                </div>
+                <div class="timer-box">
+                    <span class="block text-xl font-black" id="t-days">0</span>
+                    <span class="text-[8px] opacity-50 uppercase tracking-widest">Дні</span>
+                </div>
+            </div>
+        </section>
+
+        <section id="view-army" class="tab-content">
+            <div class="flex justify-between items-end mb-4 px-1">
+                <h2 class="text-xl font-black uppercase tracking-wide">Особовий склад</h2>
+                <button onclick="UI.openModal()" class="text-yellow-500 text-xs font-bold uppercase tracking-wider border border-yellow-500/30 px-3 py-1 rounded hover:bg-yellow-500/10 transition-all">+ Додати</button>
+            </div>
+            <div id="army-list" class="space-y-3"></div>
+        </section>
+
+        <section id="view-settings" class="tab-content">
+            <h2 class="text-xl font-black uppercase tracking-wide mb-6 px-1">Параметри</h2>
+            <div class="glass-card p-6 rounded-3xl space-y-6 bg-black/20">
+                <div>
+                    <label class="label-mil">Позивний</label>
+                    <input type="text" id="set-name" class="mil-input">
+                </div>
+                <div>
+                    <label class="label-mil">Дата призову</label>
+                    <input type="date" id="set-date" class="mil-input text-white [color-scheme:dark]">
+                </div>
+                <div>
+                    <label class="label-mil">Тип служби</label>
+                    <div class="grid grid-cols-2 gap-2 mt-1">
+                        <button id="btn-mobilized" onclick="App.setService('mobilized')" class="p-3 rounded-xl border border-white/10 text-xs font-bold uppercase transition-all">Мобілізація</button>
+                        <button id="btn-contract" onclick="App.setService('contract')" class="p-3 rounded-xl border border-white/10 text-xs font-bold uppercase transition-all">Контракт</button>
+                    </div>
+                </div>
+                <div>
+                    <label class="label-mil">Звання</label>
+                    <select id="input-rank" class="mil-input appearance-none"></select>
+                    
+                    <div class="flex items-center gap-3 mt-4 p-3 border border-white/5 rounded-xl">
+                         <input type="checkbox" id="is-navy" class="w-5 h-5 accent-yellow-600 bg-transparent border-white/20" onchange="App.toggleNavy(this.checked)">
+                         <label for="is-navy" class="text-xs font-bold uppercase opacity-70">ВМС (Корабельні звання)</label>
+                    </div>
+                </div>
+
+                <button onclick="App.saveUser()" class="w-full bg-yellow-600/80 hover:bg-yellow-600 p-4 rounded-xl font-black uppercase tracking-widest text-black shadow-lg shadow-yellow-900/20 active:scale-95 transition-all mt-4">
+                    Зберегти
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <nav class="fixed bottom-6 left-4 right-4 h-16 glass-blur rounded-2xl border border-white/5 flex items-center justify-around px-2 z-50 shadow-2xl bg-black/60">
+        <button onclick="UI.switchTab('timer')" id="nav-timer" class="nav-item active">
+            <i data-lucide="crosshair"></i>
+            <span>Таймер</span>
+        </button>
+        <button onclick="UI.switchTab('army')" id="nav-army" class="nav-item">
+            <i data-lucide="users"></i>
+            <span>Склад</span>
+        </button>
+        <button onclick="UI.switchTab('settings')" id="nav-settings" class="nav-item">
+            <i data-lucide="settings"></i>
+            <span>Налаштування</span>
+        </button>
+    </nav>
+
+    <div id="modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] hidden items-center justify-center p-6">
+        <div class="glass-card w-full max-w-xs p-6 rounded-2xl border border-white/10">
+            <h3 class="font-black text-center mb-6 uppercase tracking-wider text-yellow-500">Новий боєць</h3>
+            <input type="text" id="buddy-name" placeholder="Позивний" class="mil-input mb-3">
+            <input type="date" id="buddy-date" class="mil-input mb-6 [color-scheme:dark]">
+            <div class="flex gap-2">
+                <button onclick="UI.closeModal()" class="flex-1 p-3 rounded-xl border border-white/10 text-xs font-bold uppercase hover:bg-white/5">Відміна</button>
+                <button onclick="App.addBuddy()" class="flex-1 p-3 rounded-xl bg-yellow-600 text-black text-xs font-bold uppercase hover:bg-yellow-500">Додати</button>
+            </div>
+        </div>
     </div>
 
-    <script src="js/app.js"></script>
-    <script>lucide.createIcons();</script>
+    <script src="app.js"></script>
 </body>
 </html>
