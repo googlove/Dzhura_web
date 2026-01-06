@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Джура ∞</title> 
+    <title>Джура ∞</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700;900&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
-    <div class="pixel-camo fixed inset-0 z-0"></div>
+<body class="min-h-screen relative overflow-x-hidden font-['Exo_2']">
+
+    <div class="pixel-camo"></div>
     <div class="scanline fixed inset-0 z-50 pointer-events-none"></div>
-
-<body class="min-h-screen relative font-['Exo_2']">
-
 
     <main class="relative z-10 h-screen overflow-y-auto pb-32 pt-4 px-4 max-w-md mx-auto hide-scrollbar">
         
@@ -29,13 +30,13 @@
         <section id="view-timer" class="tab-view space-y-6">
             <div class="relative flex justify-center py-2">
                 <svg width="240" height="240" viewBox="0 0 260 260" class="transform -rotate-90">
-                    <circle cx="130" cy="130" r="120" stroke="rgba(0,0,0,0.3)" stroke-width="14" fill="none" />
+                    <circle cx="130" cy="130" r="120" stroke="rgba(0,0,0,0.4)" stroke-width="14" fill="none" />
                     <circle id="progress-ring" cx="130" cy="130" r="120" stroke="#ca8a04" stroke-width="14" fill="none" stroke-dasharray="754" stroke-dashoffset="754" stroke-linecap="round" />
                 </svg>
                 <div class="absolute inset-0 flex flex-col items-center justify-center">
                     <span class="text-[14px] text-yellow-500 font-black uppercase tracking-widest">СЛУЖБА</span>
-                    <div id="main-days-counter" class="text-7xl font-black font-mono text-white filter drop-shadow-md">0</div>
-                    <span class="text-[12px] text-white font-bold uppercase">Днів</span>
+                    <div id="main-days-counter" class="main-counter">0</div>
+                    <span class="text-[14px] text-white font-black uppercase">Днів</span>
                 </div>
             </div>
 
@@ -56,7 +57,7 @@
                 <h3 class="text-yellow-500 font-black uppercase text-sm border-b border-white/10 pb-2">Дані служби</h3>
                 <div>
                     <label class="label-mil">Позивний</label>
-                    <input type="text" id="in-name" class="mil-input" placeholder="Боєць">
+                    <input type="text" id="in-name" class="mil-input" placeholder="Введіть ім'я">
                 </div>
                 <div>
                     <label class="label-mil">Дата призову</label>
@@ -85,23 +86,23 @@
                     </div>
                 </div>
                 <div class="space-y-3 pt-2">
-                    <div><label class="label-mil">Відпустка 1</label><input type="date" id="vac-1" class="mil-input"></div>
-                    <div><label class="label-mil">Відпустка 2</label><input type="date" id="vac-2" class="mil-input"></div>
-                    <div><label class="label-mil">Сімейні</label><input type="date" id="vac-fam" class="mil-input"></div>
-                    <div><label class="label-mil">Звільнення</label><input type="date" id="vac-city" class="mil-input"></div>
+                    <div><label class="label-mil">Відпустка 1 (15+2)</label><input type="date" id="vac-1" class="mil-input"></div>
+                    <div><label class="label-mil">Відпустка 2 (15+2)</label><input type="date" id="vac-2" class="mil-input"></div>
+                    <div><label class="label-mil">Сімейні (10 дн)</label><input type="date" id="vac-fam" class="mil-input"></div>
+                    <div><label class="label-mil">Звільнення (4 дн)</label><input type="date" id="vac-city" class="mil-input"></div>
                 </div>
             </div>
 
-            <button onclick="App.save()" class="w-full py-5 bg-yellow-600 hover:bg-yellow-500 text-white font-black uppercase rounded-2xl shadow-2xl transition-all active:scale-95 text-xl">ЗБЕРЕГТИ ДАНІ</button>
+            <button onclick="App.save()" class="save-btn">ЗБЕРЕГТИ ДАНІ</button>
         </section>
     </main>
 
     <nav class="fixed bottom-6 left-6 right-6 h-20 bg-black/90 backdrop-blur-2xl border border-white/10 rounded-3xl flex justify-around items-center z-[100] shadow-2xl">
         <button onclick="UI.nav('timer')" id="nav-timer" class="nav-btn active">
-            <i data-lucide="home"></i><span>Головна</span>
+            <i data-lucide="home" class="w-7 h-7"></i><span>Головна</span>
         </button>
         <button onclick="UI.nav('settings')" id="nav-settings" class="nav-btn">
-            <i data-lucide="settings"></i><span>Налаштування</span>
+            <i data-lucide="settings" class="w-7 h-7"></i><span>Налаштування</span>
         </button>
     </nav>
 
