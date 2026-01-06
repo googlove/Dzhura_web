@@ -1,31 +1,65 @@
 :root {
-    --bg: #1a1c16; --p1: #2d3026; --p2: #12140e; --glass: rgba(20,22,18,0.85); --text: #e4e4e4; --acc: #ca8a04;
-}
-[data-theme="light"] {
-    --bg: #9ca37d; --p1: #828a61; --p2: #6b704b; --glass: rgba(255,255,255,0.7); --text: #1a1c16; --acc: #4b512d;
+    /* Кольори для ММ-14 */
+    --p-light: #9ca37d; 
+    --p-mid: #828a61;   
+    --p-dark: #6b704b;  
+    --p-accent: #5d633a;
+    --text: #ffffff;
+    --glass: rgba(255, 255, 255, 0.4);
 }
 
-body { background-color: var(--bg); color: var(--text); overflow: hidden; }
+[data-theme="dark"] {
+    --p-light: #1a1c16; 
+    --p-mid: #2d3026;   
+    --p-dark: #12140e;  
+    --p-accent: #373b30;
+    --text: #e4e4e4;
+    --glass: rgba(20, 22, 18, 0.8);
+}
 
+body { 
+    background-color: var(--p-light); 
+    color: var(--text); 
+    overflow: hidden; 
+    transition: background-color 0.5s ease;
+}
+
+/* ГЕНЕРАЦІЯ ПІКСЕЛЯ КОДОМ */
 .pixel-camo {
     background-image: 
-        linear-gradient(45deg, var(--p1) 25%, transparent 25%, transparent 75%, var(--p1) 75%, var(--p1)),
-        linear-gradient(45deg, var(--p2) 25%, transparent 25%, transparent 75%, var(--p2) 75%, var(--p2));
-    background-size: 40px 40px; background-position: 0 0, 20px 20px; opacity: 0.4; position: fixed; inset: 0;
+        linear-gradient(45deg, var(--p-mid) 25%, transparent 25%, transparent 75%, var(--p-mid) 75%, var(--p-mid)),
+        linear-gradient(45deg, var(--p-dark) 25%, transparent 25%, transparent 75%, var(--p-dark) 75%, var(--p-dark)),
+        linear-gradient(90deg, var(--p-accent) 2px, transparent 2px),
+        linear-gradient(var(--p-accent) 2px, transparent 2px);
+    background-size: 40px 40px, 40px 40px, 10px 10px, 10px 10px;
+    background-position: 0 0, 20px 20px, 0 0, 0 0;
+    opacity: 0.8;
 }
 
-.glass-panel { background: var(--glass); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); }
+.glass-panel { 
+    background: var(--glass); 
+    backdrop-filter: blur(12px); 
+    -webkit-backdrop-filter: blur(12px); 
+    border: 1px solid rgba(255,255,255,0.2); 
+}
 
-.timer-card { @apply glass-panel p-2 rounded-lg text-center border-t border-white/5; }
+.timer-card { @apply glass-panel p-2 rounded-lg text-center border-t border-white/20; }
 .timer-card span { @apply block text-xl font-mono font-bold text-white; }
-.timer-card p { @apply text-[8px] uppercase opacity-50 font-bold tracking-widest; }
+.timer-card p { @apply text-[8px] uppercase opacity-70 font-bold tracking-widest text-white; }
 
-.mil-input { @apply w-full bg-black/30 border border-white/10 rounded-lg p-2 text-sm outline-none focus:border-yellow-600 text-white transition-all; }
-.label-mil { @apply block text-[9px] uppercase font-bold opacity-50 mb-1 ml-1 tracking-tighter; }
+/* ЧОРНИЙ ТЕКСТ У ПОЛЯХ ВВОДУ */
+.mil-input { 
+    @apply w-full border border-black/10 rounded-lg p-2 text-sm outline-none focus:border-yellow-600 transition-all;
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #000000 !important; 
+    font-weight: 700;
+}
 
-.nav-btn { @apply flex flex-col items-center gap-1 text-white/30 transition-all cursor-pointer outline-none; }
+.label-mil { @apply block text-[10px] uppercase font-black mb-1 ml-1 tracking-wider text-black; opacity: 0.7; }
+
+.nav-btn { @apply flex flex-col items-center gap-1 text-white/50 transition-all cursor-pointer; }
 .nav-btn.active { @apply text-yellow-500; transform: translateY(-2px); }
-.nav-btn span { @apply text-[8px] font-bold uppercase tracking-wider; }
+.nav-btn span { @apply text-[8px] font-bold uppercase; }
 
-.scanline { background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.05) 50%); background-size: 100% 4px; pointer-events: none; }
+.scanline { background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.03) 50%); background-size: 100% 4px; pointer-events: none; }
 .hide-scrollbar::-webkit-scrollbar { display: none; }
