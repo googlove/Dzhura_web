@@ -1,105 +1,86 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Джура ∞</title>
-
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
-
-  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Джура</title>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
 </head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Джура</h1>
+        </header>
 
-<body class="min-h-screen font-['Exo_2'] overflow-hidden">
+        <div class="card">
+            <h2>Налаштування</h2>
+            <label>Тип служби</label>
+            <select id="serviceType">
+                <option value="mobilized">Мобілізований</option>
+                <option value="contract">Контракт</option>
+            </select>
 
-<div class="pixel-camo fixed inset-0 z-0"></div>
-<div class="scanline fixed inset-0 z-50 pointer-events-none"></div>
+            <label>Дата початку служби</label>
+            <input type="date" id="startDate">
 
-<main class="relative z-10 h-screen overflow-y-auto px-4 pb-32 pt-4 max-w-md mx-auto">
+            <div id="endDateContainer">
+                <label>Дата закінчення контракту (дембель)</label>
+                <input type="date" id="endDate">
+            </div>
 
-  <!-- HEADER -->
-  <header class="glass-panel p-4 rounded-xl flex justify-between items-center mb-6">
-    <div>
-      <div id="realtime-clock" class="text-2xl font-mono font-black text-white">00:00:00</div>
-      <div id="money-display" class="text-yellow-400 font-black">0 ₴</div>
+            <label>Місячна зарплата (грн)</label>
+            <input type="number" id="salary" placeholder="наприклад, 25000">
+        </div>
+
+        <div id="main-counter" class="card">
+            <div class="circle">
+                <div class="big-number" id="bigNumber">0</div>
+                <div class="big-text" id="bigText">ДНІВ ПРОЙШЛО</div>
+            </div>
+            <div id="infinity" style="display:none;">&infin;</div>
+        </div>
+
+        <div class="card">
+            <h2>Пройшло часу з початку служби</h2>
+            <div class="time-breakdown" id="passedTime">-</div>
+        </div>
+
+        <div class="card" id="remainingCard" style="display:none;">
+            <h2>Залишилось до дембеля</h2>
+            <div class="time-breakdown" id="remainingTime">-</div>
+        </div>
+
+        <div class="card">
+            <h2>Зарплата</h2>
+            <p>Накопичено приблизно: <span class="earned" id="earned">0</span> грн</p>
+        </div>
+
+        <div class="card">
+            <h2>Відпустки та звільнення</h2>
+            <div class="vacation-item">
+                <label>До відпустки №1 (15 + 2 дні на дорогу)</label>
+                <input type="date" id="vac1">
+                <div class="countdown" id="toVac1">-</div>
+            </div>
+            <div class="vacation-item">
+                <label>До відпустки №2 (15 + 2 дні на дорогу)</label>
+                <input type="date" id="vac2">
+                <div class="countdown" id="toVac2">-</div>
+            </div>
+            <div class="vacation-item">
+                <label>До звільнення в місто (4 дні)</label>
+                <input type="date" id="vacCity">
+                <div class="countdown" id="toVacCity">-</div>
+            </div>
+            <div class="vacation-item">
+                <label>За сімейними обставинами (10 днів)</label>
+                <input type="date" id="vacFamily">
+                <div class="countdown" id="toVacFamily">-</div>
+            </div>
+        </div>
     </div>
 
-    <div class="flex items-center gap-3">
-      <button onclick="App.toggleTheme()" class="p-2 bg-black/40 rounded-lg">
-        <i data-lucide="sun-moon" class="w-6 h-6 text-yellow-500"></i>
-      </button>
-      <div class="text-right">
-        <div id="user-name-display" class="font-black text-white text-sm uppercase">Боєць</div>
-        <div id="rank-badge-display" class="text-[10px] text-yellow-500 font-bold uppercase">Рекрут</div>
-      </div>
-    </div>
-  </header>
-
-  <!-- TIMER -->
-  <section id="view-timer" class="tab-view space-y-4">
-
-    <div class="relative flex justify-center">
-      <svg width="220" height="220" viewBox="0 0 260 260" class="-rotate-90">
-        <circle cx="130" cy="130" r="120" stroke="rgba(255,255,255,.1)" stroke-width="12" fill="none"/>
-        <circle id="progress-ring" cx="130" cy="130" r="120" stroke="#ca8a04"
-          stroke-width="12" fill="none" stroke-dasharray="754" stroke-dashoffset="754"/>
-      </svg>
-
-      <div class="absolute inset-0 flex flex-col items-center justify-center">
-        <span class="text-yellow-500 text-xs font-black uppercase">Служба</span>
-        <div id="main-days-counter" class="text-6xl font-black font-mono text-white">0</div>
-        <span class="text-[10px] text-white/70 uppercase font-bold">Днів</span>
-      </div>
-    </div>
-
-    <div class="grid grid-cols-3 gap-2">
-      <div class="timer-card"><span id="t-year">0</span><p>Років</p></div>
-      <div class="timer-card"><span id="t-month">0</span><p>Місяців</p></div>
-      <div class="timer-card"><span id="t-day">0</span><p>Днів</p></div>
-      <div class="timer-card"><span id="t-hour">0</span><p>Годин</p></div>
-      <div class="timer-card"><span id="t-min">0</span><p>Хвилин</p></div>
-      <div class="timer-card"><span id="t-sec">0</span><p>Секунд</p></div>
-    </div>
-
-    <div id="events-tracker" class="space-y-3 mt-6"></div>
-  </section>
-
-  <!-- SETTINGS -->
-  <section id="view-settings" class="tab-view hidden space-y-6">
-
-    <div class="glass-panel p-5 rounded-2xl space-y-4">
-      <h3 class="section-title">Дані служби</h3>
-
-      <label class="label-mil">Позивний</label>
-      <input id="in-name" class="mil-input">
-
-      <label class="label-mil">Дата призову</label>
-      <input id="in-date" type="date" class="mil-input">
-
-      <label class="label-mil">ВМС (Флот)</label>
-      <input type="checkbox" id="check-navy" onchange="App.toggleNavy()">
-
-      <label class="label-mil">Звання</label>
-      <select id="input-rank" class="mil-input"></select>
-    </div>
-
-    <button onclick="App.save()" class="w-full py-4 bg-yellow-600 font-black uppercase rounded-xl">
-      Зберегти дані
-    </button>
-  </section>
-</main>
-
-<nav class="bottom-nav">
-  <button id="nav-timer" onclick="UI.nav('timer')" class="nav-btn active">
-    <i data-lucide="timer"></i><span>Головна</span>
-  </button>
-  <button id="nav-settings" onclick="UI.nav('settings')" class="nav-btn">
-    <i data-lucide="user-cog"></i><span>Налаштування</span>
-  </button>
-</nav>
-
-<script src="js/app.js"></script>
+    <script src="js/app.js"></script>
 </body>
 </html>
