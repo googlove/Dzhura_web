@@ -14,18 +14,18 @@ body { background-color: var(--bg); color: var(--text); overflow: hidden; }
     background-size: 40px 40px; background-position: 0 0, 20px 20px; opacity: 0.4; position: fixed; inset: 0;
 }
 
-.glass-panel { background: var(--glass); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); }
+.glass-panel { background: var(--glass); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); }
 
-.timer-card { @apply glass-panel p-2 rounded-lg text-center; }
-.timer-card span { @apply block text-xl font-mono font-bold; }
-.timer-card p { @apply text-[8px] uppercase opacity-50 font-bold; }
+.timer-card { @apply glass-panel p-2 rounded-lg text-center border-t border-white/5; }
+.timer-card span { @apply block text-xl font-mono font-bold text-white; }
+.timer-card p { @apply text-[8px] uppercase opacity-50 font-bold tracking-widest; }
 
-.mil-input { @apply w-full bg-black/20 border border-white/10 rounded-lg p-2 text-sm outline-none focus:border-yellow-600; }
-.label-mil { @apply block text-[9px] uppercase font-bold opacity-50 mb-1 ml-1; }
+.mil-input { @apply w-full bg-black/30 border border-white/10 rounded-lg p-2 text-sm outline-none focus:border-yellow-600 text-white transition-all; }
+.label-mil { @apply block text-[9px] uppercase font-bold opacity-50 mb-1 ml-1 tracking-tighter; }
 
-.nav-btn { @apply flex flex-col items-center gap-1 text-white/30 transition-all; }
+.nav-btn { @apply flex flex-col items-center gap-1 text-white/30 transition-all cursor-pointer outline-none; }
 .nav-btn.active { @apply text-yellow-500; transform: translateY(-2px); }
-.nav-btn span { @apply text-[8px] font-bold uppercase; }
+.nav-btn span { @apply text-[8px] font-bold uppercase tracking-wider; }
 
-.scanline { background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.05) 50%); background-size: 100% 4px; }
+.scanline { background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.05) 50%); background-size: 100% 4px; pointer-events: none; }
 .hide-scrollbar::-webkit-scrollbar { display: none; }
