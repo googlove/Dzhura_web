@@ -4,16 +4,15 @@ const App = {
         navy: ["Рекрут", "Матрос", "Старший матрос", "Старшина 2 статті", "Старшина 1 статті", "Головний старшина", "Головний корабельний старшина", "Штаб-старшина", "Майстер-старшина", "Старший майстер-старшина", "Головний майстер-старшина", "Молодший лейтенант", "Лейтенант", "Старший лейтенант", "Капітан-лейтенант", "Капітан 3 рангу", "Капітан 2 рангу", "Капітан 1 рангу", "Коммодор"]
     },
 
-    data: JSON.parse(localStorage.getItem('jura_tactical_v5')) || {
+    data: JSON.parse(localStorage.getItem('jura_tactical_vFinal')) || {
         name: "Боєць", start: new Date().toISOString().split('T')[0],
-        salary: 20000, watches: 0, theme: 'light', isNavy: false, rank: "Солдат",
+        salary: 20000, watches: 0, isNavy: false, rank: "Солдат",
         vac1: '', vac2: '', vacFam: '', vacCity: ''
     },
 
     init() {
         this.renderRanks();
         this.fillInputs();
-        this.applyTheme();
         setInterval(() => this.tick(), 1000);
         this.tick();
         lucide.createIcons();
@@ -24,9 +23,11 @@ const App = {
         const start = new Date(this.data.start);
         document.getElementById('realtime-clock').innerText = now.toLocaleTimeString('uk-UA');
 
+        // Фінанси
         const totalMoney = parseInt(this.data.salary || 0) + (parseInt(this.data.watches || 0) * 4000);
         document.getElementById('money-display').innerText = totalMoney.toLocaleString() + " ₴";
 
+        // Час
         let diff = now - start;
         if (diff < 0) diff = 0;
         const s = Math.floor(diff / 1000);
@@ -40,9 +41,9 @@ const App = {
         document.getElementById('t-min').innerText = Math.floor((s % 3600) / 60);
         document.getElementById('t-sec').innerText = s % 60;
 
+        // Прогрес (на 3 роки)
         const progress = Math.min(d / 1095, 1);
-        const ring = document.getElementById('progress-ring');
-        if(ring) ring.style.strokeDashoffset = 754 - (progress * 754);
+        document.getElementById('progress-ring').style.strokeDashoffset = 754 - (progress * 754);
         
         this.updateEvents(now);
     },
@@ -58,34 +59,25 @@ const App = {
             if (now >= s && now <= e) {
                 const left = Math.ceil((e - now) / 86400000);
                 container.innerHTML += `
-                    <div class="event-badge">
-                        <p class="event-label">${label}</p>
-                        <p class="event-time">ЗАЛИШИЛОСЬ: ${left} ДНІВ</p>
-                        <p class="event-sub">Повернення: ${e.toLocaleDateString('uk-UA')}</p>
-                    </div>`;
-            } else if (s > now) {
-                const to = Math.ceil((s - now) / 86400000);
-                container.innerHTML += `
-                    <div class="glass-panel p-3 rounded-xl opacity-60">
-                        <p class="text-[10px] font-black uppercase text-yellow-500">${label}</p>
-                        <p class="text-sm font-bold text-white uppercase">Через ${to} дн.</p>
+                    <div class="event-card">
+                        <p>${label}</p>
+                        <p>ДО ПОВЕРНЕННЯ: ${left} ДН.</p>
                     </div>`;
             }
         };
-        check(this.data.vac1, 17, "Відпустка №1");
-        check(this.data.vac2, 17, "Відпустка №2");
-        check(this.data.vacFam, 10, "Сімейні обставини");
-        check(this.data.vacCity, 4, "Звільнення у місто");
+        check(this.data.vac1, 17, "ВІДПУСТКА №1");
+        check(this.data.vac2, 17, "ВІДПУСТКА №2");
+        check(this.data.vacFam, 10, "СІМЕЙНІ ОБСТАВИНИ");
+        check(this.data.vacCity, 4, "ЗВІЛЬНЕННЯ");
     },
 
     renderRanks() {
         const sel = document.getElementById('input-rank');
-        if(!sel) return;
         sel.innerHTML = '';
         const list = this.data.isNavy ? this.ranks.navy : this.ranks.army;
         list.forEach(r => {
             const opt = document.createElement('option');
-            opt.value = opt.innerText = r;
+            opt.value = r; opt.innerText = r;
             sel.appendChild(opt);
         });
         sel.value = this.data.rank;
@@ -108,7 +100,7 @@ const App = {
         this.data.vacFam = document.getElementById('vac-fam').value;
         this.data.vacCity = document.getElementById('vac-city').value;
         
-        localStorage.setItem('jura_tactical_v5', JSON.stringify(this.data));
+        localStorage.setItem('jura_tactical_vFinal', JSON.stringify(this.data));
         this.updateHeader();
         UI.nav('timer');
     },
@@ -130,18 +122,6 @@ const App = {
     updateHeader() {
         document.getElementById('user-name-display').innerText = this.data.name;
         document.getElementById('rank-badge-display').innerText = this.data.rank;
-    },
-
-    toggleTheme() {
-        this.data.theme = this.data.theme === 'dark' ? 'light' : 'dark';
-        this.applyTheme();
-        localStorage.setItem('jura_tactical_v5', JSON.stringify(this.data));
-    },
-
-    applyTheme() {
-        document.documentElement.setAttribute('data-theme', this.data.theme);
-        const ring = document.getElementById('progress-ring');
-        if (ring) ring.setAttribute('stroke', this.data.theme === 'dark' ? '#ca8a04' : '#ffffff');
     }
 };
 
