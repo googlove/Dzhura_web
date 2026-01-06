@@ -1,64 +1,62 @@
 :root {
-    /* Кольори ММ-14 */
     --p-light: #a4a881; 
     --p-mid: #7d8256;   
     --p-dark: #535838;  
     --p-brown: #43412b;
 }
 
-body { background-color: var(--p-dark); }
+/* Примусовий камуфляж на весь екран */
+body, html { 
+    background-color: var(--p-dark) !important; 
+    margin: 0;
+    padding: 0;
+}
 
-/* ГЕНЕРАЦІЯ КАМУФЛЯЖУ (Pixel Camo) */
 .pixel-camo {
-    background-color: var(--p-light);
+    position: fixed;
+    inset: 0;
+    z-index: -1; /* Фон під всім контентом */
+    background-color: var(--p-light) !important;
     background-image: 
         linear-gradient(45deg, var(--p-mid) 25%, transparent 25%, transparent 75%, var(--p-mid) 75%, var(--p-mid)),
         linear-gradient(45deg, var(--p-dark) 25%, transparent 25%, transparent 75%, var(--p-dark) 75%, var(--p-dark)),
         linear-gradient(90deg, var(--p-brown) 2px, transparent 2px),
-        linear-gradient(var(--p-brown) 2px, transparent 2px);
-    background-size: 40px 40px, 40px 40px, 10px 10px, 10px 10px;
-    background-position: 0 0, 20px 20px, 0 0, 0 0;
+        linear-gradient(var(--p-brown) 2px, transparent 2px) !important;
+    background-size: 40px 40px, 40px 40px, 10px 10px, 10px 10px !important;
+    background-position: 0 0, 20px 20px, 0 0, 0 0 !important;
+    opacity: 1 !important;
 }
 
-.glass-panel { 
-    background: rgba(0, 0, 0, 0.65); 
-    backdrop-filter: blur(15px); 
-    border: 1px solid rgba(255,255,255,0.1); 
-}
-
-/* ТАЙМЕР - ТЕКСТ ВЕЛИКИЙ ТА БІЛИЙ */
-.timer-card { @apply glass-panel p-4 rounded-2xl text-center; }
-.timer-card span { @apply block text-3xl font-mono font-black text-white leading-none mb-1; }
-.timer-card p { @apply text-[11px] uppercase font-black text-yellow-500 tracking-tighter; }
-
-/* ПОЛЯ ВВОДУ - ЧОРНИЙ ТЕКСТ */
-.mil-input {
-    width: 100%;
-    background-color: #ffffff !important; /* Білий фон */
-    color: #000000 !important;             /* ЧОРНИЙ ТЕКСТ */
-    border: 3px solid #ca8a04 !important;
-    border-radius: 12px;
-    padding: 12px 14px;
-    font-size: 18px !important;
+/* Головний лічильник - великий та білий */
+#main-days-counter {
+    color: #ffffff !important;
+    font-size: 5rem !important; /* Дуже великий текст */
     font-weight: 900 !important;
-    outline: none;
+    text-shadow: 2px 2px 10px rgba(0,0,0,0.8) !important;
 }
 
-.label-mil { @apply block text-[12px] font-black uppercase text-white mb-2 ml-1 tracking-widest; text-shadow: 1px 1px 2px #000; }
-
-/* ПОДІЇ НА ГОЛОВНІЙ */
-.event-card {
-    @apply glass-panel p-5 rounded-2xl border-l-8 border-white animate-pulse;
-    background: rgba(255, 255, 255, 0.1);
+/* Текст відпусток на головній - яскраво білий */
+.event-card p {
+    color: #ffffff !important;
+    font-weight: 900 !important;
 }
-.event-card p:first-child { @apply text-yellow-400 font-black text-sm uppercase mb-1; }
-.event-card p:last-child { @apply text-2xl font-black text-white uppercase leading-tight; }
 
-/* НАВІГАЦІЯ */
-.nav-btn { @apply flex flex-col items-center gap-1 text-white/50 transition-all; }
-.nav-btn.active { @apply text-yellow-500 scale-110; }
-.nav-btn span { @apply text-[10px] font-black uppercase; }
-.nav-btn i { @apply w-7 h-7; }
+.event-card p:first-child {
+    color: #fbbf24 !important; /* Золотистий заголовок для контрасту */
+}
 
-.scanline { background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.1) 50%); background-size: 100% 4px; }
-.hide-scrollbar::-webkit-scrollbar { display: none; }
+/* Поля вводу - Тільки чорний текст на білому фоні */
+.mil-input {
+    background-color: #ffffff !important;
+    color: #000000 !important; /* Чіткий чорний текст */
+    font-weight: 900 !important;
+    border: 3px solid #ca8a04 !important;
+    font-size: 1.1rem !important;
+}
+
+/* Панелі, щоб вони не були просто білими */
+.glass-panel {
+    background: rgba(0, 0, 0, 0.7) !important; /* Темне скло для читабельності */
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
