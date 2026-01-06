@@ -102,6 +102,18 @@
                         <label class="label-mil text-[9px]">Звільнення в місто (4 дні)</label>
                         <input type="date" id="vac-city" class="mil-input">
                     </div>
+
+<div>
+    <label class="label-mil">Рід військ</label>
+    <div class="flex gap-4 mb-2">
+        <label class="text-xs flex items-center gap-2">
+            <input type="checkbox" id="check-navy" onchange="App.toggleNavy()"> ВМС (Флот)
+        </label>
+    </div>
+    <label class="label-mil">Звання</label>
+    <select id="input-rank" class="mil-input"></select>
+</div>
+
                 </div>
             </div>
 
