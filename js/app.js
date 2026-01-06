@@ -1,45 +1,24 @@
 const App = {
-    // База звань ЗСУ (актуальні)
     ranks: {
-        army: [
-            "Рекрут", "Солдат", "Старший солдат", "Молодший сержант", 
-            "Сержант", "Старший сержант", "Головний сержант", "Штаб-сержант", 
-            "Майстер-сержант", "Старший майстер-сержант", "Головний майстер-сержант",
-            "Молодший лейтенант", "Лейтенант", "Старший лейтенант", "Капітан", 
-            "Майор", "Підполковник", "Полковник", "Бригадний генерал", 
-            "Генерал-майор", "Генерал-лейтенант", "Генерал"
-        ],
-        navy: [
-            "Рекрут", "Матрос", "Старший матрос", "Старшина 2 статті", 
-            "Старшина 1 статті", "Головний старшина", "Головний корабельний старшина", 
-            "Штаб-старшина", "Майстер-старшина", "Старший майстер-старшина", 
-            "Головний майстер-старшина", "Молодший лейтенант", "Лейтенант", 
-            "Старший лейтенант", "Капітан-лейтенант", "Капітан 3 рангу", 
-            "Капітан 2 рангу", "Капітан 1 рангу", "Коммодор", 
-            "Контр-адмірал", "Віце-адмірал", "Адмірал"
-        ]
+        army: ["Рекрут", "Солдат", "Старший солдат", "Молодший сержант", "Сержант", "Старший сержант", "Головний сержант", "Штаб-сержант", "Майстер-сержант", "Старший майстер-сержант", "Головний майстер-сержант", "Молодший лейтенант", "Лейтенант", "Старший лейтенант", "Капітан", "Майор", "Підполковник", "Полковник", "Бригадний генерал"],
+        navy: ["Рекрут", "Матрос", "Старший матрос", "Старшина 2 статті", "Старшина 1 статті", "Головний старшина", "Головний корабельний старшина", "Штаб-старшина", "Майстер-старшина", "Старший майстер-старшина", "Головний майстер-старшина", "Молодший лейтенант", "Лейтенант", "Старший лейтенант", "Капітан-лейтенант", "Капітан 3 рангу", "Капітан 2 рангу", "Капітан 1 рангу", "Коммодор"]
     },
 
-    data: JSON.parse(localStorage.getItem('jura_final_db')) || {
-        name: "Боєць", 
-        start: new Date().toISOString().split('T')[0],
-        salary: 20000, 
-        watches: 0, 
-        theme: 'dark',
-        isNavy: false,
-        rank: "Солдат",
+    data: JSON.parse(localStorage.getItem('jura_final_v3')) || {
+        name: "Боєць", start: new Date().toISOString().split('T')[0],
+        salary: 20000, watches: 0, theme: 'dark', isNavy: false, rank: "Солдат",
         vac1: '', vac2: '', vacFam: '', vacCity: ''
     },
 
     init() {
-        this.applyTheme();
-        this.renderRanks(); // Заповнюємо список звань
+        this.renderRanks();
         this.fillInputs();
+        this.applyTheme();
         
-        // Запуск головного циклу (щосекунди)
+        // Запуск таймерів
         setInterval(() => this.tick(), 1000);
+        this.tick();
         
-        // Ініціалізація іконок
         lucide.createIcons();
     },
 
@@ -47,43 +26,33 @@ const App = {
         const now = new Date();
         const start = new Date(this.data.start);
         
-        // 1. Оновлення годинника
+        // Годинник
         document.getElementById('realtime-clock').innerText = now.toLocaleTimeString('uk-UA');
 
-        // 2. Розрахунок грошей (Зарплата + Вахти по 4000)
-        const totalMoney = parseInt(this.data.salary) + (parseInt(this.data.watches) * 4000);
+        // Гроші
+        const totalMoney = parseInt(this.data.salary || 0) + (parseInt(this.data.watches || 0) * 4000);
         document.getElementById('money-display').innerText = totalMoney.toLocaleString() + " ₴";
 
-        // 3. Детальний лічильник часу служби
+        // Розрахунок часу
         let diff = now - start;
         if (diff < 0) diff = 0;
 
-        const totalSecs = Math.floor(diff / 1000);
-        const days = Math.floor(totalSecs / 86400);
+        const s = Math.floor(diff / 1000);
+        const d = Math.floor(s / 86400);
         
-        // Розбивка для карток
-        const years = Math.floor(days / 365);
-        const months = Math.floor((days % 365) / 30);
-        const remainingDays = days % 30;
-        const hours = Math.floor((totalSecs % 86400) / 3600);
-        const mins = Math.floor((totalSecs % 3600) / 60);
-        const secs = totalSecs % 60;
+        // Оновлення лічильників
+        document.getElementById('main-days-counter').innerText = d;
+        document.getElementById('t-year').innerText = Math.floor(d / 365);
+        document.getElementById('t-month').innerText = Math.floor((d % 365) / 30);
+        document.getElementById('t-day').innerText = d % 30;
+        document.getElementById('t-hour').innerText = Math.floor((s % 86400) / 3600);
+        document.getElementById('t-min').innerText = Math.floor((s % 3600) / 60);
+        document.getElementById('t-sec').innerText = s % 60;
 
-        // Вивід у HTML
-        document.getElementById('main-days').innerText = days;
-        document.getElementById('t-year').innerText = years;
-        document.getElementById('t-month').innerText = months;
-        document.getElementById('t-day').innerText = remainingDays;
-        document.getElementById('t-hour').innerText = hours;
-        document.getElementById('t-min').innerText = mins;
-        document.getElementById('t-sec').innerText = secs;
+        // Кільце прогресу (на основі 3 років)
+        const progress = Math.min(d / 1095, 1);
+        document.getElementById('progress-ring').style.strokeDashoffset = 754 - (progress * 754);
 
-        // 4. Оновлення прогрес-кільця (умовно 3 роки = 100%)
-        const progress = Math.min(days / 1095, 1);
-        const ring = document.getElementById('progress-ring');
-        if (ring) ring.style.strokeDashoffset = 754 - (progress * 754);
-
-        // 5. Оновлення статусів відпусток та звільнень
         this.updateEvents(now);
     },
 
@@ -91,110 +60,109 @@ const App = {
         const container = document.getElementById('events-tracker');
         container.innerHTML = '';
         
-        const checkEvent = (dateStr, durationDays, label) => {
+        const check = (dateStr, days, label, color = "green") => {
             if (!dateStr) return;
-            const startDate = new Date(dateStr);
-            const endDate = new Date(startDate);
-            endDate.setDate(startDate.getDate() + durationDays);
+            const s = new Date(dateStr);
+            const e = new Date(s); e.setDate(s.getDate() + days);
             
-            if (now >= startDate && now <= endDate) {
-                const diffTime = endDate - now;
-                const daysLeft = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            if (now >= s && now <= e) {
+                const left = Math.ceil((e - now) / 86400000);
                 container.innerHTML += `
-                    <div class="glass-panel p-3 rounded-xl border-l-4 border-green-500 animate-pulse mb-2">
-                        <p class="text-[10px] font-bold uppercase text-green-500">${label} (АКТИВНО)</p>
-                        <p class="text-sm font-black text-white">ПОВЕРНЕННЯ ЧЕРЕЗ: ${daysLeft} ДН.</p>
+                    <div class="glass-panel p-3 rounded-xl border-l-4 border-${color}-500 animate-pulse">
+                        <p class="text-[9px] font-bold uppercase text-${color}-500">${label}</p>
+                        <p class="text-sm font-black text-white uppercase">Залишилось: ${left} дн.</p>
                     </div>`;
-            } else if (startDate > now) {
-                const daysTo = Math.ceil((startDate - now) / (1000 * 60 * 60 * 24));
+            } else if (s > now) {
+                const to = Math.ceil((s - now) / 86400000);
                 container.innerHTML += `
-                    <div class="glass-panel p-3 rounded-xl opacity-60 mb-2">
-                        <p class="text-[10px] font-bold uppercase tracking-widest text-yellow-500">${label} (ПЛАН)</p>
-                        <p class="text-xs text-white">Початок через ${daysTo} дн.</p>
+                    <div class="glass-panel p-3 rounded-xl opacity-50">
+                        <p class="text-[9px] font-bold uppercase text-white/40">${label}</p>
+                        <p class="text-[10px] text-white/60 uppercase">Через ${to} дн.</p>
                     </div>`;
             }
         };
 
-        // Перевірка всіх типів дат (15 днів + 2 дорога = 17)
-        checkEvent(this.data.vac1, 17, "Відпустка 1");
-        checkEvent(this.data.vac2, 17, "Відпустка 2");
-        checkEvent(this.data.vacFam, 10, "Сімейні обставини");
-        checkEvent(this.data.vacCity, 4, "Звільнення (4 дні)");
-    },
-
-    renderRanks() {
-        const select = document.getElementById('input-rank') || document.createElement('select'); 
-        // Якщо у вашому HTML id="input-rank", воно знайде його
-        select.innerHTML = '';
-        const currentList = this.data.isNavy ? this.ranks.navy : this.ranks.army;
-        
-        currentList.forEach(rank => {
-            const opt = document.createElement('option');
-            opt.value = rank;
-            opt.innerText = rank;
-            select.appendChild(opt);
-        });
-        select.value = this.data.rank;
-    },
-
-    toggleNavy() {
-        this.data.isNavy = !this.data.isNavy;
-        this.renderRanks(); // Перемальовуємо список під обраний рід військ
+        check(this.data.vac1, 17, "Перша відпустка");
+        check(this.data.vac2, 17, "Друга відпустка");
+        check(this.data.vacFam, 10, "Сімейні обставини", "yellow");
+        check(this.data.vacCity, 4, "Звільнення у місто", "blue");
     },
 
     save() {
-        // Збір даних з полів
-        this.data.name = document.getElementById('in-name').value || "Боєць";
+        this.data.name = document.getElementById('in-name').value;
         this.data.start = document.getElementById('in-date').value;
-        this.data.salary = document.getElementById('in-salary').value || 0;
-        this.data.watches = document.getElementById('in-watches').value || 0;
+        this.data.salary = document.getElementById('in-salary').value;
+        this.data.watches = document.getElementById('in-watches').value;
         this.data.rank = document.getElementById('input-rank').value;
+        this.data.isNavy = document.getElementById('check-navy').checked;
         
         this.data.vac1 = document.getElementById('vac-1').value;
         this.data.vac2 = document.getElementById('vac-2').value;
         this.data.vacFam = document.getElementById('vac-fam').value;
         this.data.vacCity = document.getElementById('vac-city').value;
 
-        localStorage.setItem('jura_final_db', JSON.stringify(this.data));
-        
-        // Оновлення текстових елементів
-        document.getElementById('user-name').innerText = this.data.name;
-        document.getElementById('rank-badge').innerText = this.data.rank;
-        
-        UI.nav('timer'); // Повернення на головну
+        localStorage.setItem('jura_final_v3', JSON.stringify(this.data));
+        this.updateHeader();
+        UI.nav('timer');
+    },
+
+    renderRanks() {
+        const sel = document.getElementById('input-rank');
+        sel.innerHTML = '';
+        const list = this.data.isNavy ? this.ranks.navy : this.ranks.army;
+        list.forEach(r => {
+            const opt = document.createElement('option');
+            opt.value = opt.innerText = r;
+            sel.appendChild(opt);
+        });
+        sel.value = this.data.rank;
+    },
+
+    toggleNavy() {
+        this.data.isNavy = document.getElementById('check-navy').checked;
+        this.renderRanks();
     },
 
     fillInputs() {
-        document.getElementById('in-name').value = this.data.name;
-        document.getElementById('in-date').value = this.data.start;
-        document.getElementById('in-salary').value = this.data.salary;
-        document.getElementById('in-watches').value = this.data.watches;
-        document.getElementById('vac-1').value = this.data.vac1;
-        document.getElementById('vac-2').value = this.data.vac2;
-        document.getElementById('vac-fam').value = this.data.vacFam;
-        document.getElementById('vac-city').value = this.data.vacCity;
-        
-        document.getElementById('user-name').innerText = this.data.name;
-        document.getElementById('rank-badge').innerText = this.data.rank;
-        
-        const navyCheck = document.getElementById('check-navy');
-        if (navyCheck) navyCheck.checked = this.data.isNavy;
+        const d = this.data;
+        document.getElementById('in-name').value = d.name;
+        document.getElementById('in-date').value = d.start;
+        document.getElementById('in-salary').value = d.salary;
+        document.getElementById('in-watches').value = d.watches;
+        document.getElementById('check-navy').checked = d.isNavy;
+        document.getElementById('vac-1').value = d.vac1;
+        document.getElementById('vac-2').value = d.vac2;
+        document.getElementById('vac-fam').value = d.vacFam;
+        document.getElementById('vac-city').value = d.vacCity;
+        this.updateHeader();
+    },
+
+    updateHeader() {
+        document.getElementById('user-name-display').innerText = this.data.name;
+        document.getElementById('rank-badge-display').innerText = this.data.rank;
     },
 
     toggleTheme() {
         this.data.theme = this.data.theme === 'dark' ? 'light' : 'dark';
         this.applyTheme();
-        localStorage.setItem('jura_final_db', JSON.stringify(this.data));
+        localStorage.setItem('jura_final_v3', JSON.stringify(this.data));
     },
 
     applyTheme() {
         document.documentElement.setAttribute('data-theme', this.data.theme);
         const ring = document.getElementById('progress-ring');
-        if (ring) {
-            ring.setAttribute('stroke', this.data.theme === 'dark' ? '#ca8a04' : '#4b512d');
-        }
+        if (ring) ring.setAttribute('stroke', this.data.theme === 'dark' ? '#ca8a04' : '#4b512d');
     }
 };
 
-// Запуск при завантаженні сторінки
-window.onload = () => App.init();
+const UI = {
+    nav(id) {
+        document.querySelectorAll('.tab-view').forEach(v => v.classList.add('hidden'));
+        document.getElementById('view-' + id).classList.remove('hidden');
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('nav-' + id).classList.add('active');
+    }
+};
+
+// Запуск при повному завантаженні
+window.addEventListener('DOMContentLoaded', () => App.init());
