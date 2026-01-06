@@ -1,230 +1,153 @@
-// --- DATA BASE ---
-const DB = {
-    ranks_army: [
-        { id: 1, title: "Рекрут" }, { id: 2, title: "Солдат" }, { id: 3, title: "Ст. Солдат" },
-        { id: 4, title: "Мол. Сержант" }, { id: 5, title: "Сержант" }, { id: 6, title: "Ст. Сержант" },
-        { id: 7, title: "Голов. Сержант" }, { id: 8, title: "Штаб-сержант" }, { id: 9, title: "Майстер-сержант" },
-        { id: 10, title: "Ст. М-сержант" }, { id: 11, title: "Голов. М-сержант" }, { id: 12, title: "Мол. Лейтенант" },
-        { id: 13, title: "Лейтенант" }, { id: 14, title: "Ст. Лейтенант" }, { id: 15, title: "Капітан" },
-        { id: 16, title: "Майор" }, { id: 17, title: "Підполковник" }, { id: 18, title: "Полковник" }
+// --- DATABASE ---
+const DB_RANKS = {
+    army: [
+        {id:1, t:"Рекрут"}, {id:2, t:"Солдат"}, {id:3, t:"Ст. Солдат"},
+        {id:4, t:"Мол. Сержант"}, {id:5, t:"Сержант"}, {id:6, t:"Ст. Сержант"},
+        {id:7, t:"Голов. Сержант"}, {id:8, t:"Штаб-сержант"}, {id:9, t:"Майстер-сержант"},
+        {id:10, t:"Ст. Майстер-сержант"}, {id:11, t:"Гол. Майстер-сержант"},
+        {id:12, t:"Мол. Лейтенант"}, {id:13, t:"Лейтенант"}, {id:14, t:"Ст. Лейтенант"},
+        {id:15, t:"Капітан"}, {id:16, t:"Майор"}, {id:17, t:"Підполковник"}, {id:18, t:"Полковник"}
     ],
-    ranks_navy: [
-        { id: 1, title: "Рекрут" }, { id: 2, title: "Матрос" }, { id: 3, title: "Ст. Матрос" },
-        { id: 4, title: "Старшина 2 ст." }, { id: 5, title: "Старшина 1 ст." }, { id: 6, title: "Голов. Старшина" },
-        { id: 7, title: "Голов. Кор. Старшина" }, { id: 8, title: "Штаб-старшина" }, { id: 9, title: "Майстер-старшина" },
-        { id: 10, title: "Ст. М-старшина" }, { id: 11, title: "Голов. М-старшина" }, { id: 12, title: "Мол. Лейтенант" },
-        { id: 13, title: "Лейтенант" }, { id: 14, title: "Ст. Лейтенант" }, { id: 15, title: "Кап-лейтенант" },
-        { id: 16, title: "Капітан 3 р." }, { id: 17, title: "Капітан 2 р." }, { id: 18, title: "Капітан 1 р." },
-        { id: 19, title: "Коммодор" }, { id: 20, title: "Контр-адмірал" }
+    navy: [
+        {id:1, t:"Рекрут"}, {id:2, t:"Матрос"}, {id:3, t:"Ст. Матрос"},
+        {id:4, t:"Старшина 2 ст."}, {id:5, t:"Старшина 1 ст."}, {id:6, t:"Голов. Старшина"},
+        {id:7, t:"Гол. Кор. Старшина"}, {id:8, t:"Штаб-старшина"}, {id:9, t:"Майстер-старшина"},
+        {id:10, t:"Ст. Майстер-старшина"}, {id:11, t:"Гол. Майстер-старшина"},
+        {id:12, t:"Мол. Лейтенант"}, {id:13, t:"Лейтенант"}, {id:14, t:"Ст. Лейтенант"},
+        {id:15, t:"Кап-лейтенант"}, {id:16, t:"Капітан 3 рангу"}, {id:17, t:"Капітан 2 рангу"}, {id:18, t:"Капітан 1 рангу"}
     ]
 };
 
+// --- APP LOGIC ---
 const App = {
-    state: {
-        user: JSON.parse(localStorage.getItem('jura_mil_user')) || { 
-            name: 'Боєць', 
-            date: new Date().toISOString().split('T')[0], 
-            rank: 1, 
-            navy: false,
-            type: 'mobilized' 
-        },
-        buddies: JSON.parse(localStorage.getItem('jura_mil_buddies')) || [],
-        activeId: 'user'
+    data: {
+        name: "Боєць",
+        start: new Date().toISOString().split('T')[0],
+        rank: 1,
+        isNavy: false
     },
 
     init() {
-        this.fillRanks();
-        this.syncUI();
-        UI.renderArmy();
+        this.load();
+        this.renderRanks();
+        this.updateUI();
         
-        // Запуск циклів
-        setInterval(() => this.tickTimer(), 1000); // Таймер служби
-        setInterval(() => this.tickClock(), 1000); // Годинник реального часу
+        // Запуск таймерів
+        setInterval(() => this.tick(), 1000);
+        this.tick(); // Перший запуск одразу
         
-        this.tickTimer(); 
-        this.tickClock();
         lucide.createIcons();
     },
 
-    // Головний таймер служби
-    tickTimer() {
-        const profile = this.state.activeId === 'user' ? this.state.user : this.state.buddies[this.state.activeId];
-        if (!profile) return;
-
-        UI.updateHeader(profile);
-
-        const start = new Date(profile.date);
+    tick() {
+        // 1. Годинник реального часу
         const now = new Date();
-        const diff = now - start;
+        document.getElementById('realtime-clock').innerText = now.toLocaleTimeString('uk-UA');
 
-        // Встановлюємо "вічний" термін (нескінченність)
-        // Для візуалізації прогресу беремо умовні 18 міс (548 днів), але текст буде ∞
-        const totalRef = 548 * 24 * 60 * 60 * 1000; 
-        const percent = Math.min(100, (diff / totalRef) * 100);
+        // 2. Таймер служби (рахуємо скільки пройшло)
+        const start = new Date(this.data.start);
+        const diff = now - start; // мілісекунди
 
-        document.getElementById('percent-display').innerText = `${percent.toFixed(0)}%`;
+        if (diff < 0) {
+            // Якщо дата в майбутньому
+            document.getElementById('total-days-counter').innerText = "0";
+            return;
+        }
+
+        // Обчислення
+        const totalSeconds = Math.floor(diff / 1000);
+        const days = Math.floor(totalSeconds / 86400);
+        const years = Math.floor(days / 365);
+        const months = Math.floor((days % 365) / 30);
+        const weeks = Math.floor((days % 365) / 7);
+
+        // Оновлення HTML
+        document.getElementById('total-days-counter').innerText = days;
+        document.getElementById('stat-years').innerText = years;
+        document.getElementById('stat-months').innerText = months;
+        document.getElementById('stat-weeks').innerText = weeks;
         
-        // Детальний час
-        const s = Math.floor(diff / 1000);
-        const y = Math.floor(s / 31536000);
-        const mo = Math.floor((s % 31536000) / 2592000);
-        const w = Math.floor((s % 2592000) / 604800);
-        const d = Math.floor((s % 604800) / 86400);
+        // Живі секунди (форматовані з пробілами, наприклад 1 200 500)
+        document.getElementById('stat-seconds-total').innerText = totalSeconds.toLocaleString('uk-UA');
 
-        document.getElementById('t-years').innerText = y;
-        document.getElementById('t-months').innerText = mo;
-        document.getElementById('t-weeks').innerText = w;
-        document.getElementById('t-days').innerText = d;
-
-        UI.drawRice(percent);
+        // 3. Круговий прогрес (візуальний ефект)
+        // Робимо вигляд, що коло заповнюється, але повільно (наприклад, 3 роки це повне коло для візуалізації)
+        // 1095 днів = 3 роки.
+        const maxRef = 1095; 
+        const progress = Math.min(days / maxRef, 1);
+        const circle = document.getElementById('progress-ring');
+        const circumference = 2 * Math.PI * 120; // r=120 -> ~754
+        const offset = circumference - (progress * circumference);
+        circle.style.strokeDashoffset = offset;
     },
 
-    // Годинник "Судного дня" (реальний час)
-    tickClock() {
-        const now = new Date();
-        const timeStr = now.toLocaleTimeString('uk-UA', { hour12: false });
-        document.getElementById('doomsday-clock').innerText = timeStr;
+    saveData() {
+        this.data.name = document.getElementById('input-name').value || "Боєць";
+        this.data.start = document.getElementById('input-date').value;
+        this.data.rank = parseInt(document.getElementById('input-rank').value);
+        this.data.isNavy = document.getElementById('check-navy').checked;
+        
+        localStorage.setItem('dzhura_mm14_data', JSON.stringify(this.data));
+        
+        this.updateUI();
+        UI.nav('timer'); // Повернутись на головну
     },
 
-    saveUser() {
-        this.state.user.name = document.getElementById('set-name').value || 'Боєць';
-        this.state.user.date = document.getElementById('set-date').value;
-        this.state.user.rank = document.getElementById('input-rank').value;
-        localStorage.setItem('jura_mil_user', JSON.stringify(this.state.user));
-        alert('Дані оновлено');
-        UI.switchTab('timer');
+    load() {
+        const saved = localStorage.getItem('dzhura_mm14_data');
+        if (saved) {
+            this.data = JSON.parse(saved);
+        }
+        
+        // Заповнити інпути
+        document.getElementById('input-name').value = this.data.name;
+        document.getElementById('input-date').value = this.data.start;
+        document.getElementById('check-navy').checked = this.data.isNavy;
     },
 
-    setService(type) {
-        this.state.user.type = type;
-        this.syncUI();
-    },
-
-    toggleNavy(checked) {
-        this.state.user.navy = checked;
-        this.fillRanks();
-    },
-
-    fillRanks() {
-        const select = document.getElementById('input-rank');
-        select.innerHTML = '';
-        const list = this.state.user.navy ? DB.ranks_navy : DB.ranks_army;
+    renderRanks() {
+        const sel = document.getElementById('input-rank');
+        sel.innerHTML = '';
+        const list = this.data.isNavy ? DB_RANKS.navy : DB_RANKS.army;
         list.forEach(r => {
             const opt = document.createElement('option');
             opt.value = r.id;
-            opt.innerText = r.title;
-            select.appendChild(opt);
+            opt.innerText = r.t;
+            sel.appendChild(opt);
         });
-        select.value = this.state.user.rank;
+        sel.value = this.data.rank;
     },
 
-    addBuddy() {
-        const name = document.getElementById('buddy-name').value;
-        const date = document.getElementById('buddy-date').value;
-        if(name && date) {
-            this.state.buddies.push({name, date, rank: 1, navy: false});
-            localStorage.setItem('jura_mil_buddies', JSON.stringify(this.state.buddies));
-            UI.closeModal();
-            UI.renderArmy();
-        }
+    toggleNavy() {
+        this.data.isNavy = document.getElementById('check-navy').checked;
+        this.renderRanks();
     },
 
-    syncUI() {
-        const u = this.state.user;
-        document.getElementById('set-name').value = u.name;
-        document.getElementById('set-date').value = u.date;
-        document.getElementById('is-navy').checked = u.navy;
+    updateUI() {
+        document.getElementById('user-name').innerText = this.data.name;
         
-        // Кнопки типу служби
-        const btnM = document.getElementById('btn-mobilized');
-        const btnC = document.getElementById('btn-contract');
-        
-        if(u.type === 'mobilized') {
-            btnM.className = 'p-3 rounded-xl bg-yellow-600 text-black text-xs font-bold uppercase';
-            btnC.className = 'p-3 rounded-xl border border-white/10 text-xs font-bold uppercase opacity-50';
-        } else {
-            btnC.className = 'p-3 rounded-xl bg-yellow-600 text-black text-xs font-bold uppercase';
-            btnM.className = 'p-3 rounded-xl border border-white/10 text-xs font-bold uppercase opacity-50';
-        }
+        const list = this.data.isNavy ? DB_RANKS.navy : DB_RANKS.army;
+        const rankObj = list.find(r => r.id == this.data.rank);
+        document.getElementById('rank-badge').innerText = rankObj ? rankObj.t : "Рекрут";
     }
 };
 
 const UI = {
-    switchTab(id) {
-        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-        document.getElementById(`view-${id}`).classList.add('active');
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        document.getElementById(`nav-${id}`).classList.add('active');
-    },
-
-    updateHeader(p) {
-        document.getElementById('header-name').innerText = p.name;
-        const list = (p.navy || App.state.user.navy) ? DB.ranks_navy : DB.ranks_army;
-        const r = list.find(x => x.id == (p.rank || App.state.user.rank));
-        document.getElementById('header-rank').innerText = r ? r.title : 'Рекрут';
-    },
-
-    drawRice(percent) {
-        const svg = document.getElementById('rice-circle-svg');
-        svg.innerHTML = '';
-        const total = 60;
-        const active = Math.floor((percent / 100) * total);
+    nav(viewId) {
+        // Ховаємо всі секції
+        document.querySelectorAll('.tab-view').forEach(el => el.classList.add('hidden'));
+        // Показуємо потрібну
+        document.getElementById(`view-${viewId}`).classList.remove('hidden');
         
-        for(let i=0; i<total; i++) {
-            const angle = (i * 6) * (Math.PI / 180);
-            const x1 = 150 + 125 * Math.cos(angle);
-            const y1 = 150 + 125 * Math.sin(angle);
-            const x2 = 150 + 140 * Math.cos(angle);
-            const y2 = 150 + 140 * Math.sin(angle);
-            
-            const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-            line.setAttribute("x1", x1); line.setAttribute("y1", y1);
-            line.setAttribute("x2", x2); line.setAttribute("y2", y2);
-            line.setAttribute("stroke", i < active ? "#ca8a04" : "rgba(255,255,255,0.1)");
-            line.setAttribute("stroke-width", "3");
-            line.setAttribute("stroke-linecap", "round");
-            svg.appendChild(line);
+        // Кнопки
+        document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active', 'text-yellow-500'));
+        const activeBtn = document.getElementById(`btn-${viewId}`);
+        if(activeBtn) {
+            activeBtn.classList.add('active', 'text-yellow-500');
+            activeBtn.classList.remove('text-white/30');
         }
-    },
-
-    renderArmy() {
-        const list = document.getElementById('army-list');
-        list.innerHTML = '';
-        
-        // Картка користувача
-        list.innerHTML += this.createCard(App.state.user.name, 'Я', 'user');
-        
-        // Побратими
-        App.state.buddies.forEach((b, idx) => {
-            list.innerHTML += this.createCard(b.name, 'Побратим', idx);
-        });
-        lucide.createIcons();
-    },
-
-    createCard(name, role, id) {
-        const isActive = App.state.activeId === id;
-        const borderClass = isActive ? 'border-yellow-600 bg-yellow-600/10' : 'border-white/5';
-        const iconColor = isActive ? 'text-yellow-500' : 'text-white/30';
-        
-        return `
-        <div onclick="App.state.activeId = '${id}'; UI.renderArmy(); App.tickTimer()" 
-             class="glass-card p-4 rounded-xl flex justify-between items-center cursor-pointer transition-all active:scale-95 border ${borderClass}">
-            <div class="flex items-center gap-4">
-                <div class="p-2 rounded-lg bg-black/30 ${iconColor}">
-                    <i data-lucide="user" class="w-5 h-5"></i>
-                </div>
-                <div>
-                    <p class="font-bold text-sm text-white leading-none">${name}</p>
-                    <p class="text-[10px] uppercase opacity-40 font-bold mt-1 tracking-wider">${role}</p>
-                </div>
-            </div>
-            ${isActive ? '<div class="w-2 h-2 rounded-full bg-yellow-500 shadow-[0_0_10px_#ca8a04]"></div>' : ''}
-        </div>`;
-    },
-
-    openModal() { document.getElementById('modal').style.display = 'flex'; },
-    closeModal() { document.getElementById('modal').style.display = 'none'; }
+    }
 };
 
 // Start
-App.init();
+window.onload = () => App.init();
