@@ -11,6 +11,10 @@ const App = {
     },
 
     init() {
+        // ПРИМУСОВИЙ ФІКС ДЛЯ VERCEL/TAILWIND
+        document.body.classList.remove('bg-white', 'bg-slate-50');
+        document.body.style.backgroundColor = "#3e4230";
+
         this.renderRanks();
         this.fillInputs();
         setInterval(() => this.tick(), 1000);
@@ -23,11 +27,9 @@ const App = {
         const start = new Date(this.data.start);
         document.getElementById('realtime-clock').innerText = now.toLocaleTimeString('uk-UA');
 
-        // Фінанси
         const totalMoney = parseInt(this.data.salary || 0) + (parseInt(this.data.watches || 0) * 4000);
         document.getElementById('money-display').innerText = totalMoney.toLocaleString() + " ₴";
 
-        // Час
         let diff = now - start;
         if (diff < 0) diff = 0;
         const s = Math.floor(diff / 1000);
@@ -41,7 +43,6 @@ const App = {
         document.getElementById('t-min').innerText = Math.floor((s % 3600) / 60);
         document.getElementById('t-sec').innerText = s % 60;
 
-        // Прогрес (на 3 роки)
         const progress = Math.min(d / 1095, 1);
         document.getElementById('progress-ring').style.strokeDashoffset = 754 - (progress * 754);
         
@@ -61,7 +62,7 @@ const App = {
                 container.innerHTML += `
                     <div class="event-card">
                         <p>${label}</p>
-                        <p>ДО ПОВЕРНЕННЯ: ${left} ДН.</p>
+                        <p>ЛИШИЛОСЬ: ${left} ДН.</p>
                     </div>`;
             }
         };
@@ -134,4 +135,4 @@ const UI = {
     }
 };
 
-window.addEventListener('DOMContentLoaded', () => App.init(document.body.style.background = "none"));
+window.addEventListener('DOMContentLoaded', () => App.init());
