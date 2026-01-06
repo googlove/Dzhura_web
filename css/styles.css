@@ -1,77 +1,48 @@
-/* ПРИМУСОВИЙ ФОН МУЛЬТИКАМ */
-html, body {
-    background-color: #3e4230 !important;
-    margin: 0;
-    padding: 0;
-    color: #ffffff;
+:root {
+    --theme-color: #bef264; /* Основний тактичний салатовий */
+    --bg-base: #1a1c14;
 }
 
-.pixel-camo {
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    background-color: #7d8256 !important;
-    background-image: 
-        radial-gradient(circle at 20% 30%, #43412b 15%, transparent 25%),
-        radial-gradient(circle at 70% 60%, #5d633a 20%, transparent 30%),
-        radial-gradient(circle at 40% 80%, #a4a881 18%, transparent 28%),
-        radial-gradient(circle at 80% 20%, #3e4230 15%, transparent 25%) !important;
-    background-size: 400px 400px !important;
-    opacity: 1 !important;
+.theme-night { --theme-color: #94a3b8; --bg-base: #0a0a0a; }
+.theme-red { --theme-color: #ef4444; --bg-base: #1a0505; }
+
+body { background-color: var(--bg-base) !important; color: white; transition: background 0.3s ease; }
+
+.camo-overlay {
+    position: fixed; inset: 0; z-index: -1; opacity: 0.1;
+    background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E");
 }
 
-/* СКЛО */
-.glass-panel { 
-    background: rgba(0, 0, 0, 0.75) !important; 
-    backdrop-filter: blur(12px); 
-    border: 1px solid rgba(255,255,255,0.15); 
+.text-theme { color: var(--theme-color) !important; }
+
+/* КРУГ */
+.circle-bg { stroke: rgba(255, 255, 255, 0.05); }
+.circle-main { stroke: var(--theme-color); filter: drop-shadow(0 0 10px var(--theme-color)); transition: stroke-dashoffset 1s ease-out; }
+
+.glass-panel { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border-radius: 1.5rem; border: 1px solid rgba(255,255,255,0.08); }
+
+.stat-card { @apply glass-panel p-4 text-center; border-bottom: 3px solid var(--theme-color); }
+.stat-card span { @apply block text-3xl font-mono font-black text-white; }
+.stat-card label { @apply text-[9px] uppercase font-black text-theme tracking-widest mt-1 block; }
+
+/* КНОПКА ЗБЕРЕГТИ ЯК ТЕКСТ НА ФОНІ */
+.mil-save-btn {
+    width: 100%; padding: 20px; background: var(--theme-color);
+    color: #000 !important; font-family: 'Exo 2', sans-serif;
+    font-weight: 900; letter-spacing: 3px; border-radius: 1rem;
+    text-transform: uppercase; transition: transform 0.2s;
 }
+.mil-save-btn:active { transform: scale(0.96); }
 
-/* ГОЛОВНИЙ ТЕКСТ ЛІЧИЛЬНИКА (БІЛИЙ І ВЕЛИКИЙ) */
-.main-counter {
-    color: #ffffff !important;
-    font-size: 6.5rem !important; /* Гігантський розмір */
-    font-weight: 900 !important;
-    font-family: 'JetBrains Mono', monospace;
-    line-height: 1;
-    filter: drop-shadow(0 0 15px rgba(255,255,255,0.2));
-}
-
-.timer-card { @apply glass-panel p-4 rounded-2xl text-center; }
-.timer-card span { @apply block text-3xl font-black text-white leading-none mb-1; }
-.timer-card p { @apply text-[11px] uppercase font-black text-yellow-500; }
-
-/* ТЕКСТ ПОДІЙ (БІЛИЙ) */
-.event-card {
-    @apply glass-panel p-5 rounded-2xl border-l-8 border-white;
-    background: rgba(255, 255, 255, 0.1) !important;
-}
-.event-card p:first-child { color: #fbbf24 !important; font-weight: 900; text-transform: uppercase; font-size: 0.8rem; }
-.event-card p:last-child { color: #ffffff !important; font-weight: 900; font-size: 1.8rem; text-transform: uppercase; line-height: 1; margin-top: 4px; }
-
-/* ПОЛЯ ВВОДУ (ЧОРНИЙ ТЕКСТ НА БІЛОМУ) */
+/* ІНПУТИ (ЧОРНИЙ ТЕКСТ) */
 .mil-input {
-    width: 100% !important;
-    background-color: #ffffff !important; /* Білий фон */
-    color: #000000 !important;             /* Чорний текст */
-    border: 3px solid #ca8a04 !important;
-    border-radius: 12px !important;
-    padding: 12px 16px !important;
-    font-size: 1.2rem !important;
-    font-weight: 900 !important;
-    outline: none !important;
+    @apply w-full p-4 bg-white text-black font-black rounded-xl border-none outline-none mb-2;
+    font-family: 'JetBrains Mono', monospace; font-size: 1rem;
 }
 
-.label-mil { @apply block text-[12px] font-black uppercase text-yellow-400 mb-2 ml-1; text-shadow: 1px 1px 2px #000; }
+.theme-dot { width: 28px; height: 28px; border-radius: 8px; border: 2px solid rgba(255,255,255,0.2); transition: 0.2s; }
+.theme-dot:hover { transform: translateY(-3px); border-color: white; }
 
-.save-btn {
-    @apply w-full py-5 bg-yellow-600 text-white font-black uppercase rounded-2xl shadow-2xl transition-all active:scale-95 text-xl;
-    border: 2px solid rgba(255,255,255,0.2);
-}
-
-.nav-btn { @apply flex flex-col items-center gap-1 text-white/50 transition-all; }
-.nav-btn.active { @apply text-yellow-500 scale-110; }
-.nav-btn span { @apply text-[10px] font-black uppercase; }
-
-.scanline { background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.1) 50%); background-size: 100% 4px; }
-.hide-scrollbar::-webkit-scrollbar { display: none; }
+.nav-item { @apply flex flex-col items-center text-white/30 transition-all; }
+.nav-item.active { color: var(--theme-color); transform: scale(1.1); }
+.nav-item span { font-weight: 900; uppercase; text-[10px] mt-1; }
