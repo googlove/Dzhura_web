@@ -1,138 +1,171 @@
 <!DOCTYPE html>
-<html lang="uk" data-theme="pixel">
+<html lang="uk">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Джура</title>
-    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/styles.css">
+    <title>Джура v2 | Fatum</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Джура</h1>
-        </header>
+    <div class="app-background"></div>
 
-        <div id="main" class="tab-content active">
-            <div id="main-counter" class="card">
-                <div class="circle">
-                    <div class="big-number" id="bigNumber">0</div>
-                    <div class="big-text" id="bigText">ДНІВ ПРОЙШЛО</div>
-                </div>
-                <div id="infinity" style="display:none;">&infin;</div>
-            </div>
-
-            <div class="card">
-                <h2>Особиста інформація</h2>
-                <p><strong>Позивний:</strong> <span id="displayCallsign">Не вказано</span></p>
-                <p><strong>Звання:</strong> <span id="displayRank">Не вказано</span></p>
-                <p><strong>Структура:</strong> <span id="displayBranch">Не вказано</span></p>
-                <p><strong>Військова частина:</strong> <span id="displayUnit">Не вказано</span></p>
-            </div>
-
-            <div class="card">
-                <h2>Пройшло часу з початку служби</h2>
-                <div class="time-breakdown" id="passedTime">-</div>
-            </div>
-
-            <div class="card" id="remainingCard" style="display:none;">
-                <h2>Залишилось до дембеля</h2>
-                <div class="time-breakdown" id="remainingTime">-</div>
-            </div>
-
-            <div class="card">
-                <h2>Зарплата</h2>
-                <p>Основна: <span id="baseEarned">0</span> грн</p>
-                <p>За вахти (4000 грн/вахта): <span id="watchEarned">0</span> грн</p>
-                <p class="earned">Всього приблизно: <span id="totalEarned">0</span> грн</p>
-            </div>
+    <nav class="sidebar glass" id="sidebar">
+        <div class="brand">
+            <i class="fas fa-anchor"></i> Джура <span class="version">v2.0</span>
         </div>
-
-        <div id="settings" class="tab-content">
-            <div class="card">
-                <h2>Налаштування служби</h2>
-
-                <label>Тип служби</label>
-                <select id="serviceType">
-                    <option value="mobilized">Мобілізований</option>
-                    <option value="contract">Контракт</option>
-                </select>
-
-                <label>Дата початку служби</label>
-                <input type="date" id="startDate">
-
-                <div id="endDateContainer">
-                    <label>Дата закінчення контракту (дембель)</label>
-                    <input type="date" id="endDate">
-                </div>
-
-                <label>Місячна зарплата (грн)</label>
-                <input type="number" id="salary" placeholder="наприклад, 25000">
-
-                <label>Кількість несених вахт (по 4000 грн)</label>
-                <input type="number" id="watches" min="0" value="0">
-
-                <label>Тема оформлення</label>
-                <select id="themeSelect">
-                    <option value="pixel">Піксельний режим (ЗСУ)</option>
-                    <option value="night">Нічний режим</option>
-                    <option value="red">Червоний режим</option>
-                    <option value="dark">Темний режим</option>
-                </select>
-            </div>
-
-            <div class="card">
-                <h2>Особиста інформація</h2>
-
-                <label>Структура</label>
-                <select id="branch">
-                    <option value="army">Сухопутні війська ЗСУ</option>
-                    <option value="navy">Військово-морські сили ЗСУ</option>
-                </select>
-
-                <label>Військове звання</label>
-                <select id="rank">
-                    <option value="">Спочатку оберіть структуру</option>
-                </select>
-
-                <label>Позивний</label>
-                <input type="text" id="callsign" placeholder="Ваш позивний">
-
-                <label>Військова частина</label>
-                <input type="text" id="unit" placeholder="наприклад, А1234">
-            </div>
-
-            <div class="card">
-                <h2>Відпустки та звільнення</h2>
-                <div class="vacation-item">
-                    <label>До відпустки №1 (15 + 2 дні на дорогу)</label>
-                    <input type="date" id="vac1">
-                    <div class="countdown" id="toVac1">-</div>
-                </div>
-                <div class="vacation-item">
-                    <label>До відпустки №2 (15 + 2 дні на дорогу)</label>
-                    <input type="date" id="vac2">
-                    <div class="countdown" id="toVac2">-</div>
-                </div>
-                <div class="vacation-item">
-                    <label>До звільнення в місто (4 дні)</label>
-                    <input type="date" id="vacCity">
-                    <div class="countdown" id="toVacCity">-</div>
-                </div>
-                <div class="vacation-item">
-                    <label>За сімейними обставинами (10 днів)</label>
-                    <input type="date" id="vacFamily">
-                    <div class="countdown" id="toVacFamily">-</div>
-                </div>
-            </div>
+        <ul class="nav-list">
+            <li class="nav-item active" data-target="home"><i class="fas fa-home"></i> Головна</li>
+            <li class="nav-item" data-target="handbook"><i class="fas fa-book-journal-whills"></i> Арсенал (Wiki)</li>
+            <li class="nav-item" data-target="stats"><i class="fas fa-chart-pie"></i> Фінанси</li>
+            <li class="nav-item" data-target="album"><i class="fas fa-images"></i> Альбом</li>
+            <li class="nav-item" data-target="settings"><i class="fas fa-cog"></i> Налаштування</li>
+            <li class="nav-item" data-target="chat"><i class="fas fa-robot"></i> AI Чат</li>
+        </ul>
+        <div class="sidebar-footer">
+            <small>Слава Україні!</small>
         </div>
-    </div>
-
-    <nav class="tab-nav">
-        <button class="tab-btn active" data-tab="main">Таймер</button>
-        <button class="tab-btn" data-tab="settings">Налаштування</button>
     </nav>
 
-    <script src="js/app.js"></script>
+    <main class="main-content">
+        <header class="header glass">
+            <button id="menu-toggle"><i class="fas fa-bars"></i></button>
+            <div class="date-widget" id="header-date">...</div>
+            <div class="controls">
+                <button class="icon-btn" id="theme-toggle"><i class="fas fa-adjust"></i></button>
+            </div>
+        </header>
+
+        <section id="home" class="view active">
+            <div class="timer-card glass">
+                <div class="timer-header">До наказу / Дембеля</div>
+                <div class="timer-big" id="days-counter">0</div>
+                <div class="timer-sub" id="full-timer">Завантаження...</div>
+                
+                <div class="progress-wrapper">
+                    <div class="progress-bar" id="progress-fill"></div>
+                    <div class="progress-ticks" id="progress-ticks"></div>
+                </div>
+                
+                <div class="dates-row">
+                    <span id="display-start">---</span>
+                    <span id="display-end">---</span>
+                </div>
+            </div>
+
+            <div class="realtime-clock glass">
+                <div id="clock-large">00:00:00</div>
+            </div>
+
+            <div class="grid-2">
+                <div class="card glass">
+                    <div class="card-title">Звання</div>
+                    <div class="card-value" id="display-rank">---</div>
+                </div>
+                <div class="card glass">
+                    <div class="card-title">Позивний</div>
+                    <div class="card-value" id="display-callsign">---</div>
+                </div>
+            </div>
+
+            <div class="card glass">
+                <div class="card-header"><i class="fas fa-calendar-day"></i> Події сьогодні</div>
+                <div id="events-container" class="events-list"></div>
+            </div>
+        </section>
+
+        <section id="handbook" class="view">
+            <div class="card glass">
+                <h2>Арсенал ЗСУ</h2>
+                <div class="search-wrapper">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="weapon-search" placeholder="Пошук (Leopard, FPV)...">
+                </div>
+                <div id="weapons-container"></div>
+            </div>
+        </section>
+
+        <section id="settings" class="view">
+            <div class="card glass">
+                <h2>Особисті дані</h2>
+                <form id="settings-form">
+                    <div class="form-group">
+                        <label>Тип служби</label>
+                        <select id="inp-serviceType">
+                            <option value="contract">Контракт</option>
+                            <option value="mobilized">Мобілізація</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Рід військ (Впливає на звання)</label>
+                        <select id="inp-branch">
+                            <option value="navy">Військово-Морські Сили</option>
+                            <option value="ground">Сухопутні війська / НГУ</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Звання</label>
+                        <select id="inp-rank-select"></select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Позивний</label>
+                        <input type="text" id="inp-callsign">
+                    </div>
+                    <div class="form-group">
+                        <label>Частина</label>
+                        <input type="text" id="inp-unit">
+                    </div>
+
+                    <h3 style="margin-top:20px;">Дати та Фінанси</h3>
+                    <div class="form-group">
+                        <label>Дата початку</label>
+                        <input type="date" id="inp-start">
+                    </div>
+                    <div class="form-group" id="group-end-date">
+                        <label>Дата закінчення</label>
+                        <input type="date" id="inp-end">
+                    </div>
+                    <div class="form-group">
+                        <label>Зарплата (грн)</label>
+                        <input type="number" id="inp-salary">
+                    </div>
+                    <div class="form-group">
+                        <label>Кількість вахт (міс)</label>
+                        <input type="number" id="inp-shifts">
+                    </div>
+                    <button type="submit" class="btn-primary">Зберегти зміни</button>
+                </form>
+            </div>
+        </section>
+
+        <section id="stats" class="view">
+            <div class="card glass">
+                <h2>Калькулятор ГЗ</h2>
+                <div class="stat-row">
+                    <span>Оклад + Премія:</span>
+                    <span class="money" id="stat-base">0 ₴</span>
+                </div>
+                <div class="stat-row">
+                    <span>Бойові / Вахти:</span>
+                    <span class="money" id="stat-shifts">0 ₴</span>
+                </div>
+                <hr style="border-color: rgba(255,255,255,0.1); margin: 10px 0;">
+                <div class="stat-row total">
+                    <span>Разом:</span>
+                    <span class="money" id="stat-total">0 ₴</span>
+                </div>
+            </div>
+        </section>
+        
+        <section id="album" class="view"><div class="card glass"><h2>Альбом</h2><p>Тут будуть фото з "галереї" телефону.</p></div></section>
+        <section id="chat" class="view"><div class="card glass"><h2>AI Помічник</h2><p>Чат в розробці...</p></div></section>
+
+    </main>
+
+    <script src="js/script.js"></script>
 </body>
 </html>
