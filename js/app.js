@@ -1,283 +1,253 @@
-// Українські форми множини
-function plural(n, one, few, many) {
-    if (n % 10 === 1 && n % 100 !== 11) return one;
-    if (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20)) return few;
-    return many;
-}
-
-const forms = {
-    year: ['рік', 'роки', 'років'],
-    month: ['місяць', 'місяці', 'місяців'],
-    day: ['день', 'дні', 'днів'],
-    hour: ['година', 'години', 'годин'],
-    minute: ['хвилина', 'хвилини', 'хвилин'],
-    second: ['секунда', 'секунди', 'секунд']
-};
-
-const ranks = {
-    army: [
-        'Рекрут', 'Солдат', 'Старший солдат',
-        'Молодший сержант', 'Сержант', 'Старший сержант', 'Головний сержант',
-        'Штаб-сержант', 'Майстер-сержант', 'Старший майстер-сержант', 'Головний майстер-сержант',
-        'Молодший лейтенант', 'Лейтенант', 'Старший лейтенант', 'Капітан',
-        'Майор', 'Підполковник', 'Полковник',
-        'Бригадний генерал', 'Генерал-майор', 'Генерал-лейтенант', 'Генерал'
-    ],
-    navy: [
-        'Рекрут', 'Матрос', 'Старший матрос',
-        'Старшина 2 статті', 'Старшина 1 статті', 'Головний старшина', 'Головний корабельний старшина',
-        'Штаб-старшина', 'Майстер-старшина', 'Старший майстер-старшина', 'Головний майстер-старшина',
-        'Молодший лейтенант', 'Лейтенант', 'Старший лейтенант', 'Капітан-лейтенант',
-        'Капітан 3 рангу', 'Капітан 2 рангу', 'Капітан 1 рангу',
-        'Коммодор', 'Контр-адмірал', 'Віце-адмірал', 'Адмірал'
-    ]
-};
-
-// Елементи
-const els = {
-    serviceType: document.getElementById('serviceType'),
-    startDate: document.getElementById('startDate'),
-    endDate: document.getElementById('endDate'),
-    endDateContainer: document.getElementById('endDateContainer'),
-    salary: document.getElementById('salary'),
-    watches: document.getElementById('watches'),
-    themeSelect: document.getElementById('themeSelect'),
-    branch: document.getElementById('branch'),
-    rank: document.getElementById('rank'),
-    callsign: document.getElementById('callsign'),
-    unit: document.getElementById('unit'),
-    bigNumber: document.getElementById('bigNumber'),
-    bigText: document.getElementById('bigText'),
-    infinity: document.getElementById('infinity'),
-    passedTime: document.getElementById('passedTime'),
-    remainingTime: document.getElementById('remainingTime'),
-    remainingCard: document.getElementById('remainingCard'),
-    baseEarned: document.getElementById('baseEarned'),
-    watchEarned: document.getElementById('watchEarned'),
-    totalEarned: document.getElementById('totalEarned'),
-    displayCallsign: document.getElementById('displayCallsign'),
-    displayRank: document.getElementById('displayRank'),
-    displayBranch: document.getElementById('displayBranch'),
-    displayUnit: document.getElementById('displayUnit'),
-    vacs: {
-        vac1: document.getElementById('vac1'),
-        vac2: document.getElementById('vac2'),
-        vacCity: document.getElementById('vacCity'),
-        vacFamily: document.getElementById('vacFamily'),
-        toVac1: document.getElementById('toVac1'),
-        toVac2: document.getElementById('toVac2'),
-        toVacCity: document.getElementById('toVacCity'),
-        toVacFamily: document.getElementById('toVacFamily')
+class DzhuraApp {
+    constructor() {
+        this.userData = {};
+        this.staticData = {};
+        this.weaponsData = [];
+        this.init();
     }
-};
 
-// Табы
-document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+    async init() {
+        await this.loadData();
+        this.setupListeners();
+        this.renderUI();
+        this.startTimers();
+    }
 
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        document.getElementById(btn.dataset.tab).classList.add('active');
-    });
-});
+    async loadData() {
+        try {
+            // Завантаження налаштувань та звань
+            const resData = await fetch('data.json');
+            this.staticData = await resData.json();
 
-// Заповнення списку звань
-function populateRanks() {
-    const branch = els.branch.value;
-    els.rank.innerHTML = '<option value="">Оберіть звання</option>';
+            // Завантаження зброї
+            const resWeapons = await fetch('weapons.json');
+            this.weaponsData = await resWeapons.json();
 
-    if (branch && ranks[branch]) {
-        ranks[branch].forEach(r => {
-            const opt = document.createElement('option');
-            opt.value = r;
-            opt.textContent = r;
-            els.rank.appendChild(opt);
+            // Завантаження користувача (або дефолт)
+            const savedUser = localStorage.getItem('dzhura_user_RC1');
+            this.userData = savedUser ? JSON.parse(savedUser) : this.staticData.defaultUser;
+
+        } catch (e) {
+            console.error("Помилка завантаження JSON. Запустіть через Live Server!", e);
+            alert("Помилка: Відкрийте консоль браузера.");
+        }
+    }
+
+    setupListeners() {
+        // Навігація
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+                
+                item.classList.add('active');
+                document.getElementById(item.dataset.target).classList.add('active');
+                
+                // Закрити меню на мобільному
+                document.getElementById('sidebar').classList.remove('open');
+            });
+        });
+
+        // Мобільне меню
+        document.getElementById('menu-toggle').addEventListener('click', () => {
+            document.getElementById('sidebar').classList.toggle('open');
+        });
+
+        // Тема
+        document.getElementById('theme-toggle').addEventListener('click', () => {
+            document.body.classList.toggle('pixel-theme');
+        });
+
+        // Збереження форми налаштувань
+        document.getElementById('settings-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.saveSettings();
+        });
+
+        // Динамічна зміна списку звань при зміні роду військ
+        document.getElementById('inp-branch').addEventListener('change', (e) => {
+            this.populateRankSelect(e.target.value);
+        });
+
+        // Пошук зброї
+        document.getElementById('weapon-search').addEventListener('input', (e) => {
+            this.renderHandbook(e.target.value);
         });
     }
 
-    // Відновлення збереженого звання, якщо підходить
-    const savedRank = localStorage.getItem('rank');
-    if (savedRank && ranks[branch]?.includes(savedRank)) {
-        els.rank.value = savedRank;
-    }
-}
+    renderUI() {
+        // Заповнення полів налаштувань
+        document.getElementById('inp-serviceType').value = this.userData.serviceType;
+        document.getElementById('inp-branch').value = this.userData.branch || 'navy';
+        document.getElementById('inp-callsign').value = this.userData.callsign;
+        document.getElementById('inp-unit').value = this.userData.unit;
+        document.getElementById('inp-start').value = this.userData.startDate;
+        document.getElementById('inp-end').value = this.userData.endDate;
+        document.getElementById('inp-salary').value = this.userData.salary;
+        document.getElementById('inp-shifts').value = this.userData.shifts;
 
-// Оновлення відображення особистої інформації
-function updatePersonalInfo() {
-    els.displayCallsign.textContent = localStorage.getItem('callsign') || 'Не вказано';
-    els.displayUnit.textContent = localStorage.getItem('unit') || 'Не вказано';
-    els.displayRank.textContent = localStorage.getItem('rank') || 'Не вказано';
+        // Заповнити селект звань (правильним списком)
+        this.populateRankSelect(this.userData.branch || 'navy', this.userData.rank);
 
-    const branch = localStorage.getItem('branch');
-    let branchName = 'Не вказано';
-    if (branch === 'army') branchName = 'Сухопутні війська ЗСУ';
-    if (branch === 'navy') branchName = 'Військово-морські сили ЗСУ';
-    els.displayBranch.textContent = branchName;
-}
+        // Головний екран
+        document.getElementById('display-rank').innerText = this.userData.rank;
+        document.getElementById('display-callsign').innerText = this.userData.callsign;
+        document.getElementById('display-start').innerText = this.formatDate(this.userData.startDate);
+        document.getElementById('display-end').innerText = this.userData.serviceType === 'contract' ? this.formatDate(this.userData.endDate) : '∞';
 
-// Збереження/завантаження
-function save() {
-    localStorage.setItem('serviceType', els.serviceType.value);
-    localStorage.setItem('startDate', els.startDate.value);
-    localStorage.setItem('endDate', els.endDate.value);
-    localStorage.setItem('salary', els.salary.value);
-    localStorage.setItem('watches', els.watches.value);
-    localStorage.setItem('theme', document.documentElement.dataset.theme);
-    localStorage.setItem('branch', els.branch.value);
-    localStorage.setItem('rank', els.rank.value);
-    localStorage.setItem('callsign', els.callsign.value);
-    localStorage.setItem('unit', els.unit.value);
-    ['vac1', 'vac2', 'vacCity', 'vacFamily'].forEach(id => {
-        localStorage.setItem(id, els.vacs[id].value);
-    });
-}
-
-function load() {
-    els.serviceType.value = localStorage.getItem('serviceType') || 'mobilized';
-    els.startDate.value = localStorage.getItem('startDate') || '';
-    els.endDate.value = localStorage.getItem('endDate') || '';
-    els.salary.value = localStorage.getItem('salary') || '';
-    els.watches.value = localStorage.getItem('watches') || '0';
-    els.branch.value = localStorage.getItem('branch') || 'army';
-    els.callsign.value = localStorage.getItem('callsign') || '';
-    els.unit.value = localStorage.getItem('unit') || '';
-    ['vac1', 'vac2', 'vacCity', 'vacFamily'].forEach(id => {
-        els.vacs[id].value = localStorage.getItem(id) || '';
-    });
-
-    const savedTheme = localStorage.getItem('theme') || 'pixel';
-    setTheme(savedTheme);
-}
-
-// Тема
-function setTheme(theme) {
-    document.documentElement.dataset.theme = theme;
-    els.themeSelect.value = theme;
-}
-
-// Форматування часу
-function formatTime(diffMs) {
-    if (diffMs <= 0) return '0 секунд';
-
-    const diff = diffMs / 1000;
-    const s = Math.floor(diff % 60);
-    const m = Math.floor((diff / 60) % 60);
-    const h = Math.floor((diff / 3600) % 24);
-    const d = Math.floor(diff / 86400);
-
-    const years = Math.floor(d / 365);
-    const months = Math.floor((d % 365) / 30);
-    const days = d % 30;
-
-    let str = '';
-    if (years > 0) str += `${years} ${plural(years, ...forms.year)} `;
-    if (months > 0) str += `${months} ${plural(months, ...forms.month)} `;
-    if (days > 0 || years + months === 0) str += `${days} ${plural(days, ...forms.day)} `;
-    str += `${h} ${plural(h, ...forms.hour)} `;
-    str += `${m} ${plural(m, ...forms.minute)} `;
-    str += `${s} ${plural(s, ...forms.second)}`;
-
-    return str.trim();
-}
-
-function formatCountdown(diffMs) {
-    if (diffMs <= 0) return 'Минуло';
-    const d = Math.floor(diffMs / 86400000);
-    const h = Math.floor((diffMs % 86400000) / 3600000);
-    if (d > 0) return `${d} ${plural(d, 'день', 'дні', 'днів')} ${h} год`;
-    return `${h} ${plural(h, 'година', 'години', 'годин')}`;
-}
-
-// Основне оновлення
-function update() {
-    const startStr = els.startDate.value;
-    if (!startStr) {
-        els.passedTime.textContent = 'Введіть дату початку служби';
-        return;
+        this.renderFinance();
+        this.renderEvents();
+        this.renderHandbook(); // Завантажити весь список зброї
     }
 
-    const start = new Date(startStr);
-    const now = new Date();
-    const passedMs = now - start;
-    const passedDays = Math.floor(passedMs / 86400000);
-
-    // Пройшло часу
-    els.passedTime.textContent = formatTime(passedMs);
-
-    // Зарплата
-    const monthly = parseFloat(els.salary.value) || 0;
-    const baseEarned = Math.round(monthly * (passedDays / 30.42));
-    const watches = parseInt(els.watches.value) || 0;
-    const watchEarned = watches * 4000;
-    const total = baseEarned + watchEarned;
-
-    els.baseEarned.textContent = baseEarned.toLocaleString('uk-UA');
-    els.watchEarned.textContent = watchEarned.toLocaleString('uk-UA');
-    els.totalEarned.textContent = total.toLocaleString('uk-UA');
-
-    // Головний лічильник
-    const type = els.serviceType.value;
-    if (type === 'contract' && els.endDate.value) {
-        const end = new Date(els.endDate.value);
-        const remainingMs = end - now;
-        const remainingDays = Math.floor(remainingMs / 86400000);
-
-        els.bigNumber.textContent = remainingDays > 0 ? remainingDays : 0;
-        els.bigText.textContent = 'ДНІВ ЗАЛИШИЛОСЯ ДО ДЕМБЕЛЯ';
-        els.infinity.style.display = 'none';
-        els.remainingCard.style.display = 'block';
-        els.remainingTime.textContent = formatTime(remainingMs);
-    } else {
-        els.bigNumber.textContent = passedDays;
-        els.bigText.textContent = 'ДНІВ ПРОЙШЛО';
-        els.infinity.style.display = type === 'mobilized' ? 'block' : 'none';
-        els.remainingCard.style.display = 'none';
+    populateRankSelect(branch, currentRank = null) {
+        const select = document.getElementById('inp-rank-select');
+        select.innerHTML = ''; // Очистити
+        
+        const ranks = this.staticData.ranks[branch] || [];
+        ranks.forEach(r => {
+            const opt = document.createElement('option');
+            opt.value = r;
+            opt.innerText = r;
+            if (r === currentRank) opt.selected = true;
+            select.appendChild(opt);
+        });
     }
 
-    // Відпустки
-    ['vac1', 'vac2', 'vacCity', 'vacFamily'].forEach(key => {
-        const dateStr = els.vacs[key].value;
-        if (dateStr) {
-            const target = new Date(dateStr);
-            const diff = target - now;
-            els.vacs['to' + key.charAt(0).toUpperCase() + key.slice(1)].textContent = formatCountdown(diff);
+    saveSettings() {
+        this.userData = {
+            serviceType: document.getElementById('inp-serviceType').value,
+            branch: document.getElementById('inp-branch').value,
+            rank: document.getElementById('inp-rank-select').value,
+            callsign: document.getElementById('inp-callsign').value,
+            unit: document.getElementById('inp-unit').value,
+            startDate: document.getElementById('inp-start').value,
+            endDate: document.getElementById('inp-end').value,
+            salary: Number(document.getElementById('inp-salary').value),
+            shifts: Number(document.getElementById('inp-shifts').value)
+        };
+        localStorage.setItem('dzhura_user_RC1', JSON.stringify(this.userData));
+        this.renderUI();
+        this.updateTimers(); // Оновити таймер одразу
+        alert('Дані збережено!');
+    }
+
+    // --- Handbook Logic ---
+    renderHandbook(query = "") {
+        const container = document.getElementById('weapons-container');
+        container.innerHTML = "";
+        const term = query.toLowerCase();
+
+        this.weaponsData.forEach(cat => {
+            const items = cat.items.filter(i => 
+                i.name.toLowerCase().includes(term) || 
+                cat.categoryName.toLowerCase().includes(term)
+            );
+
+            if (items.length > 0) {
+                const catDiv = document.createElement('div');
+                catDiv.className = 'weapon-category';
+                
+                const header = document.createElement('div');
+                header.className = 'category-header';
+                header.innerHTML = `<span><i class="fas ${cat.icon}"></i> ${cat.categoryName}</span> <i class="fas fa-chevron-down"></i>`;
+                
+                const content = document.createElement('div');
+                content.className = 'category-content';
+                if(term) content.classList.add('open'); // Розкрити при пошуку
+
+                header.addEventListener('click', () => content.classList.toggle('open'));
+
+                items.forEach(item => {
+                    content.innerHTML += `
+                        <div class="weapon-card">
+                            <div class="weapon-name">${item.name}</div>
+                            <div class="weapon-desc">
+                                <b>${item.origin}</b><br>
+                                ${item.desc}
+                            </div>
+                        </div>
+                    `;
+                });
+
+                catDiv.append(header, content);
+                container.append(catDiv);
+            }
+        });
+    }
+
+    // --- Timer & Utils ---
+    startTimers() {
+        this.updateTimers();
+        setInterval(() => this.updateTimers(), 1000);
+    }
+
+    updateTimers() {
+        const now = new Date();
+        document.getElementById('header-date').innerText = now.toLocaleDateString('uk-UA', { weekday: 'short', day: 'numeric', month: 'long' });
+        document.getElementById('clock-large').innerText = now.toLocaleTimeString('uk-UA');
+
+        const start = new Date(this.userData.startDate);
+        const end = new Date(this.userData.endDate);
+        let diff, total, isCountdown;
+
+        if (this.userData.serviceType === 'contract') {
+            diff = end - now;
+            total = end - start;
+            isCountdown = true;
         } else {
-            els.vacs['to' + key.charAt(0).toUpperCase() + key.slice(1)].textContent = 'Не вказано';
+            diff = now - start;
+            isCountdown = false;
         }
-    });
 
-    // Оновлення особистої інформації
-    updatePersonalInfo();
+        const days = Math.floor(Math.abs(diff) / (1000 * 60 * 60 * 24));
+        document.getElementById('days-counter').innerText = days;
+
+        if (isCountdown) {
+            if (diff <= 0) {
+                document.getElementById('full-timer').innerText = "Дембель!";
+                document.getElementById('progress-fill').style.width = "100%";
+                return;
+            }
+            document.getElementById('full-timer').innerText = "Днів до наказу";
+            const percent = Math.min(100, Math.max(0, ((now - start) / total) * 100));
+            document.getElementById('progress-fill').style.width = percent + "%";
+        } else {
+            document.getElementById('full-timer').innerText = "Днів на службі";
+            document.getElementById('progress-fill').style.width = "100%";
+        }
+    }
+
+    renderFinance() {
+        const base = this.userData.salary;
+        const shifts = this.userData.shifts * 4000; // 4000 за вахту
+        document.getElementById('stat-base').innerText = `${base} ₴`;
+        document.getElementById('stat-shifts').innerText = `${shifts} ₴`;
+        document.getElementById('stat-total').innerText = `${base + shifts} ₴`;
+    }
+    
+    renderEvents() {
+        const container = document.getElementById('events-container');
+        const today = new Date();
+        const m = String(today.getMonth()+1).padStart(2,'0');
+        const d = String(today.getDate()).padStart(2,'0');
+        const key = `${m}-${d}`;
+        
+        const ev = this.staticData.holidays.find(h => h.date === key);
+        container.innerHTML = ev ? 
+            `<div style="color:var(--accent); font-weight:bold;">🎉 ${ev.title}</div>` : 
+            `<div style="opacity:0.7">Сьогодні без свят. Тримаємо стрій.</div>`;
+    }
+
+    formatDate(str) {
+        if(!str) return "";
+        return new Date(str).toLocaleDateString('uk-UA');
+    }
 }
 
-function toggleEndDate() {
-    els.endDateContainer.style.display = els.serviceType.value === 'contract' ? 'block' : 'none';
-    update();
-}
-
-// Події
-load();
-toggleEndDate();
-populateRanks();
-updatePersonalInfo();
-update();
-
-els.serviceType.addEventListener('change', () => { toggleEndDate(); save(); });
-els.startDate.addEventListener('change', () => { save(); update(); });
-els.endDate.addEventListener('change', () => { save(); update(); });
-els.salary.addEventListener('input', () => { save(); update(); });
-els.watches.addEventListener('input', () => { save(); update(); });
-els.themeSelect.addEventListener('change', () => {
-    setTheme(els.themeSelect.value);
-    save();
+document.addEventListener('DOMContentLoaded', () => {
+    new DzhuraApp();
+    // Генеруємо риски прогресу
+    const ticks = document.getElementById('progress-ticks');
+    for(let i=0; i<10; i++) ticks.appendChild(document.createElement('div')).className='tick';
 });
-els.branch.addEventListener('change', () => { populateRanks(); save(); updatePersonalInfo(); });
-els.rank.addEventListener('change', () => { save(); updatePersonalInfo(); });
-els.callsign.addEventListener('input', () => { save(); updatePersonalInfo(); });
-els.unit.addEventListener('input', () => { save(); updatePersonalInfo(); });
-Object.keys(els.vacs).filter(k => k.length === 4 && k.startsWith('vac')).forEach(id => {
-    els.vacs[id].addEventListener('change', () => { save(); update(); });
-});
-
-setInterval(update, 1000);
